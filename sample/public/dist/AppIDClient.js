@@ -8,27 +8,30 @@ const openPopup = () => {
 		',top=' + h + ',width=' + w + ',height=700,resizable,scrollbars=yes,status=1');
 };
 
-async function loginWidget(popup, url) {
+async function loginWidget(popup, url, state) {
 	popup.location.href = url;
 	return new Promise((resolve, reject) => {
 		window.addEventListener('message', message => {
 			if (!message.data || message.data.type !== 'authorization_response') {
 				return;
 			}
+			console.log(message.data);
+			if (atob(message.data.state) !== state) {
+				reject("invalid state");
+			}
 			popup.close();
 			if (message.data.error) {
-				return reject(message.data);
+				reject(message.data.error);
 			}
 			resolve(message.data.code);
 		});
 	});
 };
 
-async function exchangeTokens(discovery, clientID, authCode) {
+async function exchangeTokens(discovery, clientID, authCode, nonce) {
 	let params = {
 		grant_type: 'authorization_code',
 		redirect_uri: `${discovery.issuer}/pkce_callback`,
-		client_id: clientID,
 		code: authCode,
 		code_verifier: codeVerifier
 	};
@@ -37,7 +40,7 @@ async function exchangeTokens(discovery, clientID, authCode) {
 		return encodeURIComponent(key) + '=' + encodeURIComponent(params[key]);
 	}).join('&');
 
-	return await fetch(discovery.token_endpoint, {
+	const res = await fetch(discovery.token_endpoint, {
 		method: 'POST',
 		headers: {
 			'Authorization': 'Basic ' + btoa(`${clientID}:${codeVerifier}`),
@@ -45,17 +48,48 @@ async function exchangeTokens(discovery, clientID, authCode) {
 		},
 		body: requestParams
 	});
-	// const tokens = await tokensRes.json();
-	// console.log(tokens);
-	// const isValid = validateTokens(tokens.access_token);
-	// const isValid = validateTokens(tokens.id_token);
+	const tokens = await res.json();
+	return {
+		accessToken: tokens.access_token,
+		accessTokenPayload: decodeAndValidate(tokens.access_token, discovery, clientID, nonce),
+		idToken: tokens.id_token,
+		idTokenPayload: decodeAndValidate(tokens.id_token, discovery, clientID, nonce)
+	}
 }
 
-// function validateTokens(tokens) {
-// 	const [header, payload, signature] = tokens.split('.');
-// 	console.log(payload);
-// 	console.log(signature);
-// }
+function decodeAndValidate(token, discovery, clientID, nonce) {
+	const [header, payload, signature] = token.split('.');
+	const decoded = {
+		header: JSON.parse(atob(header)),
+		payload:JSON.parse(atob(payload))
+	};
+	console.log(decoded);
+	if (decoded.header.ver !== 4) {
+		throw new Error('Invalid version');
+	}
+	if (decoded.header.alg !== 'RS256') {
+		throw new Error('Invalid algorithm');
+	}
+	if (decoded.payload.iss !== discovery.issuer) {
+		throw new Error('Invalid issuer');
+	}
+	if (!decoded.payload.aud.includes(clientID)) {
+		throw new Error('Invalid audience');
+	}
+	if (decoded.payload.nonce && decoded.payload.nonce !== nonce) {
+		throw new Error('Invalid nonce');
+	}
+	const now = Math.floor(Date.now() / 1000);
+	if (decoded.payload.exp < now) {
+		throw new Error('token expired');
+	}
+
+	// const publicKeys = await fetch(discovery.jwks_uri, {
+	// 	method: 'GET'
+	// });
+	// console.log(publicKeys);
+	return decoded.payload;
+}
 
 const randomString = () => {
 	let random = '';
@@ -101,25 +135,40 @@ class AppID {
 		const challenge_method = 'S256';
 		const code_verifier = randomString();
 		const code_challenge = await sha256(code_verifier);
-		console.log('verifier: ' + code_verifier);
-		console.log('hashed: ' + code_challenge);
-		console.log('encoded: ' + btoa(code_challenge));
-
+		const nonce = randomString();
+		const state = randomString();
 		codeVerifier = code_verifier;
-		// todo: validate state, nonce
+
 		const authUrl = encodeURI(this.discoveryObj.authorization_endpoint +
 			"?client_id=" + this.clientID +
 			"&response_type=" + responseType +
-			"&state=" + btoa(randomString()) +
+			"&state=" + btoa(state) +
 			"&code_challenge=" + btoa(code_challenge) +
 			"&code_challenge_method=" + challenge_method +
+			"&nonce=" + nonce +
 			"&scope=" + 'openid'
 		);
 		console.log(authUrl);
 		const popup = openPopup();
-		const res = await loginWidget(popup, authUrl);
-		const tokens = await exchangeTokens(this.discoveryObj, this.clientID, res);
-		return tokens.json();
-	}
-};
+		let tokens;
+		const authCode = await loginWidget(popup, authUrl, state);
+		tokens = await exchangeTokens(this.discoveryObj, this.clientID, authCode, nonce);
 
+		console.log(tokens);
+		return tokens;
+	}
+
+	async getUserInfo(accessToken) {
+		if (typeof accessToken !== "string") {
+			throw new Error('Access token must be a string');
+		}
+		let res = await fetch(this.discoveryObj.userinfo_endpoint, {
+			method: 'GET',
+			headers: {
+				'Authorization': 'Bearer ' + accessToken
+			}
+		});
+		return res.json();
+		// console.log(res.json());
+	}
+}

@@ -13,6 +13,10 @@
         #id_token {
             margin-bottom: 30px;
         }
+        #error {
+            color: red;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -40,23 +44,23 @@
   (async function () {
     const appID = new AppID();
     await appID.init({
-      clientID: '1632d97a-e317-48fc-8826-8e90047d96c3',
-      discoveryUrl: 'http://localhost:6002/oauth/v4/612a838c-7332-4a6f-9772-5da1e53facec/.well-known/openid-configuration'
+      clientID: '1b0e3658-fc1f-402e-843c-18402d4dbe58',
+      discoveryUrl: 'http://localhost:6002/oauth/v4/5b1eb5f1-34bd-41fd-b6dd-e257c188a4dd/.well-known/openid-configuration'
     });
-    // clientID: '21317af4-fe86-4ff6-86ab-3e2bfb981984',
-    // discoveryUrl: 'http://localhost:6002/oauth/v4/5b1eb5f1-34bd-41fd-b6dd-e257c188a4dd/.well-known/openid-configuration'
+
     document.getElementById('login').addEventListener('click', async () => {
-    let tokens = await appID.signinWithPopup();
-    if (tokens) {
-        let decodeIDToken = jwt_decode(tokens.id_token);
-        let decodeAccessToken = jwt_decode(tokens.access_token);
+    	document.getElementById("login").style.display = 'none';
+        let tokens = await appID.signinWithPopup();
+        let userInfo = await appID.getUserInfo(tokens.accessToken);
+        console.log('userinfo', userInfo);
+        let decodeIDToken = tokens.idTokenPayload;
+        console.log('token', tokens);
+        console.log('id token payload', decodeIDToken);
         document.getElementById('welcome').innerHTML = 'Hello, ' + decodeIDToken.name;
-        document.getElementById('id_token').innerHTML = JSON.stringify(decodeIDToken);
-        document.getElementById('access_token').innerHTML = JSON.stringify(decodeAccessToken);
-        document.getElementById("login").style.display = 'none';
-    }
+        document.getElementById('id_token').textContent = JSON.stringify(decodeIDToken);
+        document.getElementById('access_token').textContent = JSON.stringify(userInfo);
     });
-	})()
+  })()
 </script>
 </body>
 </html>
