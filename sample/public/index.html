@@ -38,13 +38,13 @@
     </div>
 </div>
 </div>
-<script src="js/jwt-decode.min.js"></script>
-<script type='text/javascript' src="/dist/AppIDClient.js"></script>
+<script src="js/jwt-decode.min.js"></script>\
+<script type='text/javascript' src="appid.js"></script>
 <script>
   (async function () {
-    const appID = new AppID();
+    const appID = new AppID.AppID();
     await appID.init({
-      clientID: '1b0e3658-fc1f-402e-843c-18402d4dbe58',
+      clientId: '1b0e3658-fc1f-402e-843c-18402d4dbe58',
       discoveryUrl: 'http://localhost:6002/oauth/v4/5b1eb5f1-34bd-41fd-b6dd-e257c188a4dd/.well-known/openid-configuration'
     });
 

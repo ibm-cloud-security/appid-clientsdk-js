@@ -1,7 +1,7 @@
 
-// const assert = require('assert');
-// const AppIDClient = require('../sample/public/dist/AppIDClient');
-// const discoveryObj = {
+const assert = require('assert');
+const AppIDClient = require('../sample/public/dist/AppIDClient');
+// const openIdConfig = {
 // 	issuer: "http://localhost:6002/oauth/v4/5b1eb5f1-34bd-41fd-b6dd-e257c188a4dd",
 // 	authorization_endpoint: "http://localhost:6002/oauth/v4/5b1eb5f1-34bd-41fd-b6dd-e257c188a4dd/authorization",
 // 	token_endpoint: "http://localhost:6002/oauth/v4/5b1eb5f1-34bd-41fd-b6dd-e257c188a4dd/token",
@@ -11,11 +11,11 @@
 describe("AppIDClient", () => {
 	describe("helpers", () => {
 		it("random string is the length of 43", () => {
-			chai.expect(randomString()).to.have.lengthOf(43);
+			chai.expect(getRandomString()).to.have.lengthOf(43);
 		});
 
 		it("sha256", () => {
-			const plain = randomString();
+			const plain = getRandomString();
 			let hashed = sha256(plain);
 			chai.expect(string).to.have.lengthOf(43);
 		})
