@@ -18,6 +18,8 @@
     "gulp": "^4.0.2",
     "gulp-concat": "^2.6.1",
     "gulp-uglify": "^3.0.2",
+    "jose-jwe-jws": "^0.2.1",
+    "jsonwebtoken": "^8.5.1",
     "jsrsasign": "^8.0.12"
   },
   "devDependencies": {
