@@ -1,16 +1,25 @@
-import {exchangeTokens, sha256, getRandomString, openLoginWidget, openPopup, request} from './utils';
+import {buildParams, getRandomString, sha256} from './utils';
+import {request} from "./RequestHandler";
+import {PopupController} from './PopupController';
+import {OpenIdConfigurationResource} from "./OpenIDConfiguration";
+import {TokenValidator} from "./TokenValidator";
+import jwt from 'jose-jwe-jws';
+
 const responseType = 'code';
 const STATE_LENGTH = 20;
 const NONCE_LENGTH = 20;
 const CODE_VERIFIER_LENGTH = 43;
 
 export class AppID {
-	// TODO: remove all console logs
-	async init({clientId, discoveryUrl}) {
-		//TODO: validate clientId as guid
+	constructor({pop=new PopupController({window})} = {}) {
+		this.popup = pop;
+		this.tokenValidator = new TokenValidator(jwt);
+	}
+
+	async init({clientId, discoveryEndpoint}) {
+		this.openIdConfig = new OpenIdConfigurationResource();
+		await this.openIdConfig.init({discoveryEndpoint, request});
 		this.clientId = clientId;
-		this.openIdConfig = await request(discoveryUrl);
-		console.log(this.openIdConfig);
 	}
 
 	/**
@@ -20,15 +29,13 @@ export class AppID {
 	 * A promise to ID and access token. If there is an error in the callback, reject the promise with the error
 	 */
 	async signinWithPopup() {
-		// open popup
 		const challengeMethod = 'S256';
 		const codeVerifier = getRandomString(CODE_VERIFIER_LENGTH);
 		const codeChallenge = await sha256(codeVerifier);
 		const nonce = getRandomString(NONCE_LENGTH);
 		const state = getRandomString(STATE_LENGTH);
-
-		// TODO: better way to build this url or use back tick
-		const authUrl = encodeURI(this.openIdConfig.authorization_endpoint +
+		this.popup.setState(state);
+		const authUrl = encodeURI(this.openIdConfig.getAuthorizationEndpoint() +
 			"?client_id=" + this.clientId +
 			"&response_type=" + responseType +
 			"&state=" + btoa(state) +
@@ -37,13 +44,11 @@ export class AppID {
 			"&nonce=" + nonce +
 			"&scope=" + 'openid'
 		);
-		console.log(authUrl);
-		const popup = openPopup();
-		let tokens;
-		const authCode = await openLoginWidget({popup, authUrl, state});
-		tokens = await exchangeTokens({openIdConfig: this.openIdConfig, clientId:this.clientId, authCode, codeVerifier, nonce});
 
-		console.log(tokens);
+		this.popup.open();
+		let tokens;
+		const authCode = await this.popup.navigate({authUrl, state});
+		tokens = await this.exchangeTokens({authCode, codeVerifier, nonce});
 		return tokens;
 	}
 
@@ -51,12 +56,44 @@ export class AppID {
 		if (typeof accessToken !== 'string') {
 			throw new Error('Access token must be a string');
 		}
-		// TODO: check for failed status code
-		return await request(this.openIdConfig.userinfo_endpoint, {
+
+		return await request(this.openIdConfig.getUserInfoEndpoint(), {
 			method: 'GET',
 			headers: {
 				'Authorization': 'Bearer ' + accessToken
 			}
 		});
+	}
+
+	async exchangeTokens({ authCode, nonce, codeVerifier}) {
+		let issuer = await this.openIdConfig.getIssuer();
+		let params = {
+			grant_type: 'authorization_code',
+			redirect_uri: `${issuer}/pkce_callback`,
+			code: authCode,
+			code_verifier: codeVerifier
+		};
+
+		const requestParams = buildParams(params);
+
+		const tokenEndpoint = this.openIdConfig.getTokenEndpoint();
+
+		const tokens = await request(tokenEndpoint, {
+			method: 'POST',
+			headers: {
+				'Authorization': 'Basic ' + btoa(`${this.clientId}:${codeVerifier}`),
+				'Content-Type': 'application/x-www-form-urlencoded'
+			},
+			body: requestParams
+		});
+
+		return {
+			accessToken: tokens.access_token,
+			accessTokenPayload: await this.tokenValidator.decodeAndValidate(
+			{token: tokens.access_token, openIdConfig: this.openIdConfig, clientId: this.clientId, nonce, request}),
+			idToken: tokens.id_token,
+			idTokenPayload: await this.tokenValidator.decodeAndValidate(
+			{token: tokens.id_token, openIdConfig: this.openIdConfig, clientId: this.clientId, nonce, request})
+		}
 	}
 }
