@@ -1,5 +1,5 @@
 const POPUP_TIMEOUT_SECONDS = 60;
-export class PopupController {
+class PopupController {
 	constructor({window}) {
 		this.window = window;
 	};
@@ -49,3 +49,4 @@ export class PopupController {
 		});
 	}
 }
+module.exports = PopupController;

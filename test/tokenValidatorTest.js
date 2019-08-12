@@ -7,7 +7,7 @@ const constants = require('./mocks/constants');
 describe("TokenValidator", () => {
 
 	describe("decodeAndValidate", () => {
-		const tokenValidator = new TokenValidator(jwt);
+		const tokenValidator = new TokenValidator();
 
 		it('should return decoded payload', async function () {
 			let res = await tokenValidator.decodeAndValidate(

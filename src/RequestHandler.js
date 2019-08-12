@@ -1,4 +1,4 @@
-export async function request(url, options) {
+module.exports = async function request(url, options) {
 	const response = await fetch(url, options);
 	const text = await response.text();
 	if (!response.ok) {
@@ -9,4 +9,4 @@ export async function request(url, options) {
 	} catch(err) {
 		throw new Error(`Invalid response while trying to fetch ${url}. Response=${text}`);
 	}
-}
+};

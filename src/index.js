@@ -1,9 +1,8 @@
-import {buildParams, getRandomString, sha256} from './utils';
-import {request} from "./RequestHandler";
-import {PopupController} from './PopupController';
-import {OpenIdConfigurationResource} from "./OpenIDConfiguration";
-import {TokenValidator} from "./TokenValidator";
-import jwt from 'jsrsasign';
+const {buildParams, getRandomString, sha256} = require('./utils');
+const request = require('./RequestHandler');
+const PopupController = require('./PopupController');
+const OpenIdConfigurationResource = require('./OpenIDConfiguration');
+const TokenValidator = require('./TokenValidator');
 
 const RESPONSE_TYPE = 'code';
 const SCOPE = 'openid';
@@ -11,20 +10,20 @@ const STATE_LENGTH = 20;
 const NONCE_LENGTH = 20;
 const CODE_VERIFIER_LENGTH = 43;
 
-export class AppID {
+class AppID {
 	constructor(
 		{popup=new PopupController({window}),
-			tokenValidator=new TokenValidator(jwt),
+			tokenValidator=new TokenValidator({}),
 			openID=new OpenIdConfigurationResource()
 		} = {}) {
 
 		this.popup = popup;
 		this.tokenValidator = tokenValidator;
-		this.openIdConfig = openID;
+		this.openIdConfigResource = openID;
 	}
 
 	async init({clientId, discoveryEndpoint}) {
-		await this.openIdConfig.init({discoveryEndpoint, request});
+		await this.openIdConfigResource.init({discoveryEndpoint, requestHandler: request});
 		this.clientId = clientId;
 	}
 
@@ -41,7 +40,7 @@ export class AppID {
 		const nonce = getRandomString(NONCE_LENGTH);
 		const state = getRandomString(STATE_LENGTH);
 		this.popup.setState(state);
-		const authUrl = encodeURI(this.openIdConfig.getAuthorizationEndpoint() +
+		const authUrl = encodeURI(this.openIdConfigResource.getAuthorizationEndpoint() +
 			"?client_id=" + this.clientId +
 			"&response_type=" + RESPONSE_TYPE +
 			"&state=" + btoa(state) +
@@ -54,7 +53,9 @@ export class AppID {
 		this.popup.open();
 		let tokens;
 		const authCode = await this.popup.navigate({authUrl, state});
+		console.log('authCode', authCode);
 		tokens = await this.exchangeTokens({authCode, codeVerifier, nonce});
+		console.log(tokens);
 		return tokens;
 	}
 
@@ -63,7 +64,7 @@ export class AppID {
 			throw new Error('Access token must be a string');
 		}
 
-		return await request(this.openIdConfig.getUserInfoEndpoint(), {
+		return await request(this.openIdConfigResource.getUserInfoEndpoint(), {
 			method: 'GET',
 			headers: {
 				'Authorization': 'Bearer ' + accessToken
@@ -72,7 +73,7 @@ export class AppID {
 	}
 
 	async exchangeTokens({ authCode, nonce, codeVerifier}) {
-		let issuer = await this.openIdConfig.getIssuer();
+		let issuer = await this.openIdConfigResource.getIssuer();
 		let params = {
 			grant_type: 'authorization_code',
 			redirect_uri: `${issuer}/pkce_callback`,
@@ -82,8 +83,8 @@ export class AppID {
 
 		const requestParams = buildParams(params);
 
-		const tokenEndpoint = this.openIdConfig.getTokenEndpoint();
-
+		const tokenEndpoint = this.openIdConfigResource.getTokenEndpoint();
+		console.log('exchange tokens', tokenEndpoint);
 		const tokens = await request(tokenEndpoint, {
 			method: 'POST',
 			headers: {
@@ -92,14 +93,15 @@ export class AppID {
 			},
 			body: requestParams
 		});
-
+		const publicKey = await this.openIdConfigResource.getPublicKey();
 		return {
 			accessToken: tokens.access_token,
 			accessTokenPayload: await this.tokenValidator.decodeAndValidate(
-			{token: tokens.access_token, openIdConfig: this.openIdConfig, clientId: this.clientId, nonce, request}),
+			{token: tokens.access_token, publicKey: publicKey.keys[0], issuer: issuer, clientId: this.clientId, nonce}),
 			idToken: tokens.id_token,
 			idTokenPayload: await this.tokenValidator.decodeAndValidate(
-			{token: tokens.id_token, openIdConfig: this.openIdConfig, clientId: this.clientId, nonce, request})
+			{token: tokens.id_token,publicKey: publicKey.keys[0], issuer: issuer, clientId: this.clientId, nonce})
 		}
 	}
 }
+module.exports = AppID;

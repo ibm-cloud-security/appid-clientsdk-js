@@ -1,6 +1,7 @@
-export class OpenIdConfigurationResource {
-	async init({discoveryEndpoint, request}){
-		this.openIdConfig = await request(discoveryEndpoint);
+class OpenIdConfigurationResource {
+	async init({discoveryEndpoint, requestHandler}){
+		this.openIdConfig = await requestHandler(discoveryEndpoint);
+		this.publicKeys = requestHandler(this.getJwksEndpoint());
 	}
 
 	getAuthorizationEndpoint() {
@@ -22,4 +23,9 @@ export class OpenIdConfigurationResource {
 	getIssuer() {
 		return this.openIdConfig.issuer;
 	}
+
+	async getPublicKey() { // TODO: add key id
+		return await this.publicKeys;
+	}
 }
+module.exports = OpenIdConfigurationResource;
