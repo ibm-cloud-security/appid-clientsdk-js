@@ -17,7 +17,9 @@
       "@babel/preset-env"
     ],
     "plugins": [
-      ["@babel/transform-runtime"]
+      [
+        "@babel/transform-runtime"
+      ]
     ]
   },
   "dependencies": {
@@ -40,6 +42,7 @@
     "babel-cli": "^7.0.0-beta.3",
     "gulp-babel": "^8.0.0",
     "mocha": "^6.2.0",
+    "nyc": "^14.1.1",
     "webpack": "^4.39.1",
     "webpack-cli": "^3.3.6"
   }

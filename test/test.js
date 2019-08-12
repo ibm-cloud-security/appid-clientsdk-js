@@ -1,17 +1,17 @@
-
 const assert = require('assert');
 const AppIDClient = require('../sample/public/dist/AppIDClient');
-// const openIdConfig = {
-// 	issuer: "http://localhost:6002/oauth/v4/5b1eb5f1-34bd-41fd-b6dd-e257c188a4dd",
-// 	authorization_endpoint: "http://localhost:6002/oauth/v4/5b1eb5f1-34bd-41fd-b6dd-e257c188a4dd/authorization",
-// 	token_endpoint: "http://localhost:6002/oauth/v4/5b1eb5f1-34bd-41fd-b6dd-e257c188a4dd/token",
-// 	jwks_uri: "http://localhost:6002/oauth/v4/5b1eb5f1-34bd-41fd-b6dd-e257c188a4dd/publickeys"
-// };
 
-describe("AppIDClient", () => {
-	describe("helpers", () => {
-		it("random string is the length of 43", () => {
-			chai.expect(getRandomString()).to.have.lengthOf(43);
+import {A} from "../src/TokenValidator";
+import {TokenValidator} from "../src/TokenValidator";
+import {AppID} from "../src";
+import {PopUpControllerMock} from "./mocks/PopUpControllerMock";
+
+describe("AppID", () => {
+
+	describe("signinWithPopup", () => {
+		before(() => {
+			// noinspection JSAnnotator
+			let appId = new AppID({popup=new PopUpControllerMock()});
 		});
 
 		it("sha256", () => {
@@ -21,10 +21,4 @@ describe("AppIDClient", () => {
 		})
 	});
 
-	describe("SDK", () => {
-		it("fail to init - invalid client id", async () => {
-			const res = await new AppID().init({clientID: 'invalid', discoveryUrl: ''});
-			chai.expect(res).to.have.lengthOf(43);
-		})
-	})
 });
