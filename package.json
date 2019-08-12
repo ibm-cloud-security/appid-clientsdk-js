@@ -7,12 +7,22 @@
     "src": "src"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack"
+    "build": "webpack",
+    "test": "mocha --require @babel/register test/tokenValidatorTest.js"
   },
   "author": "",
   "license": "ISC",
+  "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ],
+    "plugins": [
+      ["@babel/transform-runtime"]
+    ]
+  },
   "dependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/register": "^7.5.5",
     "@babel/runtime": "^7.5.5",
     "express": "^4.17.1",
     "gulp": "^4.0.2",

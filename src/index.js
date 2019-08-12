@@ -3,21 +3,27 @@ import {request} from "./RequestHandler";
 import {PopupController} from './PopupController';
 import {OpenIdConfigurationResource} from "./OpenIDConfiguration";
 import {TokenValidator} from "./TokenValidator";
-import jwt from 'jose-jwe-jws';
+import jwt from 'jsrsasign';
 
-const responseType = 'code';
+const RESPONSE_TYPE = 'code';
+const SCOPE = 'openid';
 const STATE_LENGTH = 20;
 const NONCE_LENGTH = 20;
 const CODE_VERIFIER_LENGTH = 43;
 
 export class AppID {
-	constructor({pop=new PopupController({window})} = {}) {
-		this.popup = pop;
-		this.tokenValidator = new TokenValidator(jwt);
+	constructor(
+		{popup=new PopupController({window}),
+			tokenValidator=new TokenValidator(jwt),
+			openID=new OpenIdConfigurationResource()
+		} = {}) {
+
+		this.popup = popup;
+		this.tokenValidator = tokenValidator;
+		this.openIdConfig = openID;
 	}
 
 	async init({clientId, discoveryEndpoint}) {
-		this.openIdConfig = new OpenIdConfigurationResource();
 		await this.openIdConfig.init({discoveryEndpoint, request});
 		this.clientId = clientId;
 	}
@@ -37,12 +43,12 @@ export class AppID {
 		this.popup.setState(state);
 		const authUrl = encodeURI(this.openIdConfig.getAuthorizationEndpoint() +
 			"?client_id=" + this.clientId +
-			"&response_type=" + responseType +
+			"&response_type=" + RESPONSE_TYPE +
 			"&state=" + btoa(state) +
 			"&code_challenge=" + btoa(codeChallenge) +
 			"&code_challenge_method=" + challengeMethod +
 			"&nonce=" + nonce +
-			"&scope=" + 'openid'
+			"&scope=" + SCOPE
 		);
 
 		this.popup.open();

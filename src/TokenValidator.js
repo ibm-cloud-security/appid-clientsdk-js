@@ -11,11 +11,21 @@ export class TokenValidator {
 		const publicKeys = await request(jwsUri, {
 			method: 'GET'
 		});
+		// console.log(publicKeys.keys[0]);
 
 		const tokenParts = token.split('.');
 		if (tokenParts.length !== 3) {
 			throw new Error('Invalid token');
 		}
+
+		// console.log(tokenParts);
+		// console.log(token);
+		// const myKey = this.jwt.KEYUTIL.getKey(publicKeys.keys[0]);
+		// console.log(myKey);
+		// const isValid =  this.jwt.KJUR.jws.JWS.verify(token, myKey, ['RS256']);
+		// if (!isValid) {
+		// 	throw new Error('Invalid signature');
+		// }
 
 		let decoded;
 		try {
