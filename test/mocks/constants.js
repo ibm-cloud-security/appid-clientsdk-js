@@ -12,7 +12,7 @@ module.exports = {
 		e: "AQAB",
 		kid: "appId-5b1eb5f1-34bd-41fd-b6dd-e257c188a4dd-2018-10-11T16:12:27.405"
 	},
-	PRIVATE_KEY: '-----BEGIN RSA PRIVATE KEY-----\n' +
+	RSA_PRIVATE_KEY: '-----BEGIN RSA PRIVATE KEY-----\n' +
 		'Proc-Type: 4,ENCRYPTED\n' +
 		'DEK-Info: DES-EDE3-CBC,9676BE1C26158397\n' +
 		'\n' +

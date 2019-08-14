@@ -1,4 +1,4 @@
-const assert = require('assert');
+const assert = require('chai').assert;
 const TokenValidator = require('../src/TokenValidator');
 const constants = require('./mocks/constants');
 const jwt = require('jsrsasign');
@@ -19,7 +19,7 @@ function generateToken({header, payload, exp}) {
 	payload.exp = exp || notExpired;
 	let sHeader = JSON.stringify(header);
 	let sPayload = JSON.stringify(payload);
-	let prvKey = jwt.KEYUTIL.getKey(constants.PRIVATE_KEY, 'appid');
+	let prvKey = jwt.KEYUTIL.getKey(constants.RSA_PRIVATE_KEY, 'appid');
 	return jwt.KJUR.jws.JWS.sign(alg, sHeader, sPayload, prvKey);
 }
 
@@ -33,7 +33,7 @@ describe("TokenValidator", () => {
 
 			let res = await tokenValidator.decodeAndValidate(
 				{token: token, publicKey: constants.PUBLIC_KEY, issuer: validIssuer, clientId, nonce});
-			assert.ok(res);
+			assert.equal(res.toString(), validPayload);
 		});
 
 		it('should return invalid token - malformed token', async function () {
