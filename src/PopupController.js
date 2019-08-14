@@ -1,12 +1,7 @@
-const POPUP_TIMEOUT_SECONDS = 60;
 class PopupController {
 	constructor({window}) {
 		this.window = window;
 	};
-
-	setState(state) {
-		this.state = state;
-	}
 
 	open() {
 		const h = 700;
@@ -21,30 +16,22 @@ class PopupController {
 
 	navigate({authUrl}) {
 		this.popup.location.href = authUrl;
-		return this.waitForMessage()
 	};
 
-	async waitForMessage() {
+	async waitForMessage({messageType}) {
 		return new Promise((resolve, reject) => {
-			const timer = setInterval(function() {
+			const timer = setInterval(() => {
 				if(this.popup.closed) {
+					clearInterval(timer);
 					reject(new Error('Popup closed'));
 				}
-			}, POPUP_TIMEOUT_SECONDS * 1000);
+			}, 1000);
 			window.addEventListener('message', message => {
-				if (!message.data || message.data.type !== 'authorization_response') {
+				if (!message.data || message.data.type !== messageType) {
 					return;
 				}
-				clearTimeout(timer);
-
 				this.popup.close();
-				if (message.data.error.errorType) {
-					reject(new Error(JSON.stringify(message.data.error)));
-				} else if (atob(message.data.state) !== this.state) {
-					reject(new Error("Invalid state"));
-				} else {
-					resolve(message.data.code);
-				}
+				resolve(message);
 			});
 		});
 	}

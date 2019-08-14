@@ -7,4 +7,6 @@ module.exports = {
 	INVALID_AUDIENCE: "Invalid audience",
 	INVALID_NONCE: "Invalid nonce",
 	EXPIRED_TOKEN: "Expired token",
+	INVALID_STATE: "Invalid state",
+	INVALID_ACCESS_TOKEN: "Access token must be a string"
 }

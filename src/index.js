@@ -1,70 +1,77 @@
-const {buildParams, getRandomString, sha256} = require('./utils');
-const request = require('./RequestHandler');
+const Utils = require('./utils');
+const RequestHandler = require('./RequestHandler');
 const PopupController = require('./PopupController');
 const OpenIdConfigurationResource = require('./OpenIDConfiguration');
 const TokenValidator = require('./TokenValidator');
+const rs = require('jsrsasign');
+const errorMessages = require('./constants');
 
 const RESPONSE_TYPE = 'code';
 const SCOPE = 'openid';
 const STATE_LENGTH = 20;
 const NONCE_LENGTH = 20;
-const CODE_VERIFIER_LENGTH = 43;
+const CODE_VERIFIER_LENGTH = 44;
 
 class AppID {
 	constructor(
-		{popup=new PopupController({window}),
-			tokenValidator=new TokenValidator({}),
-			openID=new OpenIdConfigurationResource()
+		{popup = new PopupController({window}),
+			tokenValidator = new TokenValidator({}),
+			openID = new OpenIdConfigurationResource(),
+			utils = new Utils(),
+			requestHandler = new RequestHandler()
 		} = {}) {
 
 		this.popup = popup;
 		this.tokenValidator = tokenValidator;
 		this.openIdConfigResource = openID;
+		this.utils = utils;
+		this.request = requestHandler.request;
 	}
 
 	async init({clientId, discoveryEndpoint}) {
-		await this.openIdConfigResource.init({discoveryEndpoint, requestHandler: request});
+		await this.openIdConfigResource.init({discoveryEndpoint, requestHandler: this.request});
 		this.clientId = clientId;
 	}
 
-	/**
-	 * ```js
-	 * await appid.signinWithPopup();
-	 * ```
-	 * A promise to ID and access token. If there is an error in the callback, reject the promise with the error
-	 */
 	async signinWithPopup() {
 		const challengeMethod = 'S256';
-		const codeVerifier = getRandomString(CODE_VERIFIER_LENGTH);
-		const codeChallenge = await sha256(codeVerifier);
-		const nonce = getRandomString(NONCE_LENGTH);
-		const state = getRandomString(STATE_LENGTH);
-		this.popup.setState(state);
-		const authUrl = encodeURI(this.openIdConfigResource.getAuthorizationEndpoint() +
-			"?client_id=" + this.clientId +
-			"&response_type=" + RESPONSE_TYPE +
-			"&state=" + btoa(state) +
-			"&code_challenge=" + btoa(codeChallenge) +
-			"&code_challenge_method=" + challengeMethod +
-			"&nonce=" + nonce +
-			"&scope=" + SCOPE
-		);
+		const codeVerifier = this.utils.getRandomString(CODE_VERIFIER_LENGTH);
+		const codeChallenge = await this.utils.sha256(codeVerifier);
+		const nonce = this.utils.getRandomString(NONCE_LENGTH);
+		const state = this.utils.getRandomString(STATE_LENGTH);
+
+		let authParams = {
+			client_id: this.clientId,
+			response_type: RESPONSE_TYPE,
+			state: rs.stob64(state),
+			code_challenge: rs.stob64(codeChallenge),
+			code_challenge_method: challengeMethod,
+			nonce: nonce,
+			scope: SCOPE
+		};
+
+		const authUrl = this.openIdConfigResource.getAuthorizationEndpoint() + '?' + this.utils.buildParams(authParams);
 
 		this.popup.open();
-		let tokens;
-		const authCode = await this.popup.navigate({authUrl, state});
-		console.log('authCode', authCode);
-		tokens = await this.exchangeTokens({authCode, codeVerifier, nonce});
-		console.log(tokens);
-		return tokens;
+		this.popup.navigate({authUrl});
+		const message = await this.popup.waitForMessage({messageType: 'authorization_response'});
+
+		if (message.data.error.errorType) {
+			throw new Error(JSON.stringify(message.data.error));
+		} else if (rs.b64utos(message.data.state) !== state) {
+			throw new Error(errorMessages.INVALID_STATE);
+		}
+		let authCode = message.data.code;
+
+		return await this.exchangeTokens({authCode, codeVerifier, nonce});
 	}
 
 	async getUserInfo(accessToken) {
 		if (typeof accessToken !== 'string') {
-			throw new Error('Access token must be a string');
+			throw new Error(errorMessages.INVALID_ACCESS_TOKEN);
 		}
 
-		return await request(this.openIdConfigResource.getUserInfoEndpoint(), {
+		return await this.request(this.openIdConfigResource.getUserInfoEndpoint(), {
 			method: 'GET',
 			headers: {
 				'Authorization': 'Bearer ' + accessToken
@@ -81,19 +88,19 @@ class AppID {
 			code_verifier: codeVerifier
 		};
 
-		const requestParams = buildParams(params);
-
+		const requestParams = this.utils.buildParams(params);
 		const tokenEndpoint = this.openIdConfigResource.getTokenEndpoint();
-		console.log('exchange tokens', tokenEndpoint);
-		const tokens = await request(tokenEndpoint, {
+
+		const tokens = await this.request(tokenEndpoint, {
 			method: 'POST',
 			headers: {
-				'Authorization': 'Basic ' + btoa(`${this.clientId}:${codeVerifier}`),
+				'Authorization': 'Basic ' + rs.stob64(`${this.clientId}:${codeVerifier}`),
 				'Content-Type': 'application/x-www-form-urlencoded'
 			},
 			body: requestParams
 		});
 		const publicKey = await this.openIdConfigResource.getPublicKey();
+
 		return {
 			accessToken: tokens.access_token,
 			accessTokenPayload: await this.tokenValidator.decodeAndValidate(

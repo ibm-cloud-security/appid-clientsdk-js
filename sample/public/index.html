@@ -51,13 +51,13 @@
     document.getElementById('login').addEventListener('click', async () => {
     	document.getElementById("login").style.display = 'none';
         let tokens = await appID.signinWithPopup();
-        // let userInfo = await appID.getUserInfo(tokens.accessToken);
+        let userInfo = await appID.getUserInfo(tokens.accessToken);
 
         let decodeIDToken = tokens.idTokenPayload;
 
         document.getElementById('welcome').innerHTML = 'Hello, ' + decodeIDToken.name;
         document.getElementById('id_token').textContent = JSON.stringify(decodeIDToken);
-        // document.getElementById('access_token').textContent = JSON.stringify(userInfo);
+        document.getElementById('access_token').textContent = JSON.stringify(userInfo);
     });
   })()
 </script>

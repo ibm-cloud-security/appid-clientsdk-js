@@ -1,6 +1,6 @@
 const errorMessages = require('./constants');
 class TokenValidator {
-	constructor({jwt = require('jsrsasign')} = {}) { // add request
+	constructor({jwt = require('jsrsasign')} = {}) {
 		this.jwt = jwt;
 	}
 
@@ -13,13 +13,6 @@ class TokenValidator {
 		if (tokenParts.length !== 3) {
 			throw new Error(`Invalid JWT token. Got only ${tokenParts.length} parts.`);
 		}
-		// const publicKey = function () {
-		// 	for (let i = 0; i < publicKeys.length; i++) {
-		// 		if (publicKeys[i].kid === token[0].kid) {
-		// 			return publicKeys[i];
-		// 		}
-		// 	}
-		// };
 
 		const myKey = this.jwt.KEYUTIL.getKey(publicKey);
 		const isValid =  this.jwt.KJUR.jws.JWS.verify(token, myKey, {alg:[TOKEN_ALG]});
