@@ -51,12 +51,8 @@ class AppID {
 		this.popup.navigate({authUrl});
 		const message = await this.popup.waitForMessage({messageType: 'authorization_response'});
 		this.popup.close();
-		message.data.error.type = 'test';
-		message.data.error.description = 'desc';
-		if (message.data.error && message.data.error.errorType) {
-			throw new AppIDError(message.data.error);
-		} else if (rs.b64utos(message.data.state) !== state) {
-			// same -- custom errors all around
+
+		if (rs.b64utos(message.data.state) !== state) {
 			throw new AppIDError({description: constants.INVALID_STATE});
 		}
 		let authCode = message.data.code;
@@ -87,7 +83,6 @@ class AppID {
 
 	async getUserInfo(accessToken) {
 		if (typeof accessToken !== 'string') {
-			// custom error
 			throw new AppIDError({description: constants.INVALID_ACCESS_TOKEN});
 		}
 
