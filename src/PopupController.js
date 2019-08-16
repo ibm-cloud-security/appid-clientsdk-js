@@ -1,6 +1,8 @@
+const PopupError = require('../errors/PopupError');
+
 class PopupController {
-	constructor({window}) {
-		this.window = window;
+	constructor({w = window} = {}) {
+		this.window = w;
 	};
 
 	open() {
@@ -10,27 +12,40 @@ class PopupController {
 		const top = (screen.height - h) / 2;
 		this.popup = this.window.open('', 'popup', `left=${left},top=${top},width=${w},height=${h},resizable,scrollbars=yes,status=1`);
 		if (!this.popup) {
-			throw new Error('Unable to open popup')
+			throw new PopupError('Unable to open popup')
 		}
 	};
+
+	openIFrame(url) {
+		this.iFrame = this.window.document.createElement('iframe');
+		this.iFrame.src = url;
+		this.iFrame.width = 0;
+		this.iFrame.height = 0;
+
+		window.document.body.appendChild(this.iFrame);
+	}
 
 	navigate({authUrl}) {
 		this.popup.location.href = authUrl;
 	};
+
+	close() {
+		this.popup.close();
+	}
 
 	async waitForMessage({messageType}) {
 		return new Promise((resolve, reject) => {
 			const timer = setInterval(() => {
 				if(this.popup.closed) {
 					clearInterval(timer);
-					reject(new Error('Popup closed'));
+					reject(new PopupError('Popup closed'));
 				}
 			}, 1000);
 			window.addEventListener('message', message => {
 				if (!message.data || message.data.type !== messageType) {
 					return;
 				}
-				this.popup.close();
+
 				resolve(message);
 			});
 		});

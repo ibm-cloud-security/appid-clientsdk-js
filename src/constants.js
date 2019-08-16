@@ -8,5 +8,14 @@ module.exports = {
 	INVALID_NONCE: "Invalid nonce",
 	EXPIRED_TOKEN: "Expired token",
 	INVALID_STATE: "Invalid state",
-	INVALID_ACCESS_TOKEN: "Access token must be a string"
+	MISSING_PUBLIC_KEY: "Cannot find public key",
+	INVALID_ACCESS_TOKEN: "Access token must be a string",
+	RESPONSE_TYPE: "code",
+ 	SCOPE: 'openid',
+ 	STATE_LENGTH: 20,
+ 	NONCE_LENGTH: 20,
+ 	CODE_VERIFIER_LENGTH: 44,
+	CHALLENGE_METHOD: 'S256',
+	TOKEN_ALG: 'RS256',
+	VERSION: 4
 }

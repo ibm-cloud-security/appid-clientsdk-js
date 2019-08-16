@@ -1,46 +1,62 @@
-const errorMessages = require('./constants');
+const constants = require('./constants');
+const TokenError = require('../errors/TokenError');
+
 class TokenValidator {
 	constructor({jwt = require('jsrsasign')} = {}) {
 		this.jwt = jwt;
 	}
 
-	async decodeAndValidate({token, publicKey, issuer, clientId, nonce}) {
-		const TOKEN_ALG = 'RS256';
-		const VERSION = 4;
+	decodeAndValidate({token, publicKeys, issuer, clientId, nonce}) {
 		const now = Math.floor(Date.now() / 1000);
 
 		const tokenParts = token.split('.');
 		if (tokenParts.length !== 3) {
-			throw new Error(`Invalid JWT token. Got only ${tokenParts.length} parts.`);
+			throw new TokenError(`Invalid JWT token. Got only ${tokenParts.length} parts.`);
 		}
+
+		const decoded = this.jwt.KJUR.jws.JWS.parse(token);
+		const kid = decoded.headerObj.kid;
+		const publicKey = this.getPublicKey(publicKeys.keys, kid);
 
 		const myKey = this.jwt.KEYUTIL.getKey(publicKey);
-		const isValid =  this.jwt.KJUR.jws.JWS.verify(token, myKey, {alg:[TOKEN_ALG]});
+		const isValid =  this.jwt.KJUR.jws.JWS.verify(token, myKey, {alg:[constants.TOKEN_ALG]});
 		if (!isValid) {
-			throw new Error(errorMessages.INVALID_SIGNATURE);
+			throw new TokenError(constants.INVALID_SIGNATURE);
 		}
-
-		let decoded = this.jwt.KJUR.jws.JWS.parse(token);
 
 		if (decoded.payloadObj.exp < now) {
-			throw new Error(errorMessages.EXPIRED_TOKEN);
+			throw new TokenError(constants.EXPIRED_TOKEN);
 		}
 
-		if (decoded.headerObj.ver !== VERSION) {
-			throw new Error(errorMessages.INVALID_VERSION);
+		if (decoded.headerObj.ver !== constants.VERSION) {
+			throw new TokenError(constants.INVALID_VERSION);
 		}
 
 		if (decoded.payloadObj.iss !== issuer) {
-			throw new Error(errorMessages.INVALID_ISSUER);
+			throw new TokenError(constants.INVALID_ISSUER);
 		}
 		if (!decoded.payloadObj.aud.includes(clientId)) {
-			throw new Error(errorMessages.INVALID_AUDIENCE);
+			throw new TokenError(constants.INVALID_AUDIENCE);
 		}
 		if (decoded.payloadObj.nonce && decoded.payloadObj.nonce !== nonce) {
-			throw new Error(errorMessages.INVALID_NONCE);
+			throw new TokenError(constants.INVALID_NONCE);
 		}
 
 		return decoded.payloadObj;
+	}
+
+	getPublicKey(keys, kid) {
+		let publicKey;
+		for(let i = 0; i < keys.length; i++) {
+			if (keys[i].kid === kid) {
+				publicKey = keys[i];
+			}
+		}
+
+		if (!publicKey) {
+			throw new TokenError(constants.MISSING_PUBLIC_KEY);
+		}
+		return publicKey;
 	}
 }
 module.exports = TokenValidator;

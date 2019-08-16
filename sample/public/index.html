@@ -10,8 +10,13 @@
             margin: 0 25%;
             display: inline;
         }
+
         #id_token {
             margin-bottom: 30px;
+        }
+
+        #error {
+            color: red;
         }
     </style>
 </head>
@@ -25,8 +30,9 @@
     </div>
     <div class="text-div" id="welcome">
     </div>
+    <div class="flex-bottom" id="error"></div>
     <div id="login-button-div" class="flex-top">
-            <button id="login" class="button">Login</button>
+        <button id="login" class="button">Login</button>
     </div>
     <div class="bottom-container">
         <div class="flex-bottom" id="id_token"></div>
@@ -36,25 +42,27 @@
 </div>
 <script type='text/javascript' src="appid.js"></script>
 <script>
-  (async function () {
-    const appID = new AppID();
-    await appID.init({
-      clientId: '1b0e3658-fc1f-402e-843c-18402d4dbe58',
-      discoveryEndpoint: 'http://localhost:6002/oauth/v4/5b1eb5f1-34bd-41fd-b6dd-e257c188a4dd/.well-known/openid-configuration'
-    });
+	(async function () {
+		const appID = new AppID();
 
-    document.getElementById('login').addEventListener('click', async () => {
-    	document.getElementById("login").style.display = 'none';
-        let tokens = await appID.signinWithPopup();
-        let userInfo = await appID.getUserInfo(tokens.accessToken);
-
-        let decodeIDToken = tokens.idTokenPayload;
-
-        document.getElementById('welcome').innerHTML = 'Hello, ' + decodeIDToken.name;
-        document.getElementById('id_token').textContent = JSON.stringify(decodeIDToken);
-        document.getElementById('access_token').textContent = JSON.stringify(userInfo);
-    });
-  })()
+		document.getElementById('login').addEventListener('click', async () => {
+			try {
+				await appID.init({
+					clientId: '1b0e3658-fc1f-402e-843c-18402d4dbe58',
+					discoveryEndpoint: 'http://localhost:6002/oauth/v4/5b1eb5f1-34bd-41fd-b6dd-e257c188a4dd/.well-known/openid-configuration'
+				});
+				const tokens = await appID.signinWithPopup();
+				let userInfo = await appID.getUserInfo(tokens.accessToken);
+				document.getElementById("login").style.display = 'none';
+				let decodeIDToken = tokens.idTokenPayload;
+				document.getElementById('welcome').innerHTML = 'Hello, ' + decodeIDToken.name;
+				document.getElementById('id_token').textContent = JSON.stringify(decodeIDToken);
+				document.getElementById('access_token').textContent = JSON.stringify(userInfo);
+			} catch (e) {
+				document.getElementById('error').textContent = JSON.stringify(e);
+			}
+		});
+	})()
 </script>
 </body>
 </html>

@@ -1,21 +1,17 @@
 const Utils = require('./utils');
 const RequestHandler = require('./RequestHandler');
 const PopupController = require('./PopupController');
-const OpenIdConfigurationResource = require('./OpenIDConfiguration');
+const OpenIdConfigurationResource = require('./OpenIDConfigurationResource');
 const TokenValidator = require('./TokenValidator');
 const rs = require('jsrsasign');
-const errorMessages = require('./constants');
-
-const RESPONSE_TYPE = 'code';
-const SCOPE = 'openid';
-const STATE_LENGTH = 20;
-const NONCE_LENGTH = 20;
-const CODE_VERIFIER_LENGTH = 44;
+const constants = require('./constants');
+const AppIDError = require('../errors/AppIDError');
 
 class AppID {
 	constructor(
-		{popup = new PopupController({window}),
-			tokenValidator = new TokenValidator({}),
+		{
+			popup = new PopupController(),
+			tokenValidator = new TokenValidator(),
 			openID = new OpenIdConfigurationResource(),
 			utils = new Utils(),
 			requestHandler = new RequestHandler()
@@ -34,20 +30,19 @@ class AppID {
 	}
 
 	async signinWithPopup() {
-		const challengeMethod = 'S256';
-		const codeVerifier = this.utils.getRandomString(CODE_VERIFIER_LENGTH);
+		const codeVerifier = this.utils.getRandomString(constants.CODE_VERIFIER_LENGTH);
 		const codeChallenge = await this.utils.sha256(codeVerifier);
-		const nonce = this.utils.getRandomString(NONCE_LENGTH);
-		const state = this.utils.getRandomString(STATE_LENGTH);
+		const nonce = this.utils.getRandomString(constants.NONCE_LENGTH);
+		const state = this.utils.getRandomString(constants.STATE_LENGTH);
 
 		let authParams = {
 			client_id: this.clientId,
-			response_type: RESPONSE_TYPE,
+			response_type: constants.RESPONSE_TYPE,
 			state: rs.stob64(state),
 			code_challenge: rs.stob64(codeChallenge),
-			code_challenge_method: challengeMethod,
+			code_challenge_method: constants.CHALLENGE_METHOD,
 			nonce: nonce,
-			scope: SCOPE
+			scope: constants.SCOPE
 		};
 
 		const authUrl = this.openIdConfigResource.getAuthorizationEndpoint() + '?' + this.utils.buildParams(authParams);
@@ -55,31 +50,55 @@ class AppID {
 		this.popup.open();
 		this.popup.navigate({authUrl});
 		const message = await this.popup.waitForMessage({messageType: 'authorization_response'});
-
-		if (message.data.error.errorType) {
-			throw new Error(JSON.stringify(message.data.error));
+		this.popup.close();
+		message.data.error.type = 'test';
+		message.data.error.description = 'desc';
+		if (message.data.error && message.data.error.errorType) {
+			throw new AppIDError(message.data.error);
 		} else if (rs.b64utos(message.data.state) !== state) {
-			throw new Error(errorMessages.INVALID_STATE);
+			// same -- custom errors all around
+			throw new AppIDError({description: constants.INVALID_STATE});
 		}
 		let authCode = message.data.code;
 
 		return await this.exchangeTokens({authCode, codeVerifier, nonce});
 	}
 
+	// async silentLogin() {
+	// 	const constants.CHALLENGE_METHOD = 'S256';
+	// 	const codeVerifier = this.utils.getRandomString(constants.CODE_VERIFIER_LENGTH);
+	// 	const codeChallenge = await this.utils.sha256(codeVerifier);
+	// 	const nonce = this.utils.getRandomString(NONCE_LENGTH);
+	// 	const state = this.utils.getRandomString(STATE_LENGTH);
+	//
+	// 	let authParams = {
+	// 		client_id: this.clientId,
+	// 		response_type: RESPONSE_TYPE,
+	// 		state: rs.stob64(state),
+	// 		code_challenge: rs.stob64(codeChallenge),
+	// 		code_challenge_method: constants.CHALLENGE_METHOD,
+	// 		nonce: nonce,
+	// 		scope: SCOPE
+	// 	};
+	//
+	// 	const authUrl = this.openIdConfigResource.getAuthorizationEndpoint() + '?' + this.utils.buildParams(authParams);
+	// 	this.popup.openIFrame(authUrl);
+	// }
+
 	async getUserInfo(accessToken) {
 		if (typeof accessToken !== 'string') {
-			throw new Error(errorMessages.INVALID_ACCESS_TOKEN);
+			// custom error
+			throw new AppIDError({description: constants.INVALID_ACCESS_TOKEN});
 		}
 
 		return await this.request(this.openIdConfigResource.getUserInfoEndpoint(), {
-			method: 'GET',
 			headers: {
 				'Authorization': 'Bearer ' + accessToken
 			}
 		});
 	}
 
-	async exchangeTokens({ authCode, nonce, codeVerifier}) {
+	async exchangeTokens({authCode, nonce, codeVerifier}) {
 		let issuer = await this.openIdConfigResource.getIssuer();
 		let params = {
 			grant_type: 'authorization_code',
@@ -99,16 +118,25 @@ class AppID {
 			},
 			body: requestParams
 		});
-		const publicKey = await this.openIdConfigResource.getPublicKey();
+		const publicKeys = await this.openIdConfigResource.getPublicKeys();
 
-		return {
-			accessToken: tokens.access_token,
-			accessTokenPayload: await this.tokenValidator.decodeAndValidate(
-			{token: tokens.access_token, publicKey: publicKey.keys[0], issuer: issuer, clientId: this.clientId, nonce}),
-			idToken: tokens.id_token,
-			idTokenPayload: await this.tokenValidator.decodeAndValidate(
-			{token: tokens.id_token,publicKey: publicKey.keys[0], issuer: issuer, clientId: this.clientId, nonce})
-		}
+		const accessTokenPayload = this.tokenValidator.decodeAndValidate({
+			token: tokens.access_token,
+			publicKeys,
+			issuer,
+			clientId: this.clientId,
+			nonce
+		});
+
+		const idTokenPayload = this.tokenValidator.decodeAndValidate({
+			token: tokens.id_token,
+			publicKeys,
+			issuer,
+			clientId: this.clientId,
+			nonce
+		});
+
+		return {accessToken: tokens.access_token, accessTokenPayload, idToken: tokens.id_token, idTokenPayload}
 	}
 }
 module.exports = AppID;

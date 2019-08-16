@@ -24,7 +24,7 @@ class OpenIdConfigurationResource {
 		return this.openIdConfig.issuer;
 	}
 
-	async getPublicKey() { // TODO: add key id
+	async getPublicKeys() {
 		return await this.publicKeys;
 	}
 }
