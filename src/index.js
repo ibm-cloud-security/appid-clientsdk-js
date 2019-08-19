@@ -33,7 +33,7 @@ class AppID {
 
 	async signinWithPopup() {
 		const codeVerifier = this.utils.getRandomString(constants.CODE_VERIFIER_LENGTH);
-		const codeChallenge = await this.utils.sha256(codeVerifier);
+		const codeChallenge = this.utils.sha256(codeVerifier);
 		const nonce = this.utils.getRandomString(constants.NONCE_LENGTH);
 		const state = this.utils.getRandomString(constants.STATE_LENGTH);
 

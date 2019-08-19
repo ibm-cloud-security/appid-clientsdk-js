@@ -44,18 +44,17 @@
 <script>
 	(async function () {
 		const appID = new AppID();
+			await appID.init({
+				clientId: '1b0e3658-fc1f-402e-843c-18402d4dbe58',
+				discoveryEndpoint: 'http://localhost:6002/oauth/v4/5b1eb5f1-34bd-41fd-b6dd-e257c188a4dd/.well-known/openid-configuration'
+			});
 
 		document.getElementById('login').addEventListener('click', async () => {
 			try {
-				await appID.init({
-					clientId: '1b0e3658-fc1f-402e-843c-18402d4dbe58',
-					discoveryEndpoint: 'http://localhost:6002/oauth/v4/5b1eb5f1-34bd-41fd-b6dd-e257c188a4dd/.well-known/openid-configuration'
-				});
 				const tokens = await appID.signinWithPopup();
 				let userInfo = await appID.getUserInfo(tokens.accessToken);
 				document.getElementById("login").style.display = 'none';
 				let decodeIDToken = tokens.idTokenPayload;
-				console.log(tokens.accessToken);
 				document.getElementById('welcome').innerHTML = 'Hello, ' + decodeIDToken.name;
 				document.getElementById('id_token').textContent = JSON.stringify(decodeIDToken);
 				document.getElementById('access_token').textContent = JSON.stringify(userInfo);

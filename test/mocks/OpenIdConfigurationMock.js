@@ -21,7 +21,7 @@ class OpenIdConfigurationMock {
 	}
 
 	getPublicKeys() {
-		return constants.PUBLIC_KEYS;
+		return 'publicKeys';
 	}
 }
 module.exports = OpenIdConfigurationMock;

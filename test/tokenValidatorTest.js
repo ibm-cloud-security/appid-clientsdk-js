@@ -1,12 +1,11 @@
 const assert = require('chai').assert;
 const TokenValidator = require('../src/TokenValidator');
-const constants = require('./mocks/constants');
 const rs = require('jsrsasign');
-const errorMessages = require('../src/constants');
+const constants = require('../src/constants');
 
 const nonce = '616161',
 	clientId = 'clientId',
-	alg = 'RS256',
+	alg = constants.TOKEN_ALG,
 	validIssuer = 'validIssuer';
 let notExpired = Math.floor(Date.now() / 1000) + 3000;
 const validPayload = {
@@ -56,7 +55,7 @@ describe("TokenValidator", () => {
 				let res = await tokenValidator.decodeAndValidate(
 					{token, publicKeys, clientId, nonce, issuer: validIssuer});
 			} catch (e) {
-				assert.equal(e, "Error: " + errorMessages.EXPIRED_TOKEN);
+				assert.equal(e, "Error: " + constants.EXPIRED_TOKEN);
 			}
 		});
 
@@ -68,7 +67,7 @@ describe("TokenValidator", () => {
 				let res = await tokenValidator.decodeAndValidate(
 					{token, publicKeys, clientId, nonce, issuer: validIssuer});
 			} catch (e) {
-				assert.equal(e, "Error: " + errorMessages.INVALID_AUDIENCE);
+				assert.equal(e, "Error: " + constants.INVALID_AUDIENCE);
 			}
 		});
 
@@ -80,7 +79,7 @@ describe("TokenValidator", () => {
 				let res = await tokenValidator.decodeAndValidate(
 					{token, publicKeys, clientId, nonce, issuer: validIssuer});
 			} catch (e) {
-				assert.equal(e, "Error: " + errorMessages.INVALID_VERSION);
+				assert.equal(e, "Error: " + constants.INVALID_VERSION);
 			}
 		});
 
@@ -92,7 +91,7 @@ describe("TokenValidator", () => {
 				let res = await tokenValidator.decodeAndValidate(
 					{token, publicKeys, clientId, nonce, issuer: validIssuer});
 			} catch (e) {
-				assert.equal(e, "Error: " + errorMessages.INVALID_NONCE);
+				assert.equal(e, "Error: " + constants.INVALID_NONCE);
 			}
 		});
 
@@ -104,7 +103,7 @@ describe("TokenValidator", () => {
 				let res = await tokenValidator.decodeAndValidate(
 					{token, publicKeys, clientId, nonce, issuer: validIssuer});
 			} catch (e) {
-				assert.equal(e, "Error: " + errorMessages.INVALID_ISSUER);
+				assert.equal(e, "Error: " + constants.INVALID_ISSUER);
 			}
 		});
 
@@ -114,7 +113,7 @@ describe("TokenValidator", () => {
 				let res = await tokenValidator.decodeAndValidate(
 					{token, publicKeys, clientId, nonce, issuer: validIssuer});
 			} catch (e) {
-				assert.equal(e, "Error: " + errorMessages.INVALID_SIGNATURE);
+				assert.equal(e, "Error: " + constants.INVALID_SIGNATURE);
 			}
 		});
 	})

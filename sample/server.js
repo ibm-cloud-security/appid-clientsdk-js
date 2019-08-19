@@ -9,6 +9,5 @@ app.use(express.static("public"));
 
 // Listen for HTTP requests on port 3000
 app.listen(port, () => {
-	console.log(`${__dirname}/dist/`);
 	console.log('listening on %d', port);
 });
