@@ -1,8 +1,7 @@
 class AppIDError extends Error {
-	constructor({type, status, description}) {
+	constructor({type, description}) {
 		super(description);
-		this.type = type || 'AppIDError';
-		this.status = status || 400;
+		this.type = type;
 		this.description = description;
 	}
 }

@@ -15,6 +15,9 @@ class TokenValidator {
 		}
 
 		const decoded = this.jwt.KJUR.jws.JWS.parse(token);
+		if (!decoded.headerObj) {
+			throw new TokenError(constants.INVALID_TOKEN);
+		}
 		const kid = decoded.headerObj.kid;
 		const publicKey = this.getPublicKey(publicKeys.keys, kid);
 

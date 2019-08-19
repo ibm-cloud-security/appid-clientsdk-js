@@ -14,7 +14,8 @@ class AppID {
 			tokenValidator = new TokenValidator(),
 			openID = new OpenIdConfigurationResource(),
 			utils = new Utils(),
-			requestHandler = new RequestHandler()
+			requestHandler = new RequestHandler(),
+			w = window
 		} = {}) {
 
 		this.popup = popup;
@@ -22,6 +23,7 @@ class AppID {
 		this.openIdConfigResource = openID;
 		this.utils = utils;
 		this.request = requestHandler.request;
+		this.window = w;
 	}
 
 	async init({clientId, discoveryEndpoint}) {
@@ -41,6 +43,8 @@ class AppID {
 			state: rs.stob64(state),
 			code_challenge: rs.stob64(codeChallenge),
 			code_challenge_method: constants.CHALLENGE_METHOD,
+			redirect_uri: this.window.origin,
+			response_mode: constants.RESPONSE_MODE,
 			nonce: nonce,
 			scope: constants.SCOPE
 		};
@@ -51,7 +55,9 @@ class AppID {
 		this.popup.navigate({authUrl});
 		const message = await this.popup.waitForMessage({messageType: 'authorization_response'});
 		this.popup.close();
-
+		if (message.data.error && message.data.error.description) {
+			throw new AppIDError({description: message.data.error.description, type: message.data.error.type})
+		}
 		if (rs.b64utos(message.data.state) !== state) {
 			throw new AppIDError({description: constants.INVALID_STATE});
 		}
@@ -59,27 +65,6 @@ class AppID {
 
 		return await this.exchangeTokens({authCode, codeVerifier, nonce});
 	}
-
-	// async silentLogin() {
-	// 	const constants.CHALLENGE_METHOD = 'S256';
-	// 	const codeVerifier = this.utils.getRandomString(constants.CODE_VERIFIER_LENGTH);
-	// 	const codeChallenge = await this.utils.sha256(codeVerifier);
-	// 	const nonce = this.utils.getRandomString(NONCE_LENGTH);
-	// 	const state = this.utils.getRandomString(STATE_LENGTH);
-	//
-	// 	let authParams = {
-	// 		client_id: this.clientId,
-	// 		response_type: RESPONSE_TYPE,
-	// 		state: rs.stob64(state),
-	// 		code_challenge: rs.stob64(codeChallenge),
-	// 		code_challenge_method: constants.CHALLENGE_METHOD,
-	// 		nonce: nonce,
-	// 		scope: SCOPE
-	// 	};
-	//
-	// 	const authUrl = this.openIdConfigResource.getAuthorizationEndpoint() + '?' + this.utils.buildParams(authParams);
-	// 	this.popup.openIFrame(authUrl);
-	// }
 
 	async getUserInfo(accessToken) {
 		if (typeof accessToken !== 'string') {
@@ -97,7 +82,7 @@ class AppID {
 		let issuer = await this.openIdConfigResource.getIssuer();
 		let params = {
 			grant_type: 'authorization_code',
-			redirect_uri: `${issuer}/pkce_callback`,
+			redirect_uri: this.window.origin,
 			code: authCode,
 			code_verifier: codeVerifier
 		};

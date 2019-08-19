@@ -55,11 +55,12 @@
 				let userInfo = await appID.getUserInfo(tokens.accessToken);
 				document.getElementById("login").style.display = 'none';
 				let decodeIDToken = tokens.idTokenPayload;
+				console.log(tokens.accessToken);
 				document.getElementById('welcome').innerHTML = 'Hello, ' + decodeIDToken.name;
 				document.getElementById('id_token').textContent = JSON.stringify(decodeIDToken);
 				document.getElementById('access_token').textContent = JSON.stringify(userInfo);
 			} catch (e) {
-				document.getElementById('error').textContent = JSON.stringify(e);
+				document.getElementById('error').textContent = e;
 			}
 		});
 	})()

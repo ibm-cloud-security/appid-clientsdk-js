@@ -1,7 +1,7 @@
-const AppIDError = require('./AppIDError');
-class RequestError extends AppIDError {
+class RequestError extends Error {
 	constructor(description, status) {
-		super({type: 'RequestError', description, status});
+		super(description);
+		this.status = status;
 	}
 }
 module.exports = RequestError;

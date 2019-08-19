@@ -16,7 +16,8 @@ describe('AppID tests', () => {
 				tokenValidator: new TokenValidator(),
 				openID: new OpenIdConfigurationResource(),
 				utils: new Utils(),
-				requestHandler: new RequestHandler()
+				requestHandler: new RequestHandler(),
+				w: {origin: 'localhost'}
 			});
 			let res = await appID.signinWithPopup();
 			assert.equal(res.accessToken, 'accessToken');
@@ -30,7 +31,8 @@ describe('AppID tests', () => {
 				tokenValidator: new TokenValidator(),
 				openID: new OpenIdConfigurationResource(),
 				utils: new Utils(),
-				requestHandler: new RequestHandler()
+				requestHandler: new RequestHandler(),
+				w: {origin: 'localhost'}
 			});
 			try {
 				await appID.signinWithPopup();
@@ -45,7 +47,8 @@ describe('AppID tests', () => {
 				tokenValidator: new TokenValidator(),
 				openID: new OpenIdConfigurationResource(),
 				utils: new Utils(),
-				requestHandler: new RequestHandler()
+				requestHandler: new RequestHandler(),
+				w: {origin: 'localhost'}
 			});
 			try {
 				await appID.signinWithPopup();
@@ -61,7 +64,8 @@ describe('AppID tests', () => {
 			tokenValidator: new TokenValidator(),
 			openID: new OpenIdConfigurationResource(),
 			utils: new Utils(),
-			requestHandler: new RequestHandler()
+			requestHandler: new RequestHandler(),
+			w: {origin: 'localhost'}
 		});
 
 		it('should return user info', async () => {

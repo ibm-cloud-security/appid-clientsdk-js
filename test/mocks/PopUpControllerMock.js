@@ -7,6 +7,10 @@ class PopupControllerMock {
 		return;
 	};
 
+	close() {
+		return;
+	};
+
 	navigate() {
 		return;
 	};

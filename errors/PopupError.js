@@ -1,7 +1,2 @@
-const AppIDError = require('./AppIDError');
-class PopupError extends AppIDError {
-	constructor(description) {
-		super({type: 'PopupError', description});
-	}
-}
+class PopupError extends Error {}
 module.exports = PopupError;
