@@ -35,12 +35,18 @@ class TokenValidator {
 			throw new TokenError(constants.INVALID_VERSION);
 		}
 
+		if (decoded.headerObj.alg !== constants.TOKEN_ALG) {
+			throw new TokenError(constants.INVALID_ALGORITHM);
+		}
+
 		if (decoded.payloadObj.iss !== issuer) {
 			throw new TokenError(constants.INVALID_ISSUER);
 		}
+
 		if (!decoded.payloadObj.aud.includes(clientId)) {
 			throw new TokenError(constants.INVALID_AUDIENCE);
 		}
+
 		if (decoded.payloadObj.nonce && decoded.payloadObj.nonce !== nonce) {
 			throw new TokenError(constants.INVALID_NONCE);
 		}

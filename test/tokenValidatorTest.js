@@ -5,13 +5,14 @@ const constants = require('../src/constants');
 
 const nonce = '616161',
 	clientId = 'clientId',
-	alg = constants.TOKEN_ALG,
+	validAlg = constants.TOKEN_ALG,
 	validIssuer = 'validIssuer';
 let notExpired = Math.floor(Date.now() / 1000) + 3000;
 const validPayload = {
 	iss: validIssuer,
 	aud: [clientId],
-	nonce: nonce
+	nonce: nonce,
+	exp: notExpired
 };
 
 let keyPair = rs.KEYUTIL.generateKeypair("RSA", 1024);
@@ -19,10 +20,11 @@ let privateKey = rs.KEYUTIL.getJWKFromKey(keyPair.prvKeyObj);
 let publicKey = rs.KEYUTIL.getJWKFromKey(keyPair.pubKeyObj);
 publicKey.kid = rs.KJUR.jws.JWS.getJWKthumbprint(publicKey);
 const publicKeys = {keys: [publicKey]};
-const header = {alg, typ: 'JWT', ver: 4, kid: publicKey.kid};
+const header = {typ: 'JWT', ver: 4, kid: publicKey.kid};
 
-function generateToken({header, payload, exp}) {
-	payload.exp = exp || notExpired;
+function generateToken({header, payload, exp, algorithm}) {
+	let alg = algorithm || validAlg;
+	header.alg = alg;
 	let sHeader = JSON.stringify(header);
 	let sPayload = JSON.stringify(payload);
 	return rs.KJUR.jws.JWS.sign(alg, sHeader, sPayload, privateKey);
@@ -48,14 +50,34 @@ describe("TokenValidator", () => {
 			}
 		});
 
+		it('should return error - cannot find public key', async function () {
+			try {
+				let res = await tokenValidator.decodeAndValidate(
+					{token: constants.INVALID_SIGNATURE_TOKEN, publicKeys, clientId, nonce});
+			} catch (e) {
+				assert.equal(e, "Error: " + constants.MISSING_PUBLIC_KEY);
+			}
+		});
+
+		it('should return error - invalid token', async function () {
+			try {
+				let res = await tokenValidator.decodeAndValidate(
+					{token: 'asdasd.asdasd.asdasd', publicKeys, clientId, nonce});
+			} catch (e) {
+				assert.equal(e, "Error: " + constants.INVALID_TOKEN);
+			}
+		});
+
 		it('should return error - expired token', async function () {
 			let expired = Math.floor(Date.now() / 1000) - 3000;
+			validPayload.exp = notExpired - 5000;
 			let token = generateToken({header, payload: validPayload, exp: expired});
 			try {
 				let res = await tokenValidator.decodeAndValidate(
 					{token, publicKeys, clientId, nonce, issuer: validIssuer});
 			} catch (e) {
 				assert.equal(e, "Error: " + constants.EXPIRED_TOKEN);
+				validPayload.exp = notExpired + 5000;
 			}
 		});
 
@@ -108,12 +130,12 @@ describe("TokenValidator", () => {
 		});
 
 		it('should return error - invalid signature', async function () {
-			let token = generateToken({header, payload: validPayload});
+			let token = generateToken({header, payload: validPayload, algorithm: 'RS384'});
 			try {
 				let res = await tokenValidator.decodeAndValidate(
 					{token, publicKeys, clientId, nonce, issuer: validIssuer});
 			} catch (e) {
-				assert.equal(e, "Error: " + constants.INVALID_SIGNATURE);
+				assert.equal(e, "Error: " + constants.INVALID_ALGORITHM);
 			}
 		});
 	})
