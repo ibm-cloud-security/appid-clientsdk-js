@@ -1,5 +1,4 @@
 const assert = require('chai').assert;
-const expect = require('chai').expect;
 const constants = require('../src/constants');
 const Utils = require('./mocks/UtilsMock');
 const AppID = require('../src/index');
@@ -37,7 +36,7 @@ describe('AppID tests', () => {
 			try {
 				await appID.signinWithPopup();
 			} catch (e) {
-				assert.equal(e, 'Error: ' + constants.INVALID_STATE);
+				assert.equal(e.description, constants.INVALID_STATE);
 			}
 		});
 
@@ -53,7 +52,8 @@ describe('AppID tests', () => {
 			try {
 				await appID.signinWithPopup();
 			} catch (e) {
-				expect(e.toString()).to.include('Invalid client type');
+				assert.equal(e.type, 'access_denied');
+				assert.equal(e.description, 'Could not verify SAML assertion');
 			}
 		});
 	});

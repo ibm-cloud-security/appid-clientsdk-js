@@ -55,8 +55,9 @@ class AppID {
 		this.popup.navigate({authUrl});
 		const message = await this.popup.waitForMessage({messageType: 'authorization_response'});
 		this.popup.close();
+
 		if (message.data.error && message.data.error.description) {
-			throw new AppIDError({description: message.data.error.description, type: message.data.error.type})
+			throw new AppIDError({description: message.data.error.description, type: message.data.error.type, code: message.data.error.code})
 		}
 		if (rs.b64utos(message.data.state) !== state) {
 			throw new AppIDError({description: constants.INVALID_STATE});
