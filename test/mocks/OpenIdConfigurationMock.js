@@ -1,4 +1,3 @@
-const constants = require('../mocks/constants');
 class OpenIdConfigurationMock {
 	getAuthorizationEndpoint() {
 		return 'authEndpoint';
