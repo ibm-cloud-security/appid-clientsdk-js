@@ -1,0 +1,29 @@
+{
+  "name": "appid-clientsdk-js",
+  "version": "1.0.0",
+  "description": "IBM Cloud App ID SDK for Browser Apps",
+  "directories": {
+    "src": "src"
+  },
+  "scripts": {
+    "build": "webpack",
+    "test": "mocha test"
+  },
+  "dependencies": {
+    "jsrsasign": "^8.0.12",
+    "node-fetch": "^2.6.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-transform-runtime": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "babel-cli": "^7.0.0-beta.3",
+    "gulp-babel": "^8.0.0",
+    "mocha": "^6.2.0",
+    "chai": "^4.2.0",
+    "nyc": "^14.1.1",
+    "webpack": "^4.39.1",
+    "webpack-cli": "^3.3.6"
+  }
+}
