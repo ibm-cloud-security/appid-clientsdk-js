@@ -83,3 +83,21 @@ body {
     margin-bottom: 41px;
     margin-top: 81px;
 }
+
+.bottom-container {
+    justify-content: center;
+    margin: 0 25%;
+    display: inline;
+}
+
+#id_token {
+    margin-bottom: 30px;
+}
+
+#error {
+    color: red;
+}
+
+.hidden {
+    display: none;
+}

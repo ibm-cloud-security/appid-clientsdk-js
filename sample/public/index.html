@@ -4,21 +4,6 @@
     <title>Sample App</title>
     <link rel='stylesheet' href='index.css'/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <style>
-        .bottom-container {
-            justify-content: center;
-            margin: 0 25%;
-            display: inline;
-        }
-
-        #id_token {
-            margin-bottom: 30px;
-        }
-
-        #error {
-            color: red;
-        }
-    </style>
 </head>
 <body>
 <div class="main-container">
@@ -32,11 +17,11 @@
     </div>
     <div class="flex-bottom" id="error"></div>
     <div id="login-button-div" class="flex-top">
-        <button id="login" class="button">Login</button>
+        <button id="login" class="button hidden">Login</button>
     </div>
     <div class="bottom-container">
         <div class="flex-bottom" id="id_token"></div>
-        <div class="flex-bottom" id="access_token"></div>
+        <div class="flex-bottom" id="user_info"></div>
     </div>
 </div>
 </div>
@@ -44,10 +29,15 @@
 <script>
 	(async function () {
 		const appID = new AppID();
+		try {
 			await appID.init({
-                clientId: '<SPA_CLIENT_ID>',
-                discoveryEndpoint: '<WELL_KNOWN_ENDPOINT>'
+				clientId: '<SPA_CLIENT_ID>',
+				discoveryEndpoint: '<WELL_KNOWN_ENDPOINT>'
 			});
+			document.getElementById('login').setAttribute('class', 'button');
+		} catch (e) {
+			document.getElementById('error').textContent = e;
+		}
 
 		document.getElementById('login').addEventListener('click', async () => {
 			try {
@@ -57,7 +47,7 @@
 				let decodeIDToken = tokens.idTokenPayload;
 				document.getElementById('welcome').innerHTML = 'Hello, ' + decodeIDToken.name;
 				document.getElementById('id_token').textContent = JSON.stringify(decodeIDToken);
-				document.getElementById('access_token').textContent = JSON.stringify(userInfo);
+				document.getElementById('user_info').textContent = JSON.stringify(userInfo);
 			} catch (e) {
 				document.getElementById('error').textContent = e;
 			}

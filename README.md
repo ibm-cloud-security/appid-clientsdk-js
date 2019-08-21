@@ -13,9 +13,11 @@ node server.js
 ```
 
 ## Getting Started
-Load into your app using `script` tags
+A simple sample application can be found in the `sample` folder in this repo.
+
+If you want to use our SDK in your existing application, load the script using `script` tags.
 ```
-<script type='text/javascript' src="appid.js"></script>
+<script type='text/javascript' src="dist/appid.js"></script>
 ```
 
 You will need an [IBM Cloud App ID](https://www.ibm.com/cloud/app-id) instance with a `singlepageapp` application created.
@@ -36,5 +38,3 @@ The `signinWithPopup` function will trigger a login widget and return the full a
 ```javascript
 const tokens = await appID.signinWithPopup();
 ```
-
-A simple sample application can be found in the `sample` folder in this repo.
