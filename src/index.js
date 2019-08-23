@@ -1,6 +1,7 @@
 const Utils = require('./utils');
 const RequestHandler = require('./RequestHandler');
 const PopupController = require('./PopupController');
+const IFrameController = require('./IFrameController');
 const OpenIdConfigurationResource = require('./OpenIDConfigurationResource');
 const TokenValidator = require('./TokenValidator');
 const rs = require('jsrsasign');
@@ -11,6 +12,7 @@ class AppID {
 	constructor(
 		{
 			popup = new PopupController(),
+			iframe = new IFrameController(),
 			tokenValidator = new TokenValidator(),
 			openID = new OpenIdConfigurationResource(),
 			utils = new Utils(),
@@ -19,6 +21,7 @@ class AppID {
 		} = {}) {
 
 		this.popup = popup;
+		this.iframe = iframe;
 		this.tokenValidator = tokenValidator;
 		this.openIdConfigResource = openID;
 		this.utils = utils;
@@ -79,6 +82,53 @@ class AppID {
 		});
 	}
 
+	async silentSignin() {
+		const codeVerifier = this.utils.getRandomString(constants.CODE_VERIFIER_LENGTH);
+		const codeChallenge = this.utils.sha256(codeVerifier);
+		const nonce = this.utils.getRandomString(constants.NONCE_LENGTH);
+		const state = this.utils.getRandomString(constants.STATE_LENGTH);
+
+		let authParams = {
+			client_id: this.clientId,
+			response_type: constants.RESPONSE_TYPE,
+			state: rs.stob64(state),
+			code_challenge: rs.stob64(codeChallenge),
+			code_challenge_method: constants.CHALLENGE_METHOD,
+			redirect_uri: this.window.origin,
+			response_mode: constants.RESPONSE_MODE,
+			nonce: nonce,
+			scope: constants.SCOPE,
+			prompt: 'none'
+		};
+
+		try {
+			const authUrl = this.openIdConfigResource.getAuthorizationEndpoint() + '?' + this.utils.buildParams(authParams);
+			this.iframe.open(authUrl);
+
+			const message = await this.iframe.waitForMessage({messageType: 'authorization_response'});
+			this.iframe.close();
+			if (message.data.error && message.data.description) {
+				throw new AppIDError({description: message.data.description, error: message.data.error})
+			}
+
+			if (rs.b64utos(message.data.state) !== state) {
+				throw new AppIDError({description: constants.INVALID_STATE});
+			}
+
+			if (new URL(message.origin).hostname !== new URL(this.openIdConfigResource.getAuthorizationEndpoint()).hostname) {
+				throw new AppIDError({description: constants.INVALID_ORIGIN});
+			}
+
+			let authCode = message.data.code;
+			return await this.exchangeTokens({authCode, codeVerifier, nonce});
+		} catch (e) {
+			if (signinOnFailure) {
+				return this.signinWithPopup();
+			}
+			throw new AppIDError({description: e});
+		}
+	}
+
 	async exchangeTokens({authCode, nonce, codeVerifier}) {
 		let issuer = await this.openIdConfigResource.getIssuer();
 		let params = {
@@ -120,4 +170,5 @@ class AppID {
 		return {accessToken: tokens.access_token, accessTokenPayload, idToken: tokens.id_token, idTokenPayload}
 	}
 }
+
 module.exports = AppID;

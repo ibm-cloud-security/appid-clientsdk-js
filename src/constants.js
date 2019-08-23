@@ -8,6 +8,7 @@ module.exports = {
 	INVALID_NONCE: 'Invalid nonce',
 	EXPIRED_TOKEN: 'Expired token',
 	INVALID_STATE: 'Invalid state',
+	INVALID_ORIGIN: 'Invalid origin',
 	INVALID_TOKEN: 'Invalid token',
 	MISSING_PUBLIC_KEY: 'Cannot find public key',
 	INVALID_ACCESS_TOKEN: 'Access token must be a string',

@@ -16,15 +16,6 @@ class PopupController {
 		}
 	};
 
-	openIFrame(url) {
-		this.iFrame = this.window.document.createElement('iframe');
-		this.iFrame.src = url;
-		this.iFrame.width = 0;
-		this.iFrame.height = 0;
-
-		window.document.body.appendChild(this.iFrame);
-	}
-
 	navigate({authUrl}) {
 		this.popup.location.href = authUrl;
 	};
