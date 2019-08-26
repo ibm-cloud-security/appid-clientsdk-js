@@ -1,9 +1,9 @@
 class RequestHandlerMock {
 	async request(url) {
 		switch (url) {
-			case 'tokenEndpoint':
+			case 'http://authServer.com/tokenEndpoint':
 				return {access_token: 'accessToken', id_token: 'idToken'};
-			case 'userinfoEndpoint':
+			case 'http://authServer.com/userinfoEndpoint':
 				return {name: 'KittyCat'};
 			default:
 		}

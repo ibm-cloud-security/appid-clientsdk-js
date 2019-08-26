@@ -31,8 +31,8 @@
 		const appID = new AppID();
 		try {
 			await appID.init({
-				clientId: '1b0e3658-fc1f-402e-843c-18402d4dbe58',
-				discoveryEndpoint: 'http://localhost:6002/oauth/v4/5b1eb5f1-34bd-41fd-b6dd-e257c188a4dd/.well-known/openid-configuration'
+				clientId: '<SPA_CLIENT_ID>',
+				discoveryEndpoint: '<WELL_KNOWN_ENDPOINT>'
 			});
 		} catch (e) {
 			document.getElementById('error').textContent = e;
@@ -45,7 +45,7 @@
 				document.getElementById('login').setAttribute('class', 'button');
 			}
 		} catch (e) {
-			document.getElementById('error').textContent = e;
+			document.getElementById('login').setAttribute('class', 'button');
 		}
 		document.getElementById('login').addEventListener('click', async () => {
 			document.getElementById('login').setAttribute('class', 'hidden');

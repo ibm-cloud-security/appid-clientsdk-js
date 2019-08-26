@@ -1,4 +1,4 @@
-const PopupError = require('../errors/PopupError');
+const IFrameError = require('../errors/IFrameError');
 
 class IFrameController {
 	constructor({w = window} = {}) {
@@ -22,7 +22,7 @@ class IFrameController {
 		return new Promise((resolve, reject) => {
 			const timer = setInterval(() => {
 				clearInterval(timer);
-				reject(new PopupError('Silent sign-in stalled'));
+				reject(new IFrameError('Silent sign-in stalled'));
 			}, 5 * 1000);
 			window.addEventListener('message', message => {
 				if (!message.data || message.data.type !== messageType) {

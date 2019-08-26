@@ -101,32 +101,26 @@ class AppID {
 			prompt: 'none'
 		};
 
-		try {
-			const authUrl = this.openIdConfigResource.getAuthorizationEndpoint() + '?' + this.utils.buildParams(authParams);
-			this.iframe.open(authUrl);
+		const authUrl = this.openIdConfigResource.getAuthorizationEndpoint() + '?' + this.utils.buildParams(authParams);
+		this.iframe.open(authUrl);
 
-			const message = await this.iframe.waitForMessage({messageType: 'authorization_response'});
-			this.iframe.close();
-			if (message.data.error && message.data.description) {
-				throw new AppIDError({description: message.data.description, error: message.data.error})
-			}
+		const message = await this.iframe.waitForMessage({messageType: 'authorization_response'});
+		this.iframe.close();
 
-			if (rs.b64utos(message.data.state) !== state) {
-				throw new AppIDError({description: constants.INVALID_STATE});
-			}
-
-			if (new URL(message.origin).hostname !== new URL(this.openIdConfigResource.getAuthorizationEndpoint()).hostname) {
-				throw new AppIDError({description: constants.INVALID_ORIGIN});
-			}
-
-			let authCode = message.data.code;
-			return await this.exchangeTokens({authCode, codeVerifier, nonce});
-		} catch (e) {
-			if (signinOnFailure) {
-				return this.signinWithPopup();
-			}
-			throw new AppIDError({description: e});
+		if (message.data.error && message.data.description) {
+			throw new AppIDError({description: message.data.description, error: message.data.error})
 		}
+
+		if (rs.b64utos(message.data.state) !== state) {
+			throw new AppIDError({description: constants.INVALID_STATE});
+		}
+		let origin = message.origin;
+		if (origin.split('/')[2] !== this.openIdConfigResource.getAuthorizationEndpoint().split('/')[2]) {
+			throw new AppIDError({description: constants.INVALID_ORIGIN});
+		}
+
+		let authCode = message.data.code;
+		return await this.exchangeTokens({authCode, codeVerifier, nonce});
 	}
 
 	async exchangeTokens({authCode, nonce, codeVerifier}) {
