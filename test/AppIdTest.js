@@ -1,5 +1,4 @@
 const assert = require('chai').assert;
-const url = require('url');
 const constants = require('../src/constants');
 const Utils = require('./mocks/UtilsMock');
 const AppID = require('../src/index');
@@ -73,8 +72,7 @@ describe('AppID tests', () => {
 				openID: new OpenIdConfigurationResource(),
 				utils: new Utils(),
 				requestHandler: new RequestHandler(),
-				w: {origin: 'localhost'},
-				url: url
+				w: {origin: 'localhost'}
 			});
 			let res = await appID.silentSignin();
 			assert.equal(res.accessToken, 'accessToken');
@@ -90,8 +88,7 @@ describe('AppID tests', () => {
 				openID: new OpenIdConfigurationResource(),
 				utils: new Utils(),
 				requestHandler: new RequestHandler(),
-				w: {origin: 'localhost'},
-				url: url
+				w: {origin: 'localhost'}
 			});
 			try {
 				await appID.silentSignin();
@@ -108,8 +105,7 @@ describe('AppID tests', () => {
 				openID: new OpenIdConfigurationResource(),
 				utils: new Utils(),
 				requestHandler: new RequestHandler(),
-				w: {origin: 'localhost'},
-				url: url
+				w: {origin: 'localhost'}
 			});
 			try {
 				await appID.silentSignin();
@@ -126,8 +122,7 @@ describe('AppID tests', () => {
 				openID: new OpenIdConfigurationResource(),
 				utils: new Utils(),
 				requestHandler: new RequestHandler(),
-				w: {origin: 'localhost'},
-				url: url
+				w: {origin: 'localhost'}
 			});
 			try {
 				await appID.silentSignin();
