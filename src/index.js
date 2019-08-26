@@ -59,8 +59,8 @@ class AppID {
 		const message = await this.popup.waitForMessage({messageType: 'authorization_response'});
 		this.popup.close();
 
-		if (message.data.error && message.data.description) {
-			throw new AppIDError({description: message.data.description, error: message.data.error})
+		if (message.data.error || message.data.error_description) {
+			throw new AppIDError({description: message.data.error_description, error: message.data.error})
 		}
 		if (rs.b64utos(message.data.state) !== state) {
 			throw new AppIDError({description: constants.INVALID_STATE});
@@ -105,17 +105,17 @@ class AppID {
 		this.iframe.open(authUrl);
 
 		const message = await this.iframe.waitForMessage({messageType: 'authorization_response'});
-		this.iframe.close();
 
-		if (message.data.error && message.data.description) {
-			throw new AppIDError({description: message.data.description, error: message.data.error})
+		if (message.data.error || message.data.error_description) {
+			throw new AppIDError({description: message.data.error_description, error: message.data.error})
 		}
 
 		if (rs.b64utos(message.data.state) !== state) {
 			throw new AppIDError({description: constants.INVALID_STATE});
 		}
-		let origin = message.origin;
-		if (origin.split('/')[2] !== this.openIdConfigResource.getAuthorizationEndpoint().split('/')[2]) {
+		const originHost = message.origin.split('/')[2];
+		const authServerHost = this.openIdConfigResource.getAuthorizationEndpoint().split('/')[2];
+		if (originHost !== authServerHost) {
 			throw new AppIDError({description: constants.INVALID_ORIGIN});
 		}
 

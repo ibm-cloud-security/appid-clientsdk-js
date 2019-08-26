@@ -23,6 +23,7 @@ class IFrameController {
 			const timer = setInterval(() => {
 				clearInterval(timer);
 				reject(new IFrameError('Silent sign-in stalled'));
+				this.close();
 			}, 5 * 1000);
 			window.addEventListener('message', message => {
 				if (!message.data || message.data.type !== messageType) {

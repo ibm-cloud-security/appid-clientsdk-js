@@ -45,9 +45,11 @@
 				document.getElementById('login').setAttribute('class', 'button');
 			}
 		} catch (e) {
+			document.getElementById('error').textContent = e;
 			document.getElementById('login').setAttribute('class', 'button');
 		}
 		document.getElementById('login').addEventListener('click', async () => {
+			document.getElementById('error').textContent = '';
 			document.getElementById('login').setAttribute('class', 'hidden');
 			try {
 				const tokens = await appID.signinWithPopup();
