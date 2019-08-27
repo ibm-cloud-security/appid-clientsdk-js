@@ -15,7 +15,6 @@
     </div>
     <div class="text-div" id="welcome">
     </div>
-    <div class="flex-bottom" id="error"></div>
     <div id="login-button-div" class="flex-top">
         <button id="login" class="button hidden">Login</button>
     </div>
@@ -35,21 +34,18 @@
 				discoveryEndpoint: '<WELL_KNOWN_ENDPOINT>'
 			});
 		} catch (e) {
-			document.getElementById('error').textContent = e;
+			console.error(e);
 		}
 		try {
 			const tokens = await appID.silentSignin();
 			if (tokens) {
 				document.getElementById('id_token').textContent = JSON.stringify(tokens.idTokenPayload);
-			} else {
-				document.getElementById('login').setAttribute('class', 'button');
 			}
 		} catch (e) {
-			document.getElementById('error').textContent = e;
+			console.error(e);
 			document.getElementById('login').setAttribute('class', 'button');
 		}
 		document.getElementById('login').addEventListener('click', async () => {
-			document.getElementById('error').textContent = '';
 			document.getElementById('login').setAttribute('class', 'hidden');
 			try {
 				const tokens = await appID.signinWithPopup();
@@ -60,7 +56,7 @@
 				document.getElementById('id_token').textContent = JSON.stringify(decodeIDToken);
 				document.getElementById('user_info').textContent = JSON.stringify(userInfo);
 			} catch (e) {
-				document.getElementById('error').textContent = e;
+				console.error(e);
 			}
 		});
 	})()

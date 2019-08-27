@@ -104,7 +104,12 @@ class AppID {
 		const authUrl = this.openIdConfigResource.getAuthorizationEndpoint() + '?' + this.utils.buildParams(authParams);
 		this.iframe.open(authUrl);
 
-		const message = await this.iframe.waitForMessage({messageType: 'authorization_response'});
+		let message;
+		try {
+			message = await this.iframe.waitForMessage({messageType: 'authorization_response'});
+		} finally {
+			this.iframe.remove();
+		}
 
 		if (message.data.error || message.data.error_description) {
 			throw new AppIDError({description: message.data.error_description, error: message.data.error})

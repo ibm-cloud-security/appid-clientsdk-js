@@ -1,6 +1,6 @@
 class AppIDError extends Error {
 	constructor({error, description}) {
-		super(description);
+		super(error);
 		this.error = error;
 		this.description = description;
 	}
