@@ -17,8 +17,8 @@ export class WelcomeComponent {
   async onLoginClick() {
     const appid = new AppID();
     await appid.init({
-      clientId: '<SPA_CLIENT_ID>',
-      discoveryEndpoint: '<WELL_KNOWN_ENDPOINT>'
+      clientId: '1b0e3658-fc1f-402e-843c-18402d4dbe58',
+      discoveryEndpoint: 'https://eu-gb.appid.test.cloud.ibm.com/oauth/v4/5b1eb5f1-34bd-41fd-b6dd-e257c188a4dd/.well-known/openid-configuration'
     });
     const tokens = await appid.signinWithPopup();
     const userInfo =  await appid.getUserInfo(tokens.accessToken);
