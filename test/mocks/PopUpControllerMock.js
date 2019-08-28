@@ -28,7 +28,7 @@ class PopupControllerMock {
 		}
 		if (this.error) {
 			message.data.error = 'access_denied';
-			message.data.description = 'Could not verify SAML assertion';
+			message.data.error_description = 'Could not verify SAML assertion';
 		}
 		return Promise.resolve(message);
 	}

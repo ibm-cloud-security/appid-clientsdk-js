@@ -8,7 +8,7 @@ class IFrameControllerMock {
 		return;
 	};
 
-	close() {
+	remove() {
 		return;
 	};
 
@@ -30,7 +30,7 @@ class IFrameControllerMock {
 		}
 		if (this.error) {
 			message.data.error = 'GENERAL_ERROR';
-			message.data.description = 'Unable to log in due to time out. Try again';
+			message.data.error_description = 'Unable to log in due to time out. Try again';
 		}
 		if (this.invalidOrigin) {
 			message.origin = 'http://invalidOrigin.com'

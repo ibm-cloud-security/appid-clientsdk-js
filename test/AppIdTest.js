@@ -152,7 +152,7 @@ describe('AppID tests', () => {
 			try {
 				let res = await appID.getUserInfo({sub: 1234, iss: 'appid'});
 			} catch (e) {
-				assert.equal(e, 'Error: ' + constants.INVALID_ACCESS_TOKEN);
+				assert.equal(e.description, constants.INVALID_ACCESS_TOKEN);
 			}
 		});
 	});
