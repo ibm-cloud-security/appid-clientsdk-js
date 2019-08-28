@@ -1,0 +1,60 @@
+.content-card {
+  margin-top: 2%;
+  margin-bottom: 10%;
+}
+
+.logo-icon {
+  display: block;
+  margin: 0 auto;
+  width: 20%;
+  height: 20%;
+  margin-bottom: 10%;
+  margin-top: 10%;
+}
+
+#content-header {
+  font-family: IBMPlexSans-Light;
+  font-size: 2vw;
+  color: #152935;
+  letter-spacing: 0;
+  text-align: center;
+}
+
+#content-details {
+  font-family: IBMPlexSans-Light;
+  font-size: 1.5vw;
+  color: #152935;
+  letter-spacing: 0;
+  text-align: center;
+}
+
+.loginButton {
+  display: flex;
+  justify-content: center;
+  margin-top: 5%;
+}
+
+#title {
+  font-family: IBMPlexSans-Light;
+  font-size: 1.2vw;
+  color: #152935;
+  letter-spacing: 0;
+
+}
+
+#title-content {
+  font-family: IBMPlexSans-Light;
+  font-size: 1vw;
+  color: #152935;
+  letter-spacing: 0;
+
+}
+
+.hide {
+  display: none;
+}
+
+.show {
+  display: block;
+}
+

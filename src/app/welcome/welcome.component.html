@@ -1,3 +1,25 @@
-<p>
-  welcome works!
-</p>
+<mat-card class="content-card">
+  <div class="logo">
+    <img class="logo-icon" src="../../assets/images/app_id_icon.svg">
+  </div>
+  <p id="content-header">Welcome to the<br><b>IBM Cloud AppID SPA SDK</b><br>Sample App</p>
+  <p id="content-details">{{userName}}</p>
+  <div class="loginButton">
+      <button mat-raised-button (click)="onLoginClick()" [ngClass]="buttonDisplay">Login or Sign Up with IBM Cloud AppID</button>
+  </div>
+  <mat-accordion [ngClass]="credentials">
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <span id='title'>ID Token</span>
+      </mat-expansion-panel-header>
+      <span id='title-content'>{{idToken}}</span>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <span id='title'>User Credentials</span>
+      </mat-expansion-panel-header>
+      <span id='title-content'>{{userData}}</span>
+    </mat-expansion-panel>
+  </mat-accordion>
+</mat-card>
+

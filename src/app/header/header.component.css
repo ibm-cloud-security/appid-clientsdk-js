@@ -1,18 +1,6 @@
-ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-a {
-  text-decoration: none;
+#heading {
+  font-family: IBMPlexSans-Light;
+  font-size: 2vw;
   color: white;
-}
-
-.spacer {
-  flex: 1 1 auto;
-}
-
-#loginButton {
-  color: black;
+  text-align: center;
 }
