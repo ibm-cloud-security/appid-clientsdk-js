@@ -10,6 +10,17 @@
     "test": "mocha",
     "coverage": "nyc --reporter=lcov mocha"
   },
+  "nyc": {
+    "all": true,
+    "include": [
+      "src/*.js"
+    ],
+    "exclude": [
+      "**/PopupController.js",
+      "**/IFrameController.js",
+      "**/OpenIDConfigurationResource.js"
+    ]
+  },
   "dependencies": {
     "jsrsasign": "^8.0.12",
     "node-fetch": "^2.6.0"

@@ -6,7 +6,8 @@ const OpenIdConfigurationResource = require('./OpenIDConfigurationResource');
 const TokenValidator = require('./TokenValidator');
 const rs = require('jsrsasign');
 const constants = require('./constants');
-const AppIDError = require('../errors/AppIDError');
+const AuthenticationError = require('../errors/AuthenticationError');
+const URL = require('url').URL;
 
 class AppID {
 	constructor(
@@ -51,7 +52,7 @@ class AppID {
 
 	async getUserInfo(accessToken) {
 		if (typeof accessToken !== 'string') {
-			throw new AppIDError({description: constants.INVALID_ACCESS_TOKEN});
+			throw new AuthenticationError({description: constants.INVALID_ACCESS_TOKEN});
 		}
 
 		return await this.request(this.openIdConfigResource.getUserInfoEndpoint(), {
@@ -91,15 +92,15 @@ class AppID {
 
 	verifyMessage({message, state}) {
 		if (message.data.error || message.data.error_description) {
-			throw new AppIDError({description: message.data.error_description, error: message.data.error})
+			throw new AuthenticationError({description: message.data.error_description, error: message.data.error})
 		}
 
 		if (rs.b64utos(message.data.state) !== state) {
-			throw new AppIDError({description: constants.INVALID_STATE});
+			throw new AuthenticationError({description: constants.INVALID_STATE});
 		}
 
 		if (message.origin !== new URL(this.openIdConfigResource.getAuthorizationEndpoint()).origin) {
-			throw new AppIDError({description: constants.INVALID_ORIGIN});
+			throw new AuthenticationError({description: constants.INVALID_ORIGIN});
 		}
 	}
 
