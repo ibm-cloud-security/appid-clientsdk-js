@@ -1,8 +1,8 @@
-class AppIDError extends Error {
+class AuthenticationError extends Error {
 	constructor({error, description}) {
-		super(error);
+		super(description || error);
 		this.error = error;
 		this.description = description;
 	}
 }
-module.exports = AppIDError;
+module.exports = AuthenticationError;

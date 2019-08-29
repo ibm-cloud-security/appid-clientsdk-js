@@ -6,9 +6,8 @@ class IFrameController {
 	};
 
 	open(url) {
-		this.iFrame = this.window.document.createElement('iframe',);
+		this.iFrame = this.window.document.createElement('iframe');
 		this.iFrame.src = url;
-		this.iFrame.id = 'iframe';
 		this.iFrame.width = 0;
 		this.iFrame.height = 0;
 		this.window.document.body.appendChild(this.iFrame);
@@ -21,8 +20,8 @@ class IFrameController {
 	async waitForMessage({messageType}) {
 		return new Promise((resolve, reject) => {
 			const timer = setInterval(() => {
-				reject(new IFrameError('Silent sign-in stalled'));
-			}, 8 * 1000);
+				reject(new IFrameError('Silent sign-in timed out'));
+			}, 5 * 1000);
 			window.addEventListener('message', message => {
 				clearInterval(timer);
 				if (!message.data || message.data.type !== messageType) {

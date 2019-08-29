@@ -14,6 +14,7 @@ module.exports = {
 	INVALID_ACCESS_TOKEN: 'Access token must be a string',
 	RESPONSE_TYPE: 'code',
 	RESPONSE_MODE: 'web_message',
+	PROMPT: 'none',
  	SCOPE: 'openid',
  	STATE_LENGTH: 20,
  	NONCE_LENGTH: 20,
