@@ -23,7 +23,7 @@ class IFrameControllerMock {
 				code: 'authCode',
 				state: 'dmFsaWQ=' //b64('valid')
 		 	},
-			origin: 'http://authServer.com/'
+			origin: 'http://authserver.com'
 		};
 		if (this.invalidState) {
 			message.data.state = 'invalidState';

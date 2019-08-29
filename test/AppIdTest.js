@@ -12,13 +12,13 @@ describe('AppID tests', () => {
 	describe('signInWithPopup', () => {
 		it('should return tokens', async () => {
 			const appID = new AppID({
-				popup: new PopupController({invalidState: false, error: false}),
+				popup: new PopupController({invalidState: false, error: false, invalidOrigin: false}),
 				iframe: new IFrameController({invalidState: false, error: false, invalidOrigin: false}),
 				tokenValidator: new TokenValidator(),
 				openID: new OpenIdConfigurationResource(),
 				utils: new Utils(),
 				requestHandler: new RequestHandler(),
-				w: {origin: 'localhost'}
+				w: {origin: 'http://localhost:3005'}
 			});
 			let res = await appID.signinWithPopup();
 			assert.equal(res.accessToken, 'accessToken');
@@ -105,7 +105,7 @@ describe('AppID tests', () => {
 				openID: new OpenIdConfigurationResource(),
 				utils: new Utils(),
 				requestHandler: new RequestHandler(),
-				w: {origin: 'localhost'}
+				w: {origin: 'https://localhost'}
 			});
 			try {
 				await appID.silentSignin();
@@ -114,7 +114,7 @@ describe('AppID tests', () => {
 			}
 		});
 
-		it('should return error - invalid message origin', async () => {
+		it('should return error - invalid state', async () => {
 			const appID = new AppID({
 				popup: new PopupController({invalidState: false, error: true}),
 				iframe: new IFrameController({invalidState: true, error: false, invalidOrigin: false}),
