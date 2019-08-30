@@ -7,6 +7,7 @@ const IFrameController = require('./mocks/IFrameControllerMock');
 const OpenIdConfigurationResource = require('./mocks/OpenIdConfigurationMock');
 const TokenValidator = require('./mocks/TokenValidatorMock');
 const RequestHandler = require('./mocks/RequestHandlerMock');
+const {URL} = require('url');
 
 describe('AppID tests', () => {
 	describe('signInWithPopup', () => {
@@ -18,7 +19,8 @@ describe('AppID tests', () => {
 				openID: new OpenIdConfigurationResource(),
 				utils: new Utils(),
 				requestHandler: new RequestHandler(),
-				w: {origin: 'http://localhost:3005'}
+				w: {origin: 'http://localhost:3005'},
+				url: URL
 			});
 			let res = await appID.signinWithPopup();
 			assert.equal(res.accessToken, 'accessToken');
@@ -34,7 +36,8 @@ describe('AppID tests', () => {
 				openID: new OpenIdConfigurationResource(),
 				utils: new Utils(),
 				requestHandler: new RequestHandler(),
-				w: {origin: 'localhost'}
+				w: {origin: 'localhost'},
+				url: URL
 			});
 			try {
 				await appID.signinWithPopup();
@@ -51,7 +54,8 @@ describe('AppID tests', () => {
 				openID: new OpenIdConfigurationResource(),
 				utils: new Utils(),
 				requestHandler: new RequestHandler(),
-				w: {origin: 'localhost'}
+				w: {origin: 'localhost'},
+				url: URL
 			});
 			try {
 				await appID.signinWithPopup();
@@ -72,7 +76,8 @@ describe('AppID tests', () => {
 				openID: new OpenIdConfigurationResource(),
 				utils: new Utils(),
 				requestHandler: new RequestHandler(),
-				w: {origin: 'localhost'}
+				w: {origin: 'localhost'},
+				url: URL
 			});
 			let res = await appID.silentSignin();
 			assert.equal(res.accessToken, 'accessToken');
@@ -88,7 +93,8 @@ describe('AppID tests', () => {
 				openID: new OpenIdConfigurationResource(),
 				utils: new Utils(),
 				requestHandler: new RequestHandler(),
-				w: {origin: 'localhost'}
+				w: {origin: 'localhost'},
+				url: URL
 			});
 			try {
 				await appID.silentSignin();
@@ -105,7 +111,8 @@ describe('AppID tests', () => {
 				openID: new OpenIdConfigurationResource(),
 				utils: new Utils(),
 				requestHandler: new RequestHandler(),
-				w: {origin: 'https://localhost'}
+				w: {origin: 'https://localhost'},
+				url: URL
 			});
 			try {
 				await appID.silentSignin();
@@ -122,7 +129,8 @@ describe('AppID tests', () => {
 				openID: new OpenIdConfigurationResource(),
 				utils: new Utils(),
 				requestHandler: new RequestHandler(),
-				w: {origin: 'localhost'}
+				w: {origin: 'localhost'},
+				url: URL
 			});
 			try {
 				await appID.silentSignin();
@@ -133,14 +141,18 @@ describe('AppID tests', () => {
 	});
 
 	describe('getUserInfo', () => {
-		const appID = new AppID({
-			popup: new PopupController({invalidState: false, error: false}),
-			iframe: new IFrameController({invalidState: false, error: false, invalidOrigin: false}),
-			tokenValidator: new TokenValidator(),
-			openID: new OpenIdConfigurationResource(),
-			utils: new Utils(),
-			requestHandler: new RequestHandler(),
-			w: {origin: 'localhost'}
+		let appID;
+		beforeEach(() => {
+			appID = new AppID({
+				popup: new PopupController({invalidState: false, error: false}),
+				iframe: new IFrameController({invalidState: false, error: false, invalidOrigin: false}),
+				tokenValidator: new TokenValidator(),
+				openID: new OpenIdConfigurationResource(),
+				utils: new Utils(),
+				requestHandler: new RequestHandler(),
+				w: {origin: 'localhost'},
+				url: URL
+			});
 		});
 
 		it('should return user info', async () => {

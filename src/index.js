@@ -7,7 +7,6 @@ const TokenValidator = require('./TokenValidator');
 const rs = require('jsrsasign');
 const constants = require('./constants');
 const AuthenticationError = require('../errors/AuthenticationError');
-const URL = require('url').URL;
 
 class AppID {
 	constructor(
@@ -18,7 +17,8 @@ class AppID {
 			openID = new OpenIdConfigurationResource(),
 			utils = new Utils(),
 			requestHandler = new RequestHandler(),
-			w = window
+			w = window,
+			url = URL
 		} = {}) {
 
 		this.popup = popup;
@@ -28,6 +28,7 @@ class AppID {
 		this.utils = utils;
 		this.request = requestHandler.request;
 		this.window = w;
+		this.URL = url;
 	}
 
 	async init({clientId, discoveryEndpoint}) {
@@ -98,8 +99,9 @@ class AppID {
 		if (rs.b64utos(message.data.state) !== state) {
 			throw new AuthenticationError({description: constants.INVALID_STATE});
 		}
-
-		if (message.origin !== new URL(this.openIdConfigResource.getAuthorizationEndpoint()).origin) {
+		let messageOrigin = message.origin;
+		let oauthOrigin = new this.URL(this.openIdConfigResource.getAuthorizationEndpoint()).origin;
+		if (messageOrigin !== oauthOrigin) {
 			throw new AuthenticationError({description: constants.INVALID_ORIGIN});
 		}
 	}
