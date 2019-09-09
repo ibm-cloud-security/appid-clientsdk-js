@@ -4,6 +4,7 @@ class IFrameControllerMock {
 		this.error = error;
 		this.invalidOrigin = invalidOrigin;
 	}
+
 	open() {
 		return;
 	};
@@ -14,15 +15,15 @@ class IFrameControllerMock {
 
 	navigate() {
 		return;
-	};
+	}
 
 	waitForMessage() {
 		let message = {
-		 	data: {
-		 		type: 'authorization_response',
+			data: {
+				type: 'authorization_response',
 				code: 'authCode',
 				state: 'dmFsaWQ=' //b64('valid')
-		 	},
+			},
 			origin: 'http://authserver.com'
 		};
 		if (this.invalidState) {
@@ -33,9 +34,10 @@ class IFrameControllerMock {
 			message.data.error_description = 'Unable to log in due to time out. Try again';
 		}
 		if (this.invalidOrigin) {
-			message.origin = 'http://invalidOrigin.com'
+			message.origin = 'http://invalidOrigin.com';
 		}
 		return Promise.resolve(message);
 	}
 }
+
 module.exports = IFrameControllerMock;

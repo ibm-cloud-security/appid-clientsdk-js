@@ -33,7 +33,7 @@ class PopupControllerMock {
 			message.data.error_description = 'Could not verify SAML assertion';
 		}
 		if (this.invalidOrigin) {
-			message.origin = 'http://invalidOrigin.com'
+			message.origin = 'http://invalidOrigin.com';
 		}
 		return Promise.resolve(message);
 	}

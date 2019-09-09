@@ -88,12 +88,12 @@ class AppID {
 			nonce,
 			state,
 			authUrl
-		}
+		};
 	}
 
 	verifyMessage({message, state}) {
 		if (message.data.error || message.data.error_description) {
-			throw new AppIDError({description: message.data.error_description, error: message.data.error})
+			throw new AppIDError({description: message.data.error_description, error: message.data.error});
 		}
 
 		if (rs.b64utos(message.data.state) !== state) {

@@ -32,7 +32,7 @@ class PopupController {
 					reject(new PopupError('Popup closed'));
 				}
 			}, 1000);
-			window.addEventListener('message', message => {
+			window.addEventListener('message', (message) => {
 				if (!message.data || message.data.type !== messageType) {
 					return;
 				}

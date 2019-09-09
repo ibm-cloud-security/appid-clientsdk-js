@@ -3,7 +3,7 @@ const IFrameError = require('../errors/IFrameError');
 class IFrameController {
 	constructor({w = window} = {}) {
 		this.window = w;
-	};
+	}
 
 	open(url) {
 		this.iFrame = this.window.document.createElement('iframe');
@@ -22,7 +22,7 @@ class IFrameController {
 			const timer = setInterval(() => {
 				reject(new IFrameError('Silent sign-in timed out'));
 			}, 5 * 1000);
-			window.addEventListener('message', message => {
+			window.addEventListener('message', (message) => {
 				if (!message.data || message.data.type !== messageType) {
 					return;
 				}
