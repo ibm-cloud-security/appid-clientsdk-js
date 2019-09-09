@@ -27,6 +27,12 @@
 </div>
 <script type='text/javascript' src="appid.js"></script>
 <script>
+	function showError(e) {
+        console.error(e);
+        document.getElementById('error').textContent = e;
+        document.getElementById('login').setAttribute('class', 'button');
+	}
+
 	(async function () {
 		const appID = new AppID();
 		try {
@@ -44,9 +50,7 @@
 				document.getElementById('id_token').textContent = JSON.stringify(tokens.idTokenPayload);
 			}
 		} catch (e) {
-			console.error(e);
-			document.getElementById('error').textContent = e;
-			document.getElementById('login').setAttribute('class', 'button');
+			showError(e);
 		}
 		document.getElementById('login').addEventListener('click', async () => {
 			document.getElementById('login').setAttribute('class', 'hidden');
@@ -54,15 +58,12 @@
 			try {
 				const tokens = await appID.signinWithPopup();
 				let userInfo = await appID.getUserInfo(tokens.accessToken);
-				document.getElementById("login").style.display = 'none';
 				let decodeIDToken = tokens.idTokenPayload;
 				document.getElementById('welcome').innerHTML = 'Hello, ' + decodeIDToken.name;
 				document.getElementById('id_token').textContent = JSON.stringify(decodeIDToken);
 				document.getElementById('user_info').textContent = JSON.stringify(userInfo);
 			} catch (e) {
-				console.error(e);
-				document.getElementById('error').textContent = e;
-				document.getElementById('login').setAttribute('class', 'button');
+                showError(e);
 			}
 		});
 	})()
