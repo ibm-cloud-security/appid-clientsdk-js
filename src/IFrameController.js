@@ -23,11 +23,10 @@ class IFrameController {
 				reject(new IFrameError('Silent sign-in timed out'));
 			}, 5 * 1000);
 			window.addEventListener('message', message => {
-				clearInterval(timer);
 				if (!message.data || message.data.type !== messageType) {
 					return;
 				}
-
+				clearInterval(timer);
 				resolve(message);
 			});
 		});
