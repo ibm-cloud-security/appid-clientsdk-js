@@ -7,11 +7,11 @@ class IFrameControllerMock {
 
 	open() {
 		return;
-	};
+	}
 
 	remove() {
 		return;
-	};
+	}
 
 	navigate() {
 		return;
