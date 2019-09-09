@@ -1,6 +1,7 @@
 const Utils = require('./utils');
 const RequestHandler = require('./RequestHandler');
 const PopupController = require('./PopupController');
+const IFrameController = require('./IFrameController');
 const OpenIdConfigurationResource = require('./OpenIDConfigurationResource');
 const TokenValidator = require('./TokenValidator');
 const rs = require('jsrsasign');
@@ -11,19 +12,23 @@ class AppID {
 	constructor(
 		{
 			popup = new PopupController(),
+			iframe = new IFrameController(),
 			tokenValidator = new TokenValidator(),
 			openID = new OpenIdConfigurationResource(),
 			utils = new Utils(),
 			requestHandler = new RequestHandler(),
-			w = window
+			w = window,
+			url = URL
 		} = {}) {
 
 		this.popup = popup;
+		this.iframe = iframe;
 		this.tokenValidator = tokenValidator;
 		this.openIdConfigResource = openID;
 		this.utils = utils;
 		this.request = requestHandler.request;
 		this.window = w;
+		this.URL = url;
 	}
 
 	async init({clientId, discoveryEndpoint}) {
@@ -32,36 +37,15 @@ class AppID {
 	}
 
 	async signinWithPopup() {
-		const codeVerifier = this.utils.getRandomString(constants.CODE_VERIFIER_LENGTH);
-		const codeChallenge = this.utils.sha256(codeVerifier);
-		const nonce = this.utils.getRandomString(constants.NONCE_LENGTH);
-		const state = this.utils.getRandomString(constants.STATE_LENGTH);
-
-		let authParams = {
-			client_id: this.clientId,
-			response_type: constants.RESPONSE_TYPE,
-			state: rs.stob64(state),
-			code_challenge: rs.stob64(codeChallenge),
-			code_challenge_method: constants.CHALLENGE_METHOD,
-			redirect_uri: this.window.origin,
-			response_mode: constants.RESPONSE_MODE,
-			nonce: nonce,
-			scope: constants.SCOPE
-		};
-
-		const authUrl = this.openIdConfigResource.getAuthorizationEndpoint() + '?' + this.utils.buildParams(authParams);
+		const {codeVerifier, nonce, state, authUrl} = this.getAuthParams();
 
 		this.popup.open();
 		this.popup.navigate({authUrl});
 		const message = await this.popup.waitForMessage({messageType: 'authorization_response'});
 		this.popup.close();
 
-		if (message.data.error && message.data.description) {
-			throw new AppIDError({description: message.data.description, error: message.data.error})
-		}
-		if (rs.b64utos(message.data.state) !== state) {
-			throw new AppIDError({description: constants.INVALID_STATE});
-		}
+		this.verifyMessage({message, state});
+
 		let authCode = message.data.code;
 
 		return await this.exchangeTokens({authCode, codeVerifier, nonce});
@@ -77,6 +61,67 @@ class AppID {
 				'Authorization': 'Bearer ' + accessToken
 			}
 		});
+	}
+
+	getAuthParams({prompt} = {}) {
+		const codeVerifier = this.utils.getRandomString(constants.CODE_VERIFIER_LENGTH);
+		const codeChallenge = this.utils.sha256(codeVerifier);
+		const nonce = this.utils.getRandomString(constants.NONCE_LENGTH);
+		const state = this.utils.getRandomString(constants.STATE_LENGTH);
+
+		let authParams = {
+			client_id: this.clientId,
+			response_type: constants.RESPONSE_TYPE,
+			state: rs.stob64(state),
+			code_challenge: rs.stob64(codeChallenge),
+			code_challenge_method: constants.CHALLENGE_METHOD,
+			redirect_uri: this.window.origin,
+			response_mode: constants.RESPONSE_MODE,
+			nonce,
+			scope: constants.SCOPE,
+			prompt
+		};
+
+		const authUrl = this.openIdConfigResource.getAuthorizationEndpoint() + '?' + this.utils.buildParams(authParams);
+		return {
+			codeVerifier,
+			nonce,
+			state,
+			authUrl
+		};
+	}
+
+	verifyMessage({message, state}) {
+		if (message.data.error || message.data.error_description) {
+			throw new AppIDError({description: message.data.error_description, error: message.data.error});
+		}
+
+		if (rs.b64utos(message.data.state) !== state) {
+			throw new AppIDError({description: constants.INVALID_STATE});
+		}
+		let messageOrigin = message.origin;
+		let oauthOrigin = new this.URL(this.openIdConfigResource.getAuthorizationEndpoint()).origin;
+		if (messageOrigin !== oauthOrigin) {
+			throw new AppIDError({description: constants.INVALID_ORIGIN});
+		}
+	}
+
+	async silentSignin() {
+		const {codeVerifier, nonce, state, authUrl} = this.getAuthParams({prompt: constants.PROMPT});
+
+		this.iframe.open(authUrl);
+
+		let message;
+		try {
+			message = await this.iframe.waitForMessage({messageType: 'authorization_response'});
+		} finally {
+			this.iframe.remove();
+		}
+
+		this.verifyMessage({message, state});
+
+		let authCode = message.data.code;
+		return await this.exchangeTokens({authCode, codeVerifier, nonce});
 	}
 
 	async exchangeTokens({authCode, nonce, codeVerifier}) {
@@ -120,4 +165,5 @@ class AppID {
 		return {accessToken: tokens.access_token, accessTokenPayload, idToken: tokens.id_token, idTokenPayload}
 	}
 }
+
 module.exports = AppID;

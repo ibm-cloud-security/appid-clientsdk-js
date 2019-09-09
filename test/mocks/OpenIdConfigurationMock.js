@@ -1,18 +1,18 @@
 class OpenIdConfigurationMock {
 	getAuthorizationEndpoint() {
-		return 'authEndpoint';
+		return 'http://authServer.com/';
 	}
 
 	getUserInfoEndpoint() {
-		return 'userinfoEndpoint';
+		return this.getAuthorizationEndpoint() + 'userinfoEndpoint';
 	}
 
 	getJwksEndpoint() {
-		return 'publicKeysEndpoint';
+		return this.getAuthorizationEndpoint() +'publicKeysEndpoint';
 	}
 
 	getTokenEndpoint() {
-		return 'tokenEndpoint';
+		return this.getAuthorizationEndpoint() + 'tokenEndpoint';
 	}
 
 	getIssuer() {

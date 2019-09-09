@@ -3,12 +3,12 @@ const expect = require('chai').expect;
 const RequestHandler = require('../src/RequestHandler');
 const url = 'https://httpbin.org/';
 
-describe('RequestHandler tests', () => {
+describe('RequestHandler tests', async () => {
 	const successUrl = url + 'get';
 	let requestHandler = new RequestHandler().request;
 	it('returns 200 response', async () => {
 		let res = await requestHandler(successUrl);
-		assert.deepEqual(res.url, url + 'get')
+		assert.deepEqual(res.url, url + 'get');
 	});
 
 	it('returns error - failed to fetch', async () => {

@@ -1,28 +1,28 @@
-class PopupControllerMock {
+class IFrameControllerMock {
 	constructor({invalidState, error, invalidOrigin}) {
 		this.invalidState = invalidState;
-		this.invalidOrigin = invalidOrigin;
 		this.error = error;
+		this.invalidOrigin = invalidOrigin;
 	}
 
 	open() {
 		return;
-	};
+	}
 
-	close() {
+	remove() {
 		return;
-	};
+	}
 
 	navigate() {
 		return;
-	};
+	}
 
 	waitForMessage() {
 		let message = {
 			data: {
 				type: 'authorization_response',
 				code: 'authCode',
-				state: 'dmFsaWQ=', //b64('valid')
+				state: 'dmFsaWQ=' //b64('valid')
 			},
 			origin: 'http://authserver.com'
 		};
@@ -30,8 +30,8 @@ class PopupControllerMock {
 			message.data.state = 'invalidState';
 		}
 		if (this.error) {
-			message.data.error = 'access_denied';
-			message.data.error_description = 'Could not verify SAML assertion';
+			message.data.error = 'GENERAL_ERROR';
+			message.data.error_description = 'Unable to log in due to time out. Try again';
 		}
 		if (this.invalidOrigin) {
 			message.origin = 'http://invalidOrigin.com';
@@ -40,4 +40,4 @@ class PopupControllerMock {
 	}
 }
 
-module.exports = PopupControllerMock;
+module.exports = IFrameControllerMock;

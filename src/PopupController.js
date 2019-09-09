@@ -16,15 +16,6 @@ class PopupController {
 		}
 	};
 
-	openIFrame(url) {
-		this.iFrame = this.window.document.createElement('iframe');
-		this.iFrame.src = url;
-		this.iFrame.width = 0;
-		this.iFrame.height = 0;
-
-		window.document.body.appendChild(this.iFrame);
-	}
-
 	navigate({authUrl}) {
 		this.popup.location.href = authUrl;
 	};
@@ -41,7 +32,7 @@ class PopupController {
 					reject(new PopupError('Popup closed'));
 				}
 			}, 1000);
-			window.addEventListener('message', message => {
+			window.addEventListener('message', (message) => {
 				if (!message.data || message.data.type !== messageType) {
 					return;
 				}

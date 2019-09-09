@@ -27,6 +27,12 @@
 </div>
 <script type='text/javascript' src="appid.js"></script>
 <script>
+	function showError(e) {
+        console.error(e);
+        document.getElementById('error').textContent = e;
+        document.getElementById('login').setAttribute('class', 'button');
+	}
+
 	(async function () {
 		const appID = new AppID();
 		try {
@@ -34,22 +40,30 @@
 				clientId: '<SPA_CLIENT_ID>',
 				discoveryEndpoint: '<WELL_KNOWN_ENDPOINT>'
 			});
-			document.getElementById('login').setAttribute('class', 'button');
 		} catch (e) {
+			console.error(e);
 			document.getElementById('error').textContent = e;
 		}
-
+		try {
+			const tokens = await appID.silentSignin();
+			if (tokens) {
+				document.getElementById('id_token').textContent = JSON.stringify(tokens.idTokenPayload);
+			}
+		} catch (e) {
+			showError(e);
+		}
 		document.getElementById('login').addEventListener('click', async () => {
+			document.getElementById('login').setAttribute('class', 'hidden');
+			document.getElementById('error').textContent = '';
 			try {
 				const tokens = await appID.signinWithPopup();
 				let userInfo = await appID.getUserInfo(tokens.accessToken);
-				document.getElementById("login").style.display = 'none';
 				let decodeIDToken = tokens.idTokenPayload;
 				document.getElementById('welcome').innerHTML = 'Hello, ' + decodeIDToken.name;
 				document.getElementById('id_token').textContent = JSON.stringify(decodeIDToken);
 				document.getElementById('user_info').textContent = JSON.stringify(userInfo);
 			} catch (e) {
-				document.getElementById('error').textContent = e;
+                showError(e);
 			}
 		});
 	})()
