@@ -59,7 +59,7 @@
 				const tokens = await appID.signinWithPopup();
 				let userInfo = await appID.getUserInfo(tokens.accessToken);
 				let decodeIDToken = tokens.idTokenPayload;
-				document.getElementById('welcome').innerHTML = 'Hello, ' + decodeIDToken.name;
+				document.getElementById('welcome').textContent = 'Hello, ' + decodeIDToken.name;
 				document.getElementById('id_token').textContent = JSON.stringify(decodeIDToken);
 				document.getElementById('user_info').textContent = JSON.stringify(userInfo);
 			} catch (e) {
