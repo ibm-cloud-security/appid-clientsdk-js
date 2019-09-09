@@ -4,6 +4,7 @@ class PopupControllerMock {
 		this.invalidOrigin = invalidOrigin;
 		this.error = error;
 	}
+
 	open() {
 		return;
 	};
@@ -18,11 +19,11 @@ class PopupControllerMock {
 
 	waitForMessage() {
 		let message = {
-		 	data: {
-		 		type: 'authorization_response',
+			data: {
+				type: 'authorization_response',
 				code: 'authCode',
 				state: 'dmFsaWQ=', //b64('valid')
-		 	},
+			},
 			origin: 'http://authserver.com'
 		};
 		if (this.invalidState) {
@@ -38,4 +39,5 @@ class PopupControllerMock {
 		return Promise.resolve(message);
 	}
 }
+
 module.exports = PopupControllerMock;
