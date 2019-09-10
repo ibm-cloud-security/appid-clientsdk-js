@@ -55,6 +55,7 @@
 		document.getElementById('login').addEventListener('click', async () => {
 			document.getElementById('login').setAttribute('class', 'hidden');
 			document.getElementById('error').textContent = '';
+
 			try {
 				const tokens = await appID.signinWithPopup();
 				let userInfo = await appID.getUserInfo(tokens.accessToken);
