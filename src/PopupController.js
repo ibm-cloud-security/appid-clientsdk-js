@@ -1,4 +1,4 @@
-const PopupError = require('../errors/PopupError');
+const PopupError = require('./errors/PopupError');
 
 class PopupController {
 	constructor({w = window} = {}) {

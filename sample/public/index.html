@@ -25,7 +25,7 @@
     </div>
 </div>
 </div>
-<script type='text/javascript' src="appid.js"></script>
+<script type='text/javascript' src="appid.min.js"></script>
 <script>
 	function showError(e) {
         console.error(e);
@@ -37,8 +37,8 @@
 		const appID = new AppID();
 		try {
 			await appID.init({
-				clientId: '<SPA_CLIENT_ID>',
-				discoveryEndpoint: '<WELL_KNOWN_ENDPOINT>'
+				clientId: 'ca8aed4c-e57c-4b62-b7ef-69d225e3c9c3',
+				discoveryEndpoint: 'https://eu-gb.appid.test.cloud.ibm.com/oauth/v4/39a37f57-a227-4bfe-a044-93b6e6060b61/.well-known/openid-configuration'
 			});
 		} catch (e) {
 			console.error(e);

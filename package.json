@@ -1,15 +1,17 @@
 {
-  "name": "appid-clientsdk-js",
-  "version": "1.0.0",
-  "description": "IBM Cloud App ID SDK for Browser Apps",
-  "directories": {
-    "src": "src"
-  },
+  "name": "ibmcloud-appid-js",
+  "version": "0.0.1",
+  "description": "IBM Cloud App ID SDK for Single Page Applications",
   "scripts": {
     "build": "webpack",
     "test": "mocha",
     "coverage": "nyc --reporter=lcov mocha"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ibm-cloud-security/appid-clientsdk-js.git"
+  },
+  "main": "dist/appid.umd.min.js",
   "nyc": {
     "all": true,
     "include": [
@@ -22,10 +24,10 @@
     ]
   },
   "dependencies": {
-    "jsrsasign": "^8.0.12",
-    "node-fetch": "^2.6.0"
+    "jsrsasign": "^8.0.12"
   },
   "devDependencies": {
+    "node-fetch": "^2.6.0",
     "@babel/cli": "^7.0.0",
     "@babel/core": "^7.5.5",
     "@babel/plugin-transform-runtime": "^7.5.5",
