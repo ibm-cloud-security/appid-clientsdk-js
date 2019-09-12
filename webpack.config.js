@@ -6,8 +6,8 @@ module.exports = [
         output: {
             filename: 'appid.min.js',
             path: path.resolve(__dirname, 'dist'),
-            libraryTarget: "var",
-            library: "AppID"
+            libraryTarget: 'var',
+            library: 'AppID'
         }
     },
     {
@@ -16,8 +16,8 @@ module.exports = [
         output: {
             filename: 'appid.umd.min.js',
             path: path.resolve(__dirname, 'dist'),
-            libraryTarget: "umd",
-            library: "AppID"
+            libraryTarget: 'umd',
+            library: 'AppID'
         }
     }
 ];
