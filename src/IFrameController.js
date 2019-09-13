@@ -1,4 +1,4 @@
-const IFrameError = require('../errors/IFrameError');
+const IFrameError = require('./errors/IFrameError');
 
 class IFrameController {
 	constructor({w = window} = {}) {

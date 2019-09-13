@@ -6,7 +6,7 @@ const OpenIdConfigurationResource = require('./OpenIDConfigurationResource');
 const TokenValidator = require('./TokenValidator');
 const rs = require('jsrsasign');
 const constants = require('./constants');
-const AppIDError = require('../errors/AppIDError');
+const AppIDError = require('./errors/AppIDError');
 
 class AppID {
 	constructor(

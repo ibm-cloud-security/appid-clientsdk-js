@@ -1,5 +1,5 @@
 const constants = require('./constants');
-const TokenError = require('../errors/TokenError');
+const TokenError = require('./errors/TokenError');
 
 class TokenValidator {
 	constructor({jwt = require('jsrsasign')} = {}) {

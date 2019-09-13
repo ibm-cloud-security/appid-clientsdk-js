@@ -1,5 +1,5 @@
 const fetch = require('node-fetch');
-const RequestError = require('../errors/RequestError');
+const RequestError = require('./errors/RequestError');
 class RequestHandler {
 	async request(url, options) {
 		const response = await fetch(url, options);
