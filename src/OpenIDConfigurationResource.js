@@ -32,3 +32,4 @@ class OpenIdConfigurationResource {
 	}
 }
 module.exports = OpenIdConfigurationResource;
+
