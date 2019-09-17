@@ -39,8 +39,7 @@ class AppID {
 	async signinWithPopup() {
 		const {codeVerifier, nonce, state, authUrl} = this.getAuthParams();
 
-		this.popup.open();
-		this.popup.navigate({authUrl});
+		this.popup.open({authUrl});
 		const message = await this.popup.waitForMessage({messageType: 'authorization_response'});
 		this.popup.close();
 
@@ -101,7 +100,7 @@ class AppID {
 		}
 		let messageOrigin = message.origin;
 		let oauthOrigin = new this.URL(this.openIdConfigResource.getAuthorizationEndpoint()).origin;
-		if (messageOrigin !== oauthOrigin) {
+		debugger; if (messageOrigin !== oauthOrigin) {
 			throw new AppIDError({description: constants.INVALID_ORIGIN});
 		}
 	}

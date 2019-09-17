@@ -5,19 +5,11 @@ class PopupController {
 		this.window = w;
 	};
 
-	open() {
-		const h = 700;
-		const w = 400;
-		const left = (screen.width - w) / 2;
-		const top = (screen.height - h) / 2;
-		this.popup = this.window.open('', 'popup', `left=${left},top=${top},width=${w},height=${h},resizable,scrollbars=yes,status=1`);
+	open({authUrl}) {
+		this.popup = this.window.open(authUrl, '_blank');
 		if (!this.popup) {
 			throw new PopupError('Unable to open popup')
 		}
-	};
-
-	navigate({authUrl}) {
-		this.popup.location.href = authUrl;
 	};
 
 	close() {
