@@ -78,9 +78,12 @@ class AppID {
 			redirect_uri: this.window.origin,
 			response_mode: constants.RESPONSE_MODE,
 			nonce,
-			scope: constants.SCOPE,
-			prompt
+			scope: constants.SCOPE
 		};
+
+		if (prompt) {
+			authParams.prompt = prompt;
+		}
 
 		const authUrl = this.openIdConfigResource.getAuthorizationEndpoint() + '?' + this.utils.buildParams(authParams);
 		return {
