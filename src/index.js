@@ -82,7 +82,7 @@ class AppID {
 		};
 
 		if (prompt) {
-			authParams.prompt = prompt
+			authParams.prompt = prompt;
 		}
 
 		const authUrl = this.openIdConfigResource.getAuthorizationEndpoint() + '?' + this.utils.buildParams(authParams);
