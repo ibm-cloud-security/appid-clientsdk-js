@@ -100,7 +100,7 @@ class AppID {
 		}
 		let messageOrigin = message.origin;
 		let oauthOrigin = new this.URL(this.openIdConfigResource.getAuthorizationEndpoint()).origin;
-		debugger; if (messageOrigin !== oauthOrigin) {
+		if (messageOrigin !== oauthOrigin) {
 			throw new AppIDError({description: constants.INVALID_ORIGIN});
 		}
 	}
