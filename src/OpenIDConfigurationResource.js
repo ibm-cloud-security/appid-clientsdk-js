@@ -1,7 +1,10 @@
+const constants = require('./constants');
+
 class OpenIdConfigurationResource {
 	async init({discoveryEndpoint, requestHandler}){
 		this.openIdConfig = await requestHandler(discoveryEndpoint);
-		this.publicKeys = requestHandler(this.getJwksEndpoint());
+		const headers = { 'x-filter-type': `spa:v${constants.VERSION}` };
+		this.publicKeys = requestHandler(this.getJwksEndpoint(), { headers: headers });
 	}
 
 	getAuthorizationEndpoint() {
