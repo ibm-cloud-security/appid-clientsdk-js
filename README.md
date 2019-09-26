@@ -82,21 +82,30 @@ Returns **[Promise][10]**
 This will open a login widget in a popup which will prompt the user to enter their credentials.
 After a successful login, the popup will close and tokens are returned.
 
+### Example
+
+```javascript
+const {accessToken, accessTokenPayload, idToken, idTokenPayload} = await appID.signin();
+```
+
 -   Throws **AppIDError** AppIDError "Popup closed" - The user closed the popup before authentication was completed.
 -   Throws **TokenError** Any token validation error.
 -   Throws **OAuthError** Any errors from the server. e.g. {error: 'server_error', description: ''}
 -   Throws **RequestError** Any errors during a HTTP request.
 
 Returns **[Promise][10]** The tokens of the authenticated user or an error.
-e.g. {accessToken: 'eyg...', accessTokenPayload: { iss: 'https...' }, idToken: 'eyg...', idTokenPayload: { email: 'example@gmail.com' }}
 
 ## silentSignin
 
 Silent sign in will attempt to authenticate the user in a hidden iframe.
 Sign in will be successful only if there is a Cloud Directory SSO token in the browser.
 You will need to enable SSO on the App ID dashboard.
-Possible errors include:
-User not signed in - there is no Cloud Directory SSO token
+
+### Example
+
+```javascript
+const {accessToken, accessTokenPayload, idToken, idTokenPayload} = await appID.silentSignin();
+```
 
 -   Throws **OAuthError** Any errors from the server. e.g. {error: 'access_denied', description: 'User not signed in'}
 -   Throws **AppIDError** "Silent sign-in timed out" - The iframe will close after 5 seconds if authentication could not be completed.
@@ -104,7 +113,6 @@ User not signed in - there is no Cloud Directory SSO token
 -   Throws **RequestError** Any errors during a HTTP request.
 
 Returns **[Promise][10]** The tokens of the authenticated user.
-e.g. {accessToken: 'eyg...', accessTokenPayload: { iss: 'https...' }, idToken: 'eyg...', idTokenPayload: { email: 'example@gmail.com' }}
 
 ## getUserInfo
 
@@ -114,11 +122,10 @@ This method will made a GET request to the user info endpoint using the access t
 
 -   `accessToken` **[string][9]** The App ID access token of the user
 
-
 -   Throws **AppIDError** "Access token must be a string" - Invalid access token.
 -   Throws **RequestError** Any errors during a HTTP request.
 
-Returns **[Promise][10]** The user information for the authenticated user. e.g. {sub: '', email: ''}
+Returns **[Promise][10]** The user information for the authenticated user. Example: {sub: '', email: ''}
 
 [1]: #installation
 [2]: #getting-started

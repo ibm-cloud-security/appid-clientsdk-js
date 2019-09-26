@@ -7,6 +7,9 @@ const TokenValidator = require('./TokenValidator');
 const constants = require('./constants');
 const AppIDError = require('./errors/AppIDError');
 
+/**
+ * Client-side javascript SDK for the IBM Cloud App ID service.
+ */
 class AppID {
 	constructor(
 		{
@@ -64,12 +67,13 @@ class AppID {
 	/**
 	 * This will open a login widget in a popup which will prompt the user to enter their credentials.
 	 * After a successful login, the popup will close and tokens are returned.
-	 * @returns {Promise} - The tokens of the authenticated user or an error.
-	 * e.g. {accessToken: 'eyg...', accessTokenPayload: { iss: 'https...' }, idToken: 'eyg...', idTokenPayload: { email: 'example@gmail.com' }}
-	 * @throws {AppIDError}AppIDError "Popup closed" - The user closed the popup before authentication was completed.
-	 * @throws {TokenError} - Any token validation error.
-	 * @throws {OAuthError} - Any errors from the server. e.g. {error: 'server_error', description: ''}
-	 * @throws {RequestError} - Any errors during a HTTP request.
+	 * @returns {Promise} The tokens of the authenticated user or an error.
+	 * @throws {AppIDError} "Popup closed" - The user closed the popup before authentication was completed.
+	 * @throws {TokenError} Any token validation error.
+	 * @throws {OAuthError} Any errors from the server. e.g. {error: 'server_error', description: ''}
+	 * @throws {RequestError} Any errors during a HTTP request.
+	 * @example
+	 * const {accessToken, accessTokenPayload, idToken, idTokenPayload} = await appID.signin();
 	 */
 	async signin() {
 		const {codeVerifier, nonce, state, authUrl} = this.utils.getAuthParams(this.clientId, this.window.origin);
@@ -95,14 +99,13 @@ class AppID {
 	 * Silent sign in will attempt to authenticate the user in a hidden iframe.
 	 * Sign in will be successful only if there is a Cloud Directory SSO token in the browser.
 	 * You will need to enable SSO on the App ID dashboard.
-	 * Possible errors include:
-	 * User not signed in - there is no Cloud Directory SSO token
-	 * @returns {Promise} - The tokens of the authenticated user.
-	 * e.g. {accessToken: 'eyg...', accessTokenPayload: { iss: 'https...' }, idToken: 'eyg...', idTokenPayload: { email: 'example@gmail.com' }}
-	 * @throws {OAuthError} - Any errors from the server. e.g. {error: 'access_denied', description: 'User not signed in'}
+	 * @returns {Promise} The tokens of the authenticated user.
+	 * @throws {OAuthError} Any errors from the server. e.g. {error: 'access_denied', description: 'User not signed in'}
 	 * @throws {AppIDError} "Silent sign-in timed out" - The iframe will close after 5 seconds if authentication could not be completed.
-	 * @throws {TokenError} - Any token validation error.
-	 * @throws {RequestError} - Any errors during a HTTP request.
+	 * @throws {TokenError} Any token validation error.
+	 * @throws {RequestError} Any errors during a HTTP request.
+	 * @example
+	 * const {accessToken, accessTokenPayload, idToken, idTokenPayload} = await appID.silentSignin();
 	 */
 	async silentSignin() {
 		const {codeVerifier, nonce, state, authUrl} = this.utils.getAuthParams(this.clientId, this.window.origin, constants.PROMPT);
@@ -131,9 +134,9 @@ class AppID {
 	/**
 	 * This method will made a GET request to the user info endpoint using the access token of the authenticated user.
 	 * @param {string} accessToken - The App ID access token of the user
-	 * @returns {Promise} - The user information for the authenticated user. e.g. {sub: '', email: ''}
-	 * @throws {AppIDError} "Access token must be a string" - Invalid access token.
-	 * @throws {RequestError} - Any errors during a HTTP request.
+	 * @returns {Promise} The user information for the authenticated user. Example: {sub: '', email: ''}
+	 * @throws {AppIDError} "Access token must be a string" Invalid access token.
+	 * @throws {RequestError} Any errors during a HTTP request.
 	 */
 	async getUserInfo(accessToken) {
 		if (typeof accessToken !== 'string') {

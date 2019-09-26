@@ -26,7 +26,6 @@
     ]
   },
   "dependencies": {
-    "docdash": "^1.1.1",
     "jsrsasign": "^8.0.12"
   },
   "devDependencies": {
@@ -42,6 +41,8 @@
     "mocha": "^6.2.0",
     "nyc": "^14.1.1",
     "webpack": "^4.39.1",
-    "webpack-cli": "^3.3.6"
+    "webpack-cli": "^3.3.6",
+    "docdash": "^1.1.1",
+    "jsdoc": "^3.6.3"
   }
 }
