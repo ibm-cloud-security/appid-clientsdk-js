@@ -12,6 +12,8 @@ module.exports = {
 	INVALID_TOKEN: 'Invalid token',
 	MISSING_PUBLIC_KEY: 'Cannot find public key',
 	INVALID_ACCESS_TOKEN: 'Access token must be a string',
+	MISSING_CLIENT_ID: 'Missing client ID',
+	MISSING_DISCOVERY_ENDPOINT: 'Missing discovery endpoint',
 	RESPONSE_TYPE: 'code',
 	RESPONSE_MODE: 'web_message',
 	PROMPT: 'none',

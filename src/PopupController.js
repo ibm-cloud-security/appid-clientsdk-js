@@ -5,9 +5,9 @@ class PopupController {
 		this.window = w;
 	};
 
-	open() {
-		const h = 700;
-		const w = 400;
+	open(popup) {
+		const h = popup.height;
+		const w = popup.width;
 		const left = (screen.width - w) / 2;
 		const top = (screen.height - h) / 2;
 		this.popup = this.window.open('', 'popup', `left=${left},top=${top},width=${w},height=${h},resizable,scrollbars=yes,status=1`);

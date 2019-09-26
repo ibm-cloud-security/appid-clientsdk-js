@@ -1,8 +1,2 @@
-class AppIDError extends Error {
-	constructor({error, description}) {
-		super(description || error);
-		this.error = error;
-		this.description = description;
-	}
-}
+class AppIDError extends Error {}
 module.exports = AppIDError;
