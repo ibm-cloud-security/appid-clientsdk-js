@@ -10,7 +10,40 @@ const RequestHandler = require('./mocks/RequestHandlerMock');
 const {URL} = require('url');
 
 describe('AppID tests', () => {
-	describe('signInWithPopup', () => {
+	describe('init', () => {
+		const appID = new AppID({
+			popup: new PopupController({invalidState: false, error: false, invalidOrigin: false}),
+			iframe: new IFrameController({invalidState: false, error: false, invalidOrigin: false}),
+			tokenValidator: new TokenValidator(),
+			openID: new OpenIdConfigurationResource(),
+			utils: new Utils(),
+			requestHandler: new RequestHandler(),
+			w: {origin: 'http://localhost:3005'},
+			url: URL
+		});
+
+		it('should pass', async () => {
+			await appID.init({clientId: '1234', discoveryEndpoint: 'discoveryEndpoint', popup: {height: 400, width: 300}});
+		});
+
+		it('should return error - missing client id', async () => {
+			try {
+				await appID.init({discoveryEndpoint: 'discoveryEndpoint', popup: {height: 400, width: 300}});
+			} catch (e) {
+				assert.equal(e.message, constants.MISSING_CLIENT_ID);
+			}
+		});
+
+		it('should return error - missing discovery endpoint', async () => {
+			try {
+				await appID.init({clientId: '1234', popup: {height: 400, width: 300}});
+			} catch (e) {
+				assert.equal(e.message, constants.MISSING_DISCOVERY_ENDPOINT);
+			}
+		});
+	});
+
+	describe('signIn', () => {
 		it('should return tokens', async () => {
 			const appID = new AppID({
 				popup: new PopupController({invalidState: false, error: false, invalidOrigin: false}),

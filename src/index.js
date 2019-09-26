@@ -61,7 +61,7 @@ class AppID {
 		await this.openIdConfigResource.init({discoveryEndpoint, requestHandler: this.request});
 		this.clientId = clientId;
 		this.popupConfig = popup;
-		this.utils = new Utils({openId: this.openIdConfigResource, clientId: this.clientId});
+		this.utils = new Utils({openId: this.openIdConfigResource, clientId: this.clientId, url: this.URL});
 	}
 
 	/**
