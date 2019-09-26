@@ -7,11 +7,11 @@ Client-side javascript SDK for the IBM Cloud App ID service.
 
 -   [Installation][1]
 -   [Getting Started][2]
--   [Documentation][3]
-    -   [init][3]
-    -   [signin][4]
-    -   [silentSignin][5]
-    -   [getUserInfo][6]
+-   [API Reference][3]
+    -   [init][4]
+    -   [signin][5]
+    -   [silentSignin][6]
+    -   [getUserInfo][7]
 ## Installation
 Using npm
 ```javascript
@@ -40,20 +40,31 @@ await appID.init({
     discoveryEndpoint: '<WELL_KNOWN_ENDPOINT>'
 });
 ``` 
+Using the signin() in your app to start authentication:
+```javascript
+document.getElementById('login').addEventListener('click', async () => {
+    try {
+        const tokens = await appID.signin();
+    } catch (e) {
+        ...
+    }
+});
+```
 
+## API Reference
 ## init
 Initialize AppID
 
 #### Parameters
--   `clientId` **[string][8]** The clientId from the singlepageapp application credentials.
--   `discoveryEndpoint` **[string][8]** The discoveryEndpoint from the singlepageapp application credentials.
--   `popup` **[Object][7]** (optional) The popup configuration.
+-   `clientId` **[string][9]** The clientId from the singlepageapp application credentials.
+-   `discoveryEndpoint` **[string][9]** The discoveryEndpoint from the singlepageapp application credentials.
+-   `popup` **[Object][8]** (optional) The popup configuration.
 
 
 -   Throws **AppIDError** For missing required params.
 -   Throws **RequestError** Any errors during a HTTP request.
 
-Returns **[Promise][9]** 
+Returns **[Promise][10]** 
 
 ## signin
 
@@ -65,7 +76,7 @@ After a successful login, the popup will close and tokens are returned.
 -   Throws **OAuthError** Any errors from the server. e.g. {error: 'server_error', description: ''}
 -   Throws **RequestError** Any errors during a HTTP request.
 
-Returns **[Promise][9]** The tokens of the authenticated user or an error.
+Returns **[Promise][10]** The tokens of the authenticated user or an error.
 e.g. {accessToken: 'eyg...', accessTokenPayload: { iss: 'https...' }, idToken: 'eyg...', idTokenPayload: { email: 'example@gmail.com' }}
 
 ## silentSignin
@@ -81,7 +92,7 @@ User not signed in - there is no Cloud Directory SSO token
 -   Throws **TokenError** Any token validation error.
 -   Throws **RequestError** Any errors during a HTTP request.
 
-Returns **[Promise][9]** The tokens of the authenticated user.
+Returns **[Promise][10]** The tokens of the authenticated user.
 e.g. {accessToken: 'eyg...', accessTokenPayload: { iss: 'https...' }, idToken: 'eyg...', idTokenPayload: { email: 'example@gmail.com' }}
 
 ## getUserInfo
@@ -90,20 +101,21 @@ This method will made a GET request to the user info endpoint using the access t
 
 ### Parameters
 
--   `accessToken` **[string][8]** The App ID access token of the user
+-   `accessToken` **[string][9]** The App ID access token of the user
 
 
 -   Throws **AppIDError** "Access token must be a string" - Invalid access token.
 -   Throws **RequestError** Any errors during a HTTP request.
 
-Returns **[Promise][9]** The user information for the authenticated user. e.g. {sub: '', email: ''}
+Returns **[Promise][10]** The user information for the authenticated user. e.g. {sub: '', email: ''}
 
 [1]: #installation
 [2]: #getting-started
-[3]: #init
-[4]: #signin
-[5]: #silentsignin
-[6]: #getuserinfo
-[7]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
-[8]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
-[9]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
+[3]: #api-reference
+[4]: #init
+[5]: #signin
+[6]: #silentsignin
+[7]: #getuserinfo
+[8]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+[9]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+[10]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
