@@ -5,7 +5,8 @@
   "scripts": {
     "build": "webpack",
     "test": "mocha",
-    "coverage": "nyc --reporter=lcov mocha"
+    "coverage": "nyc --reporter=lcov mocha",
+    "docs": "documentation build src/index.js -f md"
   },
   "repository": {
     "type": "git",
@@ -20,7 +21,8 @@
     "exclude": [
       "**/PopupController.js",
       "**/IFrameController.js",
-      "**/OpenIDConfigurationResource.js"
+      "**/OpenIDConfigurationResource.js",
+      "**/constants.js"
     ]
   },
   "dependencies": {

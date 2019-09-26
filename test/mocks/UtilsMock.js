@@ -12,7 +12,7 @@ class UtilsMock {
 	}
 
 	getAuthParams() {
-		return 'authParams'
+		return 'authParams';
 	}
 
 	verifyMessage() {
@@ -25,7 +25,7 @@ class UtilsMock {
 			accessTokenPayload: 'tokenPayload',
 			idToken: 'idToken',
 			idTokenPayload: 'tokenPayload'
-		}
+		};
 	}
 }
 

@@ -7,15 +7,6 @@ const TokenValidator = require('./TokenValidator');
 const constants = require('./constants');
 const AppIDError = require('./errors/AppIDError');
 
-/**
- * todo:
- * README - detailed desc for each function and errors, params, npm install
- * Function comments in index.js
- * Move helper functions to different file
- * Update tests
- * Add popup obj to init - default {height: screen.height * .85, width: 400}
- *
- */
 class AppID {
 	constructor(
 		{
@@ -41,12 +32,12 @@ class AppID {
 
 	/**
 	 * Initialize AppID
-	 * @param clientId - The clientId from the singlepageapp application credentials.
-	 * @param discoveryEndpoint - The discoveryEndpoint from the singlepageapp application credentials.
-	 * @param popup - (optional) The popup configuration.
-	 * @returns {Promise<void>}
-	 * @throws AppIDError - For missing required params.
-	 * @throws RequestError - Any errors during a HTTP request.
+	 * @param {string} clientId - The clientId from the singlepageapp application credentials.
+	 * @param {string} discoveryEndpoint - The discoveryEndpoint from the singlepageapp application credentials.
+	 * @param {Object} popup - (optional) The popup configuration.
+	 * @returns {Promise}
+	 * @throws {AppIDError} For missing required params.
+	 * @throws {RequestError} Any errors during a HTTP request.
 	 */
 	async init({clientId, discoveryEndpoint, popup = {height: screen.height * .80, width: 400}}) {
 		if (!clientId) {
@@ -64,12 +55,12 @@ class AppID {
 	/**
 	 * This will open a login widget in a popup which will prompt the user to enter their credentials.
 	 * After a successful login, the popup will close and tokens are returned.
-	 * @returns {Promise<*|tokens|*>} - The tokens of the authenticated user or an error.
+	 * @returns {Promise} - The tokens of the authenticated user or an error.
 	 * e.g. {accessToken: 'eyg...', accessTokenPayload: { iss: 'https...' }, idToken: 'eyg...', idTokenPayload: { email: 'example@gmail.com' }}
-	 * @throws AppIDError "Popup closed" - The user closed the popup before authentication was completed.
-	 * @throws TokenError - Any token validation error.
-	 * @throws OAuthError - Any errors from the server. e.g. {error: 'server_error', description: ''}
-	 * @throws RequestError - Any errors during a HTTP request.
+	 * @throws {AppIDError}AppIDError "Popup closed" - The user closed the popup before authentication was completed.
+	 * @throws {TokenError} - Any token validation error.
+	 * @throws {OAuthError} - Any errors from the server. e.g. {error: 'server_error', description: ''}
+	 * @throws {RequestError} - Any errors during a HTTP request.
 	 */
 	async signin() {
 		const {codeVerifier, nonce, state, authUrl} = this.utils.getAuthParams(this.clientId, this.window.origin);
@@ -97,12 +88,12 @@ class AppID {
 	 * You will need to enable SSO on the App ID dashboard.
 	 * Possible errors include:
 	 * User not signed in - there is no Cloud Directory SSO token
-	 * @returns {Promise<object>} - The tokens of the authenticated user.
+	 * @returns {Promise} - The tokens of the authenticated user.
 	 * e.g. {accessToken: 'eyg...', accessTokenPayload: { iss: 'https...' }, idToken: 'eyg...', idTokenPayload: { email: 'example@gmail.com' }}
-	 * @throws OAuthError - Any errors from the server. e.g. {error: 'access_denied', description: 'User not signed in'}
-	 * @throws AppIDError "Silent sign-in timed out" - The iframe will close after 5 seconds if authentication could not be completed.
-	 * @throws TokenError - Any token validation error.
-	 * @throws RequestError - Any errors during a HTTP request.
+	 * @throws {OAuthError} - Any errors from the server. e.g. {error: 'access_denied', description: 'User not signed in'}
+	 * @throws {AppIDError} "Silent sign-in timed out" - The iframe will close after 5 seconds if authentication could not be completed.
+	 * @throws {TokenError} - Any token validation error.
+	 * @throws {RequestError} - Any errors during a HTTP request.
 	 */
 	async silentSignin() {
 		const {codeVerifier, nonce, state, authUrl} = this.utils.getAuthParams(this.clientId, this.window.origin, constants.PROMPT);
@@ -130,10 +121,10 @@ class AppID {
 
 	/**
 	 * This method will made a GET request to the user info endpoint using the access token of the authenticated user.
-	 * @param accessToken - The App ID access token of the user
-	 * @returns {Promise<object>} - The user information for the authenticated user. e.g. {sub: '', email: ''}
-	 * @throws AppIDError "Access token must be a string" - Invalid access token.
-	 * @throws RequestError - Any errors during a HTTP request.
+	 * @param {string} accessToken - The App ID access token of the user
+	 * @returns {Promise} - The user information for the authenticated user. e.g. {sub: '', email: ''}
+	 * @throws {AppIDError} "Access token must be a string" - Invalid access token.
+	 * @throws {RequestError} - Any errors during a HTTP request.
 	 */
 	async getUserInfo(accessToken) {
 		if (typeof accessToken !== 'string') {

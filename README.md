@@ -1,26 +1,35 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/a30e7499a5234d3494508b7050975beb)](https://www.codacy.com/app/kajabfab/appid-clientsdk-js?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ibm-cloud-security/appid-clientsdk-js&amp;utm_campaign=Badge_Grade)
 
 # appid-clientsdk-js
-Client-side javascript SDK for the IBM Cloud App ID service
+Client-side javascript SDK for the IBM Cloud App ID service.
 
-To run locally, first build the project:
-```
-npm run build
+### Table of Contents
+
+-   [Installation][1]
+-   [Getting Started][2]
+-   [Documentation][3]
+    -   [init][3]
+    -   [signin][4]
+    -   [silentSignin][5]
+    -   [getUserInfo][6]
+## Installation
+Using npm
+```javascript
+npm install ibmcloud-appid-js
 ```
 
-Start the sample app
+From the CDN:
+```html
+<script src="""></script>
 ```
-cd sample
-node server.js
+
+Or, use the minified files in this repo:
+```html
+<script type='text/javascript' src="dist/appid.js"></script>
 ```
 
 ## Getting Started
 A simple sample application can be found in the `sample` folder in this repo.
-
-If you want to use our SDK in your existing application, load the script using `script` tags.
-```
-<script type='text/javascript' src="dist/appid.js"></script>
-```
 
 You will need an [IBM Cloud App ID](https://www.ibm.com/cloud/app-id) instance with a `singlepageapp` application created.
 Use the `clientId` and `discoveryEndpoint` from the application credentials to initialize the `AppID` instance.
@@ -32,11 +41,69 @@ await appID.init({
 });
 ``` 
 
-## Using Sign In with Popup
-```html
-<button id="login" class="button">Login</button>
-```
-The `signinWithPopup` function will trigger a login widget and return the full access and ID tokens along with its payload.
-```javascript
-const tokens = await appID.signinWithPopup();
-```
+## init
+Initialize AppID
+
+#### Parameters
+-   `clientId` **[string][8]** The clientId from the singlepageapp application credentials.
+-   `discoveryEndpoint` **[string][8]** The discoveryEndpoint from the singlepageapp application credentials.
+-   `popup` **[Object][7]** (optional) The popup configuration.
+
+
+-   Throws **AppIDError** For missing required params.
+-   Throws **RequestError** Any errors during a HTTP request.
+
+Returns **[Promise][9]** 
+
+## signin
+
+This will open a login widget in a popup which will prompt the user to enter their credentials.
+After a successful login, the popup will close and tokens are returned.
+
+-   Throws **AppIDError** AppIDError "Popup closed" - The user closed the popup before authentication was completed.
+-   Throws **TokenError** Any token validation error.
+-   Throws **OAuthError** Any errors from the server. e.g. {error: 'server_error', description: ''}
+-   Throws **RequestError** Any errors during a HTTP request.
+
+Returns **[Promise][9]** The tokens of the authenticated user or an error.
+e.g. {accessToken: 'eyg...', accessTokenPayload: { iss: 'https...' }, idToken: 'eyg...', idTokenPayload: { email: 'example@gmail.com' }}
+
+## silentSignin
+
+Silent sign in will attempt to authenticate the user in a hidden iframe.
+Sign in will be successful only if there is a Cloud Directory SSO token in the browser.
+You will need to enable SSO on the App ID dashboard.
+Possible errors include:
+User not signed in - there is no Cloud Directory SSO token
+
+-   Throws **OAuthError** Any errors from the server. e.g. {error: 'access_denied', description: 'User not signed in'}
+-   Throws **AppIDError** "Silent sign-in timed out" - The iframe will close after 5 seconds if authentication could not be completed.
+-   Throws **TokenError** Any token validation error.
+-   Throws **RequestError** Any errors during a HTTP request.
+
+Returns **[Promise][9]** The tokens of the authenticated user.
+e.g. {accessToken: 'eyg...', accessTokenPayload: { iss: 'https...' }, idToken: 'eyg...', idTokenPayload: { email: 'example@gmail.com' }}
+
+## getUserInfo
+
+This method will made a GET request to the user info endpoint using the access token of the authenticated user.
+
+### Parameters
+
+-   `accessToken` **[string][8]** The App ID access token of the user
+
+
+-   Throws **AppIDError** "Access token must be a string" - Invalid access token.
+-   Throws **RequestError** Any errors during a HTTP request.
+
+Returns **[Promise][9]** The user information for the authenticated user. e.g. {sub: '', email: ''}
+
+[1]: #installation
+[2]: #getting-started
+[3]: #init
+[4]: #signin
+[5]: #silentsignin
+[6]: #getuserinfo
+[7]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+[8]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+[9]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
