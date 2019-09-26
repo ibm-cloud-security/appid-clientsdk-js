@@ -55,11 +55,22 @@ document.getElementById('login').addEventListener('click', async () => {
 ## init
 Initialize AppID
 
-#### Parameters
--   `clientId` **[string][9]** The clientId from the singlepageapp application credentials.
--   `discoveryEndpoint` **[string][9]** The discoveryEndpoint from the singlepageapp application credentials.
--   `popup` **[Object][8]** (optional) The popup configuration.
+### Parameters
+-   `options` **[Object][8]** 
+    -   `options.clientId` **[string][9]** The clientId from the singlepageapp application credentials.
+    -   `options.discoveryEndpoint` **[string][9]** The discoveryEndpoint from the singlepageapp application credentials.
+    -   `options.popup` **[Object][8]** The popup configuration. (optional, default `{height:screen.height*.80,width:400}`)
+        -   `options.popup.height` **[Number][11]** The popup height.
+        -   `options.popup.width` **[Number][11]** The popup width.
 
+### Example
+
+```javascript
+await appID.init({
+	clientId: '<SPA_CLIENT_ID>',
+	discoveryEndpoint: '<WELL_KNOWN_ENDPOINT>'
+});
+```
 
 -   Throws **AppIDError** For missing required params.
 -   Throws **RequestError** Any errors during a HTTP request.
@@ -119,3 +130,4 @@ Returns **[Promise][10]** The user information for the authenticated user. e.g. 
 [8]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
 [9]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
 [10]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
+[11]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
