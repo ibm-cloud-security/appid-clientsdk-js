@@ -22,7 +22,7 @@ describe('AppID tests', () => {
 				w: {origin: 'http://localhost:3005'},
 				url: URL
 			});
-			let res = await appID.signinWithPopup();
+			let res = await appID.signin();
 			assert.equal(res.accessToken, 'accessToken');
 			assert.equal(res.idToken, 'idToken');
 			assert.equal(res.accessTokenPayload, 'tokenPayload');
@@ -40,7 +40,7 @@ describe('AppID tests', () => {
 				url: URL
 			});
 			try {
-				await appID.signinWithPopup();
+				await appID.signin();
 			} catch (e) {
 				assert.equal(e.description, constants.INVALID_STATE);
 			}
@@ -58,7 +58,7 @@ describe('AppID tests', () => {
 				url: URL
 			});
 			try {
-				await appID.signinWithPopup();
+				await appID.signin();
 			} catch (e) {
 				assert.equal(e.error, 'access_denied');
 				assert.equal(e.description, 'Could not verify SAML assertion');

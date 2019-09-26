@@ -71,7 +71,7 @@ class AppID {
 	 * @throws OAuthError - Any errors from the server. e.g. {error: 'server_error', description: ''}
 	 * @throws RequestError - Any errors during a HTTP request.
 	 */
-	async signinWithPopup() {
+	async signin() {
 		const {codeVerifier, nonce, state, authUrl} = this.utils.getAuthParams(this.clientId, this.window.origin);
 
 		this.popup.open(this.popupConfig);
