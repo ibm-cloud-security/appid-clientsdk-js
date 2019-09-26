@@ -32,12 +32,21 @@ class AppID {
 
 	/**
 	 * Initialize AppID
-	 * @param {string} clientId - The clientId from the singlepageapp application credentials.
-	 * @param {string} discoveryEndpoint - The discoveryEndpoint from the singlepageapp application credentials.
-	 * @param {Object} popup - (optional) The popup configuration.
+	 * @param {Object} options
+	 * @param {string} options.clientId - The clientId from the singlepageapp application credentials.
+	 * @param {string} options.discoveryEndpoint - The discoveryEndpoint from the singlepageapp application credentials.
+	 * @param {Object} options.popup - The popup configuration.
+	 * @param {Number} options.popup.height - The popup height.
+	 * @param {Number} options.popup.width - The popup width.
 	 * @returns {Promise}
 	 * @throws {AppIDError} For missing required params.
 	 * @throws {RequestError} Any errors during a HTTP request.
+	 * @example
+	 * await appID.init({
+	 * 		clientId: '<SPA_CLIENT_ID>',
+	 * 		discoveryEndpoint: '<WELL_KNOWN_ENDPOINT>'
+	 * });
+	 *
 	 */
 	async init({clientId, discoveryEndpoint, popup = {height: screen.height * .80, width: 400}}) {
 		if (!clientId) {
