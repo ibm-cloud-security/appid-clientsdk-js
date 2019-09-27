@@ -3,10 +3,12 @@
 # appid-clientsdk-js
 Client-side javascript SDK for the IBM Cloud App ID service.
 
-### Table of Contents
+## Table of Contents
 
 -   [Installation][1]
+
 -   [Getting Started][2]
+
 -   [API Reference][3]
     -   [init][4]
     -   [signin][5]
@@ -58,7 +60,9 @@ Initialize AppID
 ### Parameters
 -   `options` **[Object][8]** 
     -   `options.clientId` **[string][9]** The clientId from the singlepageapp application credentials.
+    
     -   `options.discoveryEndpoint` **[string][9]** The discoveryEndpoint from the singlepageapp application credentials.
+    
     -   `options.popup` **[Object][8]** The popup configuration. (optional, default `{height:screen.height*.80,width:400}`)
         -   `options.popup.height` **[Number][11]** The popup height.
         -   `options.popup.width` **[Number][11]** The popup width.
@@ -121,7 +125,6 @@ This method will made a GET request to the user info endpoint using the access t
 ### Parameters
 
 -   `accessToken` **[string][9]** The App ID access token of the user
-
 -   Throws **AppIDError** "Access token must be a string" - Invalid access token.
 -   Throws **RequestError** Any errors during a HTTP request.
 
