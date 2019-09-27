@@ -8,9 +8,14 @@ const constants = require('./constants');
 const AppIDError = require('./errors/AppIDError');
 
 /**
- * Client-side javascript SDK for the IBM Cloud App ID service.
+ * This class provides functions to support authentication.
  */
 class AppID {
+	/**
+	 * This creates an instance of AppID. Once created, call init() before attempting to sign in.
+	 * @example
+	 * const appID = new AppID();
+	 */
 	constructor(
 		{
 			popup = new PopupController(),
@@ -38,7 +43,7 @@ class AppID {
 	 * @param {Object} options
 	 * @param {string} options.clientId - The clientId from the singlepageapp application credentials.
 	 * @param {string} options.discoveryEndpoint - The discoveryEndpoint from the singlepageapp application credentials.
-	 * @param {Object} options.popup - The popup configuration.
+	 * @param {Object} [options.popup] - The popup configuration.
 	 * @param {Number} options.popup.height - The popup height.
 	 * @param {Number} options.popup.width - The popup width.
 	 * @returns {Promise}
@@ -46,8 +51,8 @@ class AppID {
 	 * @throws {RequestError} Any errors during a HTTP request.
 	 * @example
 	 * await appID.init({
-	 * 		clientId: '<SPA_CLIENT_ID>',
-	 * 		discoveryEndpoint: '<WELL_KNOWN_ENDPOINT>'
+	 * 	clientId: '<SPA_CLIENT_ID>',
+	 * 	discoveryEndpoint: '<WELL_KNOWN_ENDPOINT>'
 	 * });
 	 *
 	 */
@@ -65,12 +70,20 @@ class AppID {
 	}
 
 	/**
-	 * This will open a login widget in a popup which will prompt the user to enter their credentials.
-	 * After a successful login, the popup will close and tokens are returned.
-	 * @returns {Promise} The tokens of the authenticated user or an error.
-	 * @throws {AppIDError} "Popup closed" - The user closed the popup before authentication was completed.
+	 * @typedef {Object} Tokens
+	 * @property {string} accessToken A JWT.
+	 * @property {Object} accessTokenPayload The decoded JWT.
+	 * @property {string} idToken A JWT.
+	 * @property {Object} idTokenPayload The decoded JWT.
+	 */
+
+	/**
+	 * This will open a sign in widget in a popup which will prompt the user to enter their credentials.
+	 * After a successful sign in, the popup will close and tokens are returned.
+	 * @returns {Promise<Tokens>} The tokens of the authenticated user.
+	 * @throws {PopupError} "Popup closed" - The user closed the popup before authentication was completed.
 	 * @throws {TokenError} Any token validation error.
-	 * @throws {OAuthError} Any errors from the server. e.g. {error: 'server_error', description: ''}
+	 * @throws {OAuthError} Any errors from the server according to the [OAuth spec]{@link https://tools.ietf.org/html/rfc6749#section-4.1.2.1}. e.g. {error: 'server_error', description: ''}
 	 * @throws {RequestError} Any errors during a HTTP request.
 	 * @example
 	 * const {accessToken, accessTokenPayload, idToken, idTokenPayload} = await appID.signin();
@@ -97,11 +110,11 @@ class AppID {
 
 	/**
 	 * Silent sign in will attempt to authenticate the user in a hidden iframe.
-	 * Sign in will be successful only if there is a Cloud Directory SSO token in the browser.
-	 * You will need to enable SSO on the App ID dashboard.
-	 * @returns {Promise} The tokens of the authenticated user.
-	 * @throws {OAuthError} Any errors from the server. e.g. {error: 'access_denied', description: 'User not signed in'}
-	 * @throws {AppIDError} "Silent sign-in timed out" - The iframe will close after 5 seconds if authentication could not be completed.
+	 * You will need to enable Cloud Directory SSO.
+	 * Sign in will be successful only if the user has previously signed in using Cloud Directory and their session is not expired.
+	 * @returns {Promise<Tokens>} The tokens of the authenticated user.
+	 * @throws {OAuthError} Any errors from the server according to the [OAuth spec]{@link https://tools.ietf.org/html/rfc6749#section-4.1.2.1}. e.g. {error: 'access_denied', description: 'User not signed in'}
+	 * @throws {IFrameError} "Silent sign-in timed out" - The iframe will close after 5 seconds if authentication could not be completed.
 	 * @throws {TokenError} Any token validation error.
 	 * @throws {RequestError} Any errors during a HTTP request.
 	 * @example
@@ -132,8 +145,8 @@ class AppID {
 	}
 
 	/**
-	 * This method will made a GET request to the user info endpoint using the access token of the authenticated user.
-	 * @param {string} accessToken - The App ID access token of the user
+	 * This method will made a GET request to the [user info endpoint]{@link https://us-south.appid.cloud.ibm.com/swagger-ui/#/Authorization%20Server%20-%20Authorization%20Server%20V4/oauth-server.userInfo} using the access token of the authenticated user.
+	 * @param {string} accessToken - The App ID access token of the user.
 	 * @returns {Promise} The user information for the authenticated user. Example: {sub: '', email: ''}
 	 * @throws {AppIDError} "Access token must be a string" Invalid access token.
 	 * @throws {RequestError} Any errors during a HTTP request.
