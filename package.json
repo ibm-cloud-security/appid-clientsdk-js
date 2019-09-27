@@ -6,7 +6,7 @@
     "build": "webpack",
     "test": "mocha",
     "coverage": "nyc --reporter=lcov mocha",
-    "docs": "jsdoc src/index.js -t node_modules/docdash --readme README.md --destination doc"
+    "docs": "jsdoc src/index.js src/errors -t node_modules/docdash --readme README.md --destination docs -c jsdoc.json"
   },
   "repository": {
     "type": "git",
