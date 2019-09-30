@@ -1,7 +1,8 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/a30e7499a5234d3494508b7050975beb)](https://www.codacy.com/app/kajabfab/appid-clientsdk-js?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ibm-cloud-security/appid-clientsdk-js&amp;utm_campaign=Badge_Grade)
 
-# appid-clientsdk-js
-Client-side javascript SDK for the IBM Cloud App ID service.
+# IBM Cloud App ID Client SDK
+Client-side javascript SDK for the IBM Cloud App ID service. 
+Read the [official documentation](https://console.ng.bluemix.net/docs/services/appid/index.html#gettingstarted) for information about getting started with IBM Cloud App ID Service.
 
 ## Table of Contents
 

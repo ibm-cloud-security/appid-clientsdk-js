@@ -11,14 +11,12 @@ class Utils {
 			requestHandler = new RequestHandler(),
 			tokenValidator = new TokenValidator(),
 			url = URL,
-			openId,
-			clientId
+			openIdConfigResource
 		} = {}) {
 		this.URL = url;
 		this.request = requestHandler.request;
 		this.tokenValidator = tokenValidator;
-		this.openId = openId;
-		this.clientId = clientId;
+		this.openIdConfigResource = openIdConfigResource;
 	};
 
 	buildParams(params) {
@@ -40,7 +38,6 @@ class Utils {
 		const codeChallenge = this.sha256(codeVerifier);
 		const nonce = this.getRandomString(constants.NONCE_LENGTH);
 		const state = this.getRandomString(constants.STATE_LENGTH);
-		this.clientId = clientId;
 
 		let authParams = {
 			client_id: clientId,
@@ -58,7 +55,7 @@ class Utils {
 			authParams.prompt = prompt;
 		}
 
-		const authUrl = this.openId.getAuthorizationEndpoint() + '?' + this.buildParams(authParams);
+		const authUrl = this.openIdConfigResource.getAuthorizationEndpoint() + '?' + this.buildParams(authParams);
 		return {
 			codeVerifier,
 			nonce,
@@ -76,13 +73,13 @@ class Utils {
 			throw new AppIDError(constants.INVALID_STATE);
 		}
 
-		if (message.origin !== new this.URL(this.openId.getAuthorizationEndpoint()).origin) {
+		if (message.origin !== new this.URL(this.openIdConfigResource.getAuthorizationEndpoint()).origin) {
 			throw new AppIDError(constants.INVALID_ORIGIN);
 		}
 	}
 
-	async exchangeTokens({authCode, nonce, codeVerifier, windowOrigin}) {
-		let issuer = this.openId.getIssuer();
+	async exchangeTokens({clientId, authCode, nonce, codeVerifier, windowOrigin}) {
+		let issuer = this.openIdConfigResource.getIssuer();
 		let params = {
 			grant_type: 'authorization_code',
 			redirect_uri: windowOrigin,
@@ -91,23 +88,23 @@ class Utils {
 		};
 
 		const requestParams = this.buildParams(params);
-		const tokenEndpoint = this.openId.getTokenEndpoint();
+		const tokenEndpoint = this.openIdConfigResource.getTokenEndpoint();
 
 		const tokens = await this.request(tokenEndpoint, {
 			method: 'POST',
 			headers: {
-				'Authorization': 'Basic ' + rs.stob64(`${this.clientId}:${codeVerifier}`),
+				'Authorization': 'Basic ' + rs.stob64(`${clientId}:${codeVerifier}`),
 				'Content-Type': 'application/x-www-form-urlencoded'
 			},
 			body: requestParams
 		});
-		const publicKeys = await this.openId.getPublicKeys();
+		const publicKeys = await this.openIdConfigResource.getPublicKeys();
 
 		const accessTokenPayload = this.tokenValidator.decodeAndValidate({
 			token: tokens.access_token,
 			publicKeys,
 			issuer,
-			clientId: this.clientId,
+			clientId,
 			nonce
 		});
 
@@ -115,7 +112,7 @@ class Utils {
 			token: tokens.id_token,
 			publicKeys,
 			issuer,
-			clientId: this.clientId,
+			clientId,
 			nonce
 		});
 

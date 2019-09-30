@@ -8,7 +8,7 @@ const utils = new Utils(
 	{
 		requestHandler: new RequestHandler(),
 		tokenValidator: new TokenValidator(),
-		openId: new OpenIdConfigurationResource(),
+		openIdConfigResource: new OpenIdConfigurationResource(),
 		clientId: '1234',
 		url: URL
 	});

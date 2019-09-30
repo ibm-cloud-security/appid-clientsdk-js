@@ -21,8 +21,8 @@ class AppID {
 			popup = new PopupController(),
 			iframe = new IFrameController(),
 			tokenValidator = new TokenValidator(),
-			openID = new OpenIdConfigurationResource(),
-			utils = new Utils(),
+			openIdConfigResource = new OpenIdConfigurationResource(),
+			utils,
 			requestHandler = new RequestHandler(),
 			w = window,
 			url = URL
@@ -31,22 +31,26 @@ class AppID {
 		this.popup = popup;
 		this.iframe = iframe;
 		this.tokenValidator = tokenValidator;
-		this.openIdConfigResource = openID;
+		this.openIdConfigResource = openIdConfigResource;
+		this.URL = url;
 		this.utils = utils;
+		if (!utils) {
+			this.utils = new Utils({openIdConfigResource: this.openIdConfigResource, url: this.URL});
+		}
 		this.request = requestHandler.request;
 		this.window = w;
-		this.URL = url;
+		this.initialized = false;
 	}
 
 	/**
-	 * Initialize AppID
+	 * Initialize AppID. Call this function before attempting to sign in. You must wait for the promise to resolve.
 	 * @param {Object} options
 	 * @param {string} options.clientId - The clientId from the singlepageapp application credentials.
 	 * @param {string} options.discoveryEndpoint - The discoveryEndpoint from the singlepageapp application credentials.
 	 * @param {Object} [options.popup] - The popup configuration.
 	 * @param {Number} options.popup.height - The popup height.
 	 * @param {Number} options.popup.width - The popup width.
-	 * @returns {Promise}
+	 * @returns {Promise<void>}
 	 * @throws {AppIDError} For missing required params.
 	 * @throws {RequestError} Any errors during a HTTP request.
 	 * @example
@@ -60,13 +64,16 @@ class AppID {
 		if (!clientId) {
 			throw new AppIDError(constants.MISSING_CLIENT_ID);
 		}
-		if (!discoveryEndpoint) {
-			throw new AppIDError(constants.MISSING_DISCOVERY_ENDPOINT);
+		try {
+			new this.URL(discoveryEndpoint)
+		} catch (e) {
+			throw new AppIDError(constants.INVALID_DISCOVERY_ENDPOINT);
 		}
+
 		await this.openIdConfigResource.init({discoveryEndpoint, requestHandler: this.request});
 		this.clientId = clientId;
 		this.popupConfig = popup;
-		this.utils = new Utils({openId: this.openIdConfigResource, clientId: this.clientId, url: this.URL});
+		this.initialized = true;
 	}
 
 	/**
@@ -89,6 +96,8 @@ class AppID {
 	 * const {accessToken, accessTokenPayload, idToken, idTokenPayload} = await appID.signin();
 	 */
 	async signin() {
+		this._validateInitalize();
+
 		const {codeVerifier, nonce, state, authUrl} = this.utils.getAuthParams(this.clientId, this.window.origin);
 
 		this.popup.open(this.popupConfig);
@@ -101,6 +110,7 @@ class AppID {
 		let authCode = message.data.code;
 
 		return await this.utils.exchangeTokens({
+			clientId: this.clientId,
 			authCode,
 			codeVerifier,
 			nonce,
@@ -121,6 +131,7 @@ class AppID {
 	 * const {accessToken, accessTokenPayload, idToken, idTokenPayload} = await appID.silentSignin();
 	 */
 	async silentSignin() {
+		this._validateInitalize();
 		const {codeVerifier, nonce, state, authUrl} = this.utils.getAuthParams(this.clientId, this.window.origin, constants.PROMPT);
 
 		this.iframe.open(authUrl);
@@ -152,6 +163,7 @@ class AppID {
 	 * @throws {RequestError} Any errors during a HTTP request.
 	 */
 	async getUserInfo(accessToken) {
+		this._validateInitalize();
 		if (typeof accessToken !== 'string') {
 			throw new AppIDError(constants.INVALID_ACCESS_TOKEN);
 		}
@@ -161,6 +173,16 @@ class AppID {
 				'Authorization': 'Bearer ' + accessToken
 			}
 		});
+	}
+
+	/**
+	 *
+	 * @private
+	 */
+	_validateInitalize() {
+		if (!this.initialized) {
+			throw new AppIDError(constants.FAIL_TO_INITIALIZE);
+		}
 	}
 }
 
