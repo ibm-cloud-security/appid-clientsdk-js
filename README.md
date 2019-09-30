@@ -1,26 +1,35 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/a30e7499a5234d3494508b7050975beb)](https://www.codacy.com/app/kajabfab/appid-clientsdk-js?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ibm-cloud-security/appid-clientsdk-js&amp;utm_campaign=Badge_Grade)
 
-# appid-clientsdk-js
-Client-side javascript SDK for the IBM Cloud App ID service
+# IBM Cloud App ID Client SDK
+Client-side javascript SDK for the IBM Cloud App ID service. 
+Read the [official documentation](https://console.ng.bluemix.net/docs/services/appid/index.html#gettingstarted) for information about getting started with IBM Cloud App ID Service.
 
-To run locally, first build the project:
-```
-npm run build
+## Table of Contents
+
+-   [Installation][1]
+
+-   [Getting Started][2]
+
+-   [API Reference][3]
+
+## Installation
+Using npm:
+```javascript
+npm install ibmcloud-appid-js
 ```
 
-Start the sample app
+From the CDN:
+```html
+<script src="""></script>
 ```
-cd sample
-node server.js
+
+Or for development purposes use the minified file in this repo:
+```html
+<script type='text/javascript' src="dist/appid.min.js"></script>
 ```
 
 ## Getting Started
 A simple sample application can be found in the `sample` folder in this repo.
-
-If you want to use our SDK in your existing application, load the script using `script` tags.
-```
-<script type='text/javascript' src="dist/appid.js"></script>
-```
 
 You will need an [IBM Cloud App ID](https://www.ibm.com/cloud/app-id) instance with a `singlepageapp` application created.
 Use the `clientId` and `discoveryEndpoint` from the application credentials to initialize the `AppID` instance.
@@ -31,12 +40,20 @@ await appID.init({
     discoveryEndpoint: '<WELL_KNOWN_ENDPOINT>'
 });
 ``` 
-
-## Using Sign In with Popup
-```html
-<button id="login" class="button">Login</button>
-```
-The `signinWithPopup` function will trigger a login widget and return the full access and ID tokens along with its payload.
+Using the signin() in your app to start authentication:
 ```javascript
-const tokens = await appID.signinWithPopup();
+document.getElementById('login').addEventListener('click', async () => {
+    try {
+        const tokens = await appID.signin();
+    } catch (e) {
+        ...
+    }
+});
 ```
+
+## API Reference
+Checkout our API reference [here](https://ibm-cloud-security.github.io/appid-clientsdk-js/).
+
+[1]: #installation
+[2]: #getting-started
+[3]: #api-reference
