@@ -19,12 +19,20 @@ describe('Utils tests', () => {
 		assert.deepEqual(res, 'param1=test&param2=test&param3=test');
 	});
 
-	it('should return auth params', () => {
+	it('should return auth params with prompt', () => {
 		let res = utils.getAuthParams('1234', 'http://origin.com', 'none');
 		assert.exists(res.codeVerifier, 'returned code verifier');
 		assert.exists(res.nonce, 'returned nonce');
 		assert.exists(res.state, 'returned state');
 		assert.include(res.authUrl, 'prompt=none');
+	});
+
+	it('should return auth params without prompt', () => {
+		let res = utils.getAuthParams('1234', 'http://origin.com');
+		assert.exists(res.codeVerifier, 'returned code verifier');
+		assert.exists(res.nonce, 'returned nonce');
+		assert.exists(res.state, 'returned state');
+		assert.notInclude(res.authUrl, 'prompt');
 	});
 
 	it('should return tokens', async () => {
@@ -52,6 +60,11 @@ describe('Utils tests', () => {
 			origin: 'http://invalidorigin'
 		};
 
+		const validData = {
+			data: {state: 'dmFsaWRTdGF0ZQ=='},
+			origin: 'http://authserver.com'
+		};
+
 		it('should throw error', () => {
 			try {
 				utils.verifyMessage({message: error});
@@ -70,10 +83,15 @@ describe('Utils tests', () => {
 
 		it('should throw error - invalid origin', function () {
 			try {
-				utils.verifyMessage({message: originError, state: 'validState', authEndpoint: 'http://validorigin'});
+				utils.verifyMessage({message: originError, state: 'validState'});
 			} catch (e) {
 				assert.equal(e.message, 'Invalid origin');
 			}
+		});
+
+		it('should pass', function () {
+			let res = utils.verifyMessage({message: validData, state: 'validState'});
+			console.log(res)
 		});
 	});
 });
