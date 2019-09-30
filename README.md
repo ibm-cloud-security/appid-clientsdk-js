@@ -50,6 +50,7 @@ document.getElementById('login').addEventListener('click', async () => {
     }
 });
 ```
+Read the [official documentation](https://cloud.ibm.com/docs/services/appid?topic=appid-getting-started#gettingstarted) for information about getting started with IBM Cloud App ID Service.
 
 ## API Reference
 Checkout our API reference [here](https://ibm-cloud-security.github.io/appid-clientsdk-js/).

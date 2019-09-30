@@ -156,7 +156,7 @@ class AppID {
 	}
 
 	/**
-	 * This method will make a GET request to the [user info endpoint]{@link https://us-south.appid.cloud.ibm.com/swagger-ui/#/Authorization%20Server%20-%20Authorization%20Server%20V4/oauth-server.userInfo} using the access token of the authenticated user.
+	 * This method will make a GET request to the [user info endpoint]{@link https://us-south.appid.cloud.ibm.com/swagger-ui/#/Authorization%2520Server%2520-%2520Authorization%2520Server%2520V4/oauth-server.userInfo} using the access token of the authenticated user.
 	 * @param {string} accessToken - The App ID access token of the user.
 	 * @returns {Promise} The user information for the authenticated user. Example: {sub: '', email: ''}
 	 * @throws {AppIDError} "Access token must be a string" Invalid access token.
