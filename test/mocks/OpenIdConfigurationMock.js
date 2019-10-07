@@ -1,4 +1,8 @@
 class OpenIdConfigurationMock {
+	init() {
+		return;
+	}
+
 	getAuthorizationEndpoint() {
 		return 'http://authServer.com/';
 	}

@@ -28,9 +28,9 @@
 <script type='text/javascript' src="appid.min.js"></script>
 <script>
 	function showError(e) {
-        console.error(e);
-        document.getElementById('error').textContent = e;
-        document.getElementById('login').setAttribute('class', 'button');
+		console.error(e);
+		document.getElementById('error').textContent = e;
+		document.getElementById('login').setAttribute('class', 'button');
 	}
 
 	(async function () {
@@ -57,7 +57,7 @@
 			document.getElementById('error').textContent = '';
 
 			try {
-				const tokens = await appID.signinWithPopup();
+				const tokens = await appID.signin();
 				let userInfo = await appID.getUserInfo(tokens.accessToken);
 				let decodeIDToken = tokens.idTokenPayload;
 				document.getElementById('welcome').textContent = 'Hello, ' + decodeIDToken.name;
