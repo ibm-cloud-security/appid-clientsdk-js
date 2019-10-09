@@ -186,7 +186,7 @@ class AppID {
 	async changePassword(userId) {
 		this._validateInitalize();
 		if (!userId) {
-			throw new  AppIDError(constants.MISSING_USER_ID);
+			throw new AppIDError(constants.MISSING_USER_ID);
 		}
 		const {codeVerifier, state, nonce, changePasswordUrl} = this.utils.getChangePasswordInfo({
 			userId,

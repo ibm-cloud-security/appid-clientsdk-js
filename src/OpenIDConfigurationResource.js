@@ -16,10 +16,6 @@ class OpenIdConfigurationResource {
 		return this.openIdConfig.jwks_uri;
 	}
 
-	getProfilesEndpoint() {
-		return this.openIdConfig.profiles_endpoint;
-	}
-
 	getTokenEndpoint() {
 		return this.openIdConfig.token_endpoint;
 	}
