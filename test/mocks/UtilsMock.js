@@ -19,6 +19,19 @@ class UtilsMock {
 		return;
 	}
 
+	getChangePasswordInfo() {
+		return {
+			codeVerifier: 'codeVerifier',
+			state: 'state',
+			nonce: 'nonce',
+			changePasswordUrl: 'url'
+		}
+	}
+
+	getPKCEFields() {
+		return;
+	}
+
 	exchangeTokens() {
 		return {
 			accessToken: 'accessToken',

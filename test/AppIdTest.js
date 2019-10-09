@@ -217,4 +217,33 @@ describe('AppID tests', () => {
 			}
 		});
 	});
+
+	describe('changePassword', () => {
+		let appID;
+		before(async () => {
+			appID = new AppID({
+				popup: new PopupController({invalidState: false, error: false}),
+				iframe: new IFrameController({invalidState: false, error: false, invalidOrigin: false}),
+				tokenValidator: new TokenValidator(),
+				openIdConfigResource: new OpenIdConfigurationResource(),
+				utils: new Utils(),
+				requestHandler: new RequestHandler(),
+				w: {origin: 'localhost'},
+				url: URL
+			});
+			await appID.init(defaultInit);
+		});
+
+		it('should throw missing user id error', async () => {
+			try {
+				await appID.changePassword();
+			} catch (e) {
+				assert.equal(e.message, constants.MISSING_USER_ID);
+			}
+		});
+
+		it('should succeed', async () => {
+				await appID.changePassword('123');
+		});
+	})
 });
