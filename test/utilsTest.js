@@ -19,6 +19,16 @@ describe('Utils tests', () => {
 		assert.deepEqual(res, 'param1=test&param2=test&param3=test');
 	});
 
+	it('should return PKCE fields', () => {
+		let res = utils.getPKCEFields();
+		assert.include(JSON.stringify(res), 'codeVerifier');
+	});
+
+	it('should return change password info', () => {
+		let res = utils.getChangePasswordInfo({userId: 'userId', origin: 'origin', clientId: 'clientId'});
+		assert.include(res.changePasswordUrl, '/cloud_directory/change_password');
+	});
+
 	it('should return auth params with prompt', () => {
 		let res = utils.getAuthParams('1234', 'http://origin.com', 'none');
 		assert.exists(res.codeVerifier, 'returned code verifier');
