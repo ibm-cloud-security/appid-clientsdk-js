@@ -101,7 +101,7 @@ class AppID {
 		const {codeVerifier, nonce, state, authUrl} = this.utils.getAuthParams(this.clientId, this.window.origin);
 
 		this.popup.open(this.popupConfig);
-		this.popup.navigate({authUrl});
+		this.popup.navigate(authUrl);
 		const message = await this.popup.waitForMessage({messageType: 'authorization_response'});
 		this.popup.close();
 
@@ -157,7 +157,7 @@ class AppID {
 
 	/**
 	 * This method will make a GET request to the [user info endpoint]{@link https://us-south.appid.cloud.ibm.com/swagger-ui/#/Authorization%2520Server%2520-%2520Authorization%2520Server%2520V4/oauth-server.userInfo} using the access token of the authenticated user.
-	 * @param {string} accessToken - The App ID access token of the user.
+	 * @param {string} accessToken The App ID access token of the user.
 	 * @returns {Promise} The user information for the authenticated user. Example: {sub: '', email: ''}
 	 * @throws {AppIDError} "Access token must be a string" Invalid access token.
 	 * @throws {RequestError} Any errors during a HTTP request.
@@ -172,6 +172,42 @@ class AppID {
 			headers: {
 				'Authorization': 'Bearer ' + accessToken
 			}
+		});
+	}
+
+	/**
+	 * This method will open a popup to the change password widget. It requires a Cloud Directory user ID, which can be found in the ID token payload identities array.
+	 * @param {string} userId The Cloud Directory user ID.
+	 * @returns {Promise<void>}
+	 * @throws {AppIDError} "Missing user id" The user id is missing.
+	 * @example
+	 * await appID.changePassword(tokens.idTokenPayload.identities[0].id);
+	 */
+	async changePassword(userId) {
+		this._validateInitalize();
+		if (!userId) {
+			throw new  AppIDError(constants.MISSING_USER_ID);
+		}
+		const {codeVerifier, state, nonce, changePasswordUrl} = this.utils.getChangePasswordInfo({
+			userId,
+			origin: this.window.origin,
+			clientId: this.clientId
+		});
+
+		this.popup.open(this.popupConfig);
+		this.popup.navigate(changePasswordUrl);
+		const message = await this.popup.waitForMessage({messageType: 'authorization_response'});
+		this.popup.close();
+		this.utils.verifyMessage({message, state});
+		let authCode = message.data.code;
+
+		await this.utils.exchangeTokens({
+			clientId: this.clientId,
+			authCode,
+			codeVerifier,
+			nonce,
+			openId: this.openIdConfigResource,
+			windowOrigin: this.window.origin
 		});
 	}
 

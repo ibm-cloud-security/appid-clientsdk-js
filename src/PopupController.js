@@ -16,8 +16,8 @@ class PopupController {
 		}
 	};
 
-	navigate({authUrl}) {
-		this.popup.location.href = authUrl;
+	navigate(url) {
+		this.popup.location.href = url;
 	};
 
 	close() {

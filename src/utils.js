@@ -33,12 +33,34 @@ class Utils {
 		return rs.KJUR.crypto.Util.sha256(message);
 	}
 
-	getAuthParams(clientId, origin, prompt) {
+	getChangePasswordInfo({userId, origin, clientId}) {
+		const {codeVerifier, codeChallenge, state, nonce} = this.getPKCEFields();
+		let params = {
+			code_challenge: rs.stob64(codeChallenge),
+			response_mode: constants.RESPONSE_MODE,
+			user_id: userId,
+			redirect_uri: origin,
+			client_id: clientId,
+			state: rs.stob64(state)
+		};
+		return {
+			codeVerifier,
+			state,
+			nonce,
+			changePasswordUrl: this.openIdConfigResource.getIssuer() + constants.CHANGE_PASSWORD + '?' + this.buildParams(params)
+		};
+	}
+
+	getPKCEFields() {
 		const codeVerifier = this.getRandomString(constants.CODE_VERIFIER_LENGTH);
 		const codeChallenge = this.sha256(codeVerifier);
-		const nonce = this.getRandomString(constants.NONCE_LENGTH);
 		const state = this.getRandomString(constants.STATE_LENGTH);
+		const nonce = this.getRandomString(constants.NONCE_LENGTH)
+		return {codeVerifier, codeChallenge, state, nonce};
+	}
 
+	getAuthParams(clientId, origin, prompt) {
+		const {codeVerifier, codeChallenge, state, nonce} = this.getPKCEFields();
 		let authParams = {
 			client_id: clientId,
 			response_type: constants.RESPONSE_TYPE,
