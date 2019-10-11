@@ -11,12 +11,14 @@ class Utils {
 			requestHandler = new RequestHandler(),
 			tokenValidator = new TokenValidator(),
 			url = URL,
-			openIdConfigResource
+			openIdConfigResource,
+			popup
 		} = {}) {
 		this.URL = url;
 		this.request = requestHandler.request;
 		this.tokenValidator = tokenValidator;
 		this.openIdConfigResource = openIdConfigResource;
+		this.popup = popup;
 	};
 
 	buildParams(params) {
@@ -55,11 +57,11 @@ class Utils {
 		const codeVerifier = this.getRandomString(constants.CODE_VERIFIER_LENGTH);
 		const codeChallenge = this.sha256(codeVerifier);
 		const state = this.getRandomString(constants.STATE_LENGTH);
-		const nonce = this.getRandomString(constants.NONCE_LENGTH)
+		const nonce = this.getRandomString(constants.NONCE_LENGTH);
 		return {codeVerifier, codeChallenge, state, nonce};
 	}
 
-	getAuthParams(clientId, origin, prompt) {
+	getAuthParamsAndUrl({clientId, origin, prompt, endpoint, userId}) {
 		const {codeVerifier, codeChallenge, state, nonce} = this.getPKCEFields();
 		let authParams = {
 			client_id: clientId,
@@ -77,13 +79,36 @@ class Utils {
 			authParams.prompt = prompt;
 		}
 
-		const authUrl = this.openIdConfigResource.getAuthorizationEndpoint() + '?' + this.buildParams(authParams);
+		if (userId) {
+			authParams.user_id = userId;
+		}
+
+		const url = endpoint + '?' + this.buildParams(authParams);
 		return {
 			codeVerifier,
 			nonce,
 			state,
-			authUrl
+			url
 		};
+	}
+
+	async performOAuthFlowAndGetTokens({userId, origin, clientId, endpoint}) {
+		const {codeVerifier, state, nonce, url} = this.getAuthParamsAndUrl({userId, origin, clientId, endpoint});
+
+		this.popup.open();
+		this.popup.navigate(url);
+		const message = await this.popup.waitForMessage({messageType: 'authorization_response'});
+		this.popup.close();
+		this.verifyMessage({message, state});
+		let authCode = message.data.code;
+
+		return await this.retrieveTokens({
+			clientId,
+			authCode,
+			codeVerifier,
+			nonce,
+			windowOrigin: origin
+		});
 	}
 
 	verifyMessage({message, state}) {
@@ -100,7 +125,7 @@ class Utils {
 		}
 	}
 
-	async exchangeTokens({clientId, authCode, nonce, codeVerifier, windowOrigin}) {
+	async retrieveTokens({clientId, authCode, nonce, codeVerifier, windowOrigin}) {
 		let issuer = this.openIdConfigResource.getIssuer();
 		let params = {
 			grant_type: 'authorization_code',

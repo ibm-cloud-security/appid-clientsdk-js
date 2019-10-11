@@ -12,6 +12,8 @@ module.exports = {
 	INVALID_TOKEN: 'Invalid token',
 	MISSING_PUBLIC_KEY: 'Cannot find public key',
 	INVALID_ACCESS_TOKEN: 'Access token must be a string',
+	INVALID_ID_TOKEN_PAYLOAD: 'Id token payload must be an object',
+	NOT_CD_USER: 'Must be a Cloud Directory user',
 	MISSING_CLIENT_ID: 'Missing client ID',
 	MISSING_USER_ID: 'Missing user ID',
 	INVALID_DISCOVERY_ENDPOINT: 'Invalid discovery endpoint',

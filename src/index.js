@@ -35,7 +35,7 @@ class AppID {
 		this.URL = url;
 		this.utils = utils;
 		if (!utils) {
-			this.utils = new Utils({openIdConfigResource: this.openIdConfigResource, url: this.URL});
+			this.utils = new Utils({openIdConfigResource: this.openIdConfigResource, url: this.URL, popup: this.popup});
 		}
 		this.request = requestHandler.request;
 		this.window = w;
@@ -71,8 +71,8 @@ class AppID {
 		}
 
 		await this.openIdConfigResource.init({discoveryEndpoint, requestHandler: this.request});
+		this.popup.init(popup);
 		this.clientId = clientId;
-		this.popupConfig = popup;
 		this.initialized = true;
 	}
 
@@ -97,25 +97,9 @@ class AppID {
 	 */
 	async signin() {
 		this._validateInitalize();
-
-		const {codeVerifier, nonce, state, authUrl} = this.utils.getAuthParams(this.clientId, this.window.origin);
-
-		this.popup.open(this.popupConfig);
-		this.popup.navigate(authUrl);
-		const message = await this.popup.waitForMessage({messageType: 'authorization_response'});
-		this.popup.close();
-
-		this.utils.verifyMessage({message, state});
-
-		let authCode = message.data.code;
-
-		return await this.utils.exchangeTokens({
-			clientId: this.clientId,
-			authCode,
-			codeVerifier,
-			nonce,
-			windowOrigin: this.window.origin
-		});
+		const endpoint = this.openIdConfigResource.getAuthorizationEndpoint();
+		console.log(endpoint);
+		return this.utils.performOAuthFlowAndGetTokens({origin: this.window.origin, clientId: this.clientId, endpoint});
 	}
 
 	/**
@@ -132,9 +116,15 @@ class AppID {
 	 */
 	async silentSignin() {
 		this._validateInitalize();
-		const {codeVerifier, nonce, state, authUrl} = this.utils.getAuthParams(this.clientId, this.window.origin, constants.PROMPT);
+		const endpoint = this.openIdConfigResource.getAuthorizationEndpoint();
+		const {codeVerifier, nonce, state, url} = this.utils.getAuthParamsAndUrl({
+			clientId: this.clientId,
+			origin: this.window.origin,
+			prompt: constants.PROMPT,
+			endpoint
+		});
 
-		this.iframe.open(authUrl);
+		this.iframe.open(url);
 
 		let message;
 		try {
@@ -145,7 +135,7 @@ class AppID {
 		this.utils.verifyMessage({message, state});
 		let authCode = message.data.code;
 
-		return await this.utils.exchangeTokens({
+		return await this.utils.retrieveTokens({
 			clientId: this.clientId,
 			authCode,
 			codeVerifier,
@@ -176,38 +166,38 @@ class AppID {
 	}
 
 	/**
-	 * This method will open a popup to the change password widget. It requires a Cloud Directory user ID, which can be found in the ID token payload identities array.
-	 * @param {string} userId The Cloud Directory user ID.
-	 * @returns {Promise<void>}
-	 * @throws {AppIDError} "Missing user id" The user id is missing.
+	 * This method will open a popup to the change password widget for Cloud Directory users.
+	 * @param {string} idTokenPayload The id token payload.
+	 * @returns {Promise<Tokens>} The tokens of the authenticated user.
+	 * @throws {AppIDError} "Id token payload must be an object"
+	 * @throws {AppIDError} "Must be a Cloud Directory user"
+	 * @throws {AppIDError} "Missing user ID"
 	 * @example
-	 * await appID.changePassword(tokens.idTokenPayload.identities[0].id);
+	 * let tokens = await appID.changePassword(idTokenPayload);
 	 */
-	async changePassword(userId) {
+	async changePassword(idTokenPayload) { // change to id token string
 		this._validateInitalize();
-		if (!userId) {
+		let userId;
+
+		if (typeof idTokenPayload === 'string') {
+			throw new AppIDError(constants.INVALID_ID_TOKEN_PAYLOAD);
+		}
+
+		if (idTokenPayload.identities && idTokenPayload.identities[0] && idTokenPayload.identities[0].id) {
+			if (idTokenPayload.identities[0].provider !== 'cloud_directory') {
+				throw new AppIDError(constants.NOT_CD_USER);
+			}
+			userId = idTokenPayload.identities[0].id;
+		} else {
 			throw new AppIDError(constants.MISSING_USER_ID);
 		}
-		const {codeVerifier, state, nonce, changePasswordUrl} = this.utils.getChangePasswordInfo({
+
+		const endpoint = this.openIdConfigResource.getIssuer() + constants.CHANGE_PASSWORD;
+		return this.utils.performOAuthFlowAndGetTokens({
 			userId,
 			origin: this.window.origin,
-			clientId: this.clientId
-		});
-
-		this.popup.open(this.popupConfig);
-		this.popup.navigate(changePasswordUrl);
-		const message = await this.popup.waitForMessage({messageType: 'authorization_response'});
-		this.popup.close();
-		this.utils.verifyMessage({message, state});
-		let authCode = message.data.code;
-
-		await this.utils.exchangeTokens({
 			clientId: this.clientId,
-			authCode,
-			codeVerifier,
-			nonce,
-			openId: this.openIdConfigResource,
-			windowOrigin: this.window.origin
+			endpoint
 		});
 	}
 
