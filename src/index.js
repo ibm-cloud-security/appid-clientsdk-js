@@ -98,7 +98,6 @@ class AppID {
 	async signin() {
 		this._validateInitalize();
 		const endpoint = this.openIdConfigResource.getAuthorizationEndpoint();
-		console.log(endpoint);
 		return this.utils.performOAuthFlowAndGetTokens({origin: this.window.origin, clientId: this.clientId, endpoint});
 	}
 
@@ -183,7 +182,7 @@ class AppID {
 			throw new AppIDError(constants.INVALID_ID_TOKEN_PAYLOAD);
 		}
 
-		if (idTokenPayload.identities && idTokenPayload.identities[0] && idTokenPayload.identities[0].id) {
+		if (idTokenPayload && idTokenPayload.identities && idTokenPayload.identities[0] && idTokenPayload.identities[0].id) {
 			if (idTokenPayload.identities[0].provider !== 'cloud_directory') {
 				throw new AppIDError(constants.NOT_CD_USER);
 			}

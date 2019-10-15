@@ -242,8 +242,27 @@ describe('AppID tests', () => {
 			}
 		});
 
-		it('should succeed', async () => {
+		it('should throw Id token payload must be an object error', async () => {
+			try {
 				await appID.changePassword('123');
+			} catch (e) {
+				assert.equal(e.message, constants.INVALID_ID_TOKEN_PAYLOAD);
+			}
+		});
+
+		it('should throw not cd user error', async () => {
+			try {
+				await appID.changePassword({identities: [{provider: 'not_cd', id: '123'}]});
+			} catch (e) {
+				assert.equal(e.message, constants.NOT_CD_USER);
+			}
+		});
+
+		it('should succeed', async () => {
+			let res = await appID.changePassword({identities: [{provider: 'cloud_directory', id: '123'}]});
+			assert.equal(res.accessToken, 'accessToken');
+			assert.equal(res.idToken, 'idToken');
+			assert.equal(res.accessTokenPayload, 'tokenPayload');
 		});
 	})
 });

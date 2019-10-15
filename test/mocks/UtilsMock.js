@@ -11,28 +11,28 @@ class UtilsMock {
 		return 'param1=test&param2=test';
 	}
 
-	getAuthParams() {
-		return 'authParams';
+	getAuthParamsAndUrl() {
+		return {
+			codeVerifier: 'codeVerifier',
+			nonce: 'nonce',
+			state: 'state',
+			url: 'url'
+		};
 	}
 
 	verifyMessage() {
 		return;
 	}
 
-	getChangePasswordInfo() {
-		return {
-			codeVerifier: 'codeVerifier',
-			state: 'state',
-			nonce: 'nonce',
-			changePasswordUrl: 'url'
-		}
+	performOAuthFlowAndGetTokens() {
+		return this.retrieveTokens()
 	}
 
 	getPKCEFields() {
 		return;
 	}
 
-	exchangeTokens() {
+	retrieveTokens() {
 		return {
 			accessToken: 'accessToken',
 			accessTokenPayload: 'tokenPayload',
