@@ -178,17 +178,17 @@ class AppID {
 		this._validateInitalize();
 		let userId;
 
+		if (!idTokenPayload){
+			throw new AppIDError(constants.MISSING_USER_ID);
+		}
 		if (typeof idTokenPayload === 'string') {
 			throw new AppIDError(constants.INVALID_ID_TOKEN_PAYLOAD);
 		}
-
-		if (idTokenPayload && idTokenPayload.identities && idTokenPayload.identities[0] && idTokenPayload.identities[0].id) {
+		if(idTokenPayload.identities && idTokenPayload.identities[0] && idTokenPayload.identities[0].id) {
 			if (idTokenPayload.identities[0].provider !== 'cloud_directory') {
 				throw new AppIDError(constants.NOT_CD_USER);
 			}
 			userId = idTokenPayload.identities[0].id;
-		} else {
-			throw new AppIDError(constants.MISSING_USER_ID);
 		}
 
 		const endpoint = this.openIdConfigResource.getIssuer() + constants.CHANGE_PASSWORD;
