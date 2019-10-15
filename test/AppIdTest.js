@@ -258,6 +258,14 @@ describe('AppID tests', () => {
 			}
 		});
 
+		it('should throw invalid token payload', async () => {
+			try {
+				await appID.changePassword({identities: 'sdasd'});
+			} catch (e) {
+				assert.equal(e.message, constants.INVALID_ID_TOKEN_PAYLOAD);
+			}
+		});
+
 		it('should succeed', async () => {
 			let res = await appID.changePassword({identities: [{provider: 'cloud_directory', id: '123'}]});
 			assert.equal(res.accessToken, 'accessToken');

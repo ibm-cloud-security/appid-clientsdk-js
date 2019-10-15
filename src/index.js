@@ -189,6 +189,8 @@ class AppID {
 				throw new AppIDError(constants.NOT_CD_USER);
 			}
 			userId = idTokenPayload.identities[0].id;
+		} else {
+			throw new AppIDError(constants.INVALID_ID_TOKEN_PAYLOAD);
 		}
 
 		const endpoint = this.openIdConfigResource.getIssuer() + constants.CHANGE_PASSWORD;
