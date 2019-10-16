@@ -168,18 +168,18 @@ class AppID {
 	 * This method will open a popup to the change password widget for Cloud Directory users.
 	 * @param {string} idTokenPayload The id token payload.
 	 * @returns {Promise<Tokens>} The tokens of the authenticated user.
-	 * @throws {AppIDError} "Id token payload must be an object"
+	 * @throws {AppIDError} "Expect id token payload object to have identities field"
 	 * @throws {AppIDError} "Must be a Cloud Directory user"
-	 * @throws {AppIDError} "Missing user ID"
+	 * @throws {AppIDError} "Missing id token payload"
 	 * @example
 	 * let tokens = await appID.changePassword(idTokenPayload);
 	 */
-	async changePassword(idTokenPayload) { // change to id token string
+	async changePassword(idTokenPayload) {
 		this._validateInitalize();
 		let userId;
 
 		if (!idTokenPayload){
-			throw new AppIDError(constants.MISSING_USER_ID);
+			throw new AppIDError(constants.MISSING_ID_TOKEN_PAYLOAD);
 		}
 		if (typeof idTokenPayload === 'string') {
 			throw new AppIDError(constants.INVALID_ID_TOKEN_PAYLOAD);

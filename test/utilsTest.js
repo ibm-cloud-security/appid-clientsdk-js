@@ -1,20 +1,20 @@
 const assert = require('chai').assert;
 const Utils = require('../src/utils');
-const RequestHandler = require('./mocks/RequestHandlerMock');
-const TokenValidator = require('./mocks/TokenValidatorMock');
-const PopupController = require('./mocks/PopUpControllerMock');
-const OpenIdConfigurationResource = require('./mocks/OpenIdConfigurationMock');
+const RequestHandlerMock = require('./mocks/RequestHandlerMock');
+const TokenValidatorMock = require('./mocks/TokenValidatorMock');
+const PopupControllerMock = require('./mocks/PopUpControllerMock');
+const OpenIdConfigurationResourceMock = require('./mocks/OpenIdConfigurationMock');
 const constants = require('../src/constants');
 
 const {URL} = require('url');
 const utils = new Utils(
 	{
-		requestHandler: new RequestHandler(),
-		tokenValidator: new TokenValidator(),
-		openIdConfigResource: new OpenIdConfigurationResource(),
+		requestHandler: new RequestHandlerMock(),
+		tokenValidator: new TokenValidatorMock(),
+		openIdConfigResource: new OpenIdConfigurationResourceMock(),
 		clientId: '1234',
 		url: URL,
-		popup: new PopupController({invalidState: false, error: false, invalidOrigin: false})
+		popup: new PopupControllerMock({invalidState: false, error: false, invalidOrigin: false})
 	});
 
 describe('Utils tests', () => {
@@ -28,9 +28,9 @@ describe('Utils tests', () => {
 		assert.include(JSON.stringify(res), 'codeVerifier');
 	});
 
-	it('should return error - performOAuthFlowAndGetTokens', () => {
+	it('should return error - performOAuthFlowAndGetTokens', async () => {
 		try {
-			let res = utils.performOAuthFlowAndGetTokens({userId: 'userId', origin: 'origin', clientId: 'clientId'});
+			let res = await utils.performOAuthFlowAndGetTokens({userId: 'userId', origin: 'origin', clientId: 'clientId'});
 		} catch (e) {
 			assert.include(e.message, constants.INVALID_STATE);
 		}
