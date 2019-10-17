@@ -6,6 +6,7 @@ const OpenIdConfigurationResource = require('./OpenIDConfigurationResource');
 const TokenValidator = require('./TokenValidator');
 const constants = require('./constants');
 const AppIDError = require('./errors/AppIDError');
+const jsrsasign = require('jsrsasign');
 
 /**
  * This class provides functions to support authentication.
@@ -35,7 +36,7 @@ class AppID {
 		this.URL = url;
 		this.utils = utils;
 		if (!utils) {
-			this.utils = new Utils({openIdConfigResource: this.openIdConfigResource, url: this.URL, popup: this.popup});
+			this.utils = new Utils({openIdConfigResource: this.openIdConfigResource, url: this.URL, popup: this.popup, jsrsasign});
 		}
 		this.request = requestHandler.request;
 		this.window = w;
