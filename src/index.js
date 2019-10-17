@@ -3,9 +3,9 @@ const RequestHandler = require('./RequestHandler');
 const PopupController = require('./PopupController');
 const IFrameController = require('./IFrameController');
 const OpenIdConfigurationResource = require('./OpenIDConfigurationResource');
-const TokenValidator = require('./TokenValidator');
 const constants = require('./constants');
 const AppIDError = require('./errors/AppIDError');
+const jsrsasign = require('jsrsasign');
 
 /**
  * This class provides functions to support authentication.
@@ -20,7 +20,6 @@ class AppID {
 		{
 			popup = new PopupController(),
 			iframe = new IFrameController(),
-			tokenValidator = new TokenValidator(),
 			openIdConfigResource = new OpenIdConfigurationResource(),
 			utils,
 			requestHandler = new RequestHandler(),
@@ -30,12 +29,11 @@ class AppID {
 
 		this.popup = popup;
 		this.iframe = iframe;
-		this.tokenValidator = tokenValidator;
 		this.openIdConfigResource = openIdConfigResource;
 		this.URL = url;
 		this.utils = utils;
 		if (!utils) {
-			this.utils = new Utils({openIdConfigResource: this.openIdConfigResource, url: this.URL});
+			this.utils = new Utils({openIdConfigResource: this.openIdConfigResource, url: this.URL, popup: this.popup, jsrsasign});
 		}
 		this.request = requestHandler.request;
 		this.window = w;
@@ -60,7 +58,7 @@ class AppID {
 	 * });
 	 *
 	 */
-	async init({clientId, discoveryEndpoint, popup = {height: screen.height * .80, width: 400}}) {
+	async init({clientId, discoveryEndpoint, popup = {height: window.screen.height * .80, width: 400}}) {
 		if (!clientId) {
 			throw new AppIDError(constants.MISSING_CLIENT_ID);
 		}
@@ -71,8 +69,8 @@ class AppID {
 		}
 
 		await this.openIdConfigResource.init({discoveryEndpoint, requestHandler: this.request});
+		this.popup.init(popup);
 		this.clientId = clientId;
-		this.popupConfig = popup;
 		this.initialized = true;
 	}
 
@@ -97,25 +95,8 @@ class AppID {
 	 */
 	async signin() {
 		this._validateInitalize();
-
-		const {codeVerifier, nonce, state, authUrl} = this.utils.getAuthParams(this.clientId, this.window.origin);
-
-		this.popup.open(this.popupConfig);
-		this.popup.navigate({authUrl});
-		const message = await this.popup.waitForMessage({messageType: 'authorization_response'});
-		this.popup.close();
-
-		this.utils.verifyMessage({message, state});
-
-		let authCode = message.data.code;
-
-		return await this.utils.exchangeTokens({
-			clientId: this.clientId,
-			authCode,
-			codeVerifier,
-			nonce,
-			windowOrigin: this.window.origin
-		});
+		const endpoint = this.openIdConfigResource.getAuthorizationEndpoint();
+		return this.utils.performOAuthFlowAndGetTokens({origin: this.window.origin, clientId: this.clientId, endpoint});
 	}
 
 	/**
@@ -132,9 +113,15 @@ class AppID {
 	 */
 	async silentSignin() {
 		this._validateInitalize();
-		const {codeVerifier, nonce, state, authUrl} = this.utils.getAuthParams(this.clientId, this.window.origin, constants.PROMPT);
+		const endpoint = this.openIdConfigResource.getAuthorizationEndpoint();
+		const {codeVerifier, nonce, state, url} = this.utils.getAuthParamsAndUrl({
+			clientId: this.clientId,
+			origin: this.window.origin,
+			prompt: constants.PROMPT,
+			endpoint
+		});
 
-		this.iframe.open(authUrl);
+		this.iframe.open(url);
 
 		let message;
 		try {
@@ -145,7 +132,7 @@ class AppID {
 		this.utils.verifyMessage({message, state});
 		let authCode = message.data.code;
 
-		return await this.utils.exchangeTokens({
+		return await this.utils.retrieveTokens({
 			clientId: this.clientId,
 			authCode,
 			codeVerifier,
@@ -157,7 +144,7 @@ class AppID {
 
 	/**
 	 * This method will make a GET request to the [user info endpoint]{@link https://us-south.appid.cloud.ibm.com/swagger-ui/#/Authorization%2520Server%2520-%2520Authorization%2520Server%2520V4/oauth-server.userInfo} using the access token of the authenticated user.
-	 * @param {string} accessToken - The App ID access token of the user.
+	 * @param {string} accessToken The App ID access token of the user.
 	 * @returns {Promise} The user information for the authenticated user. Example: {sub: '', email: ''}
 	 * @throws {AppIDError} "Access token must be a string" Invalid access token.
 	 * @throws {RequestError} Any errors during a HTTP request.
@@ -172,6 +159,44 @@ class AppID {
 			headers: {
 				'Authorization': 'Bearer ' + accessToken
 			}
+		});
+	}
+
+	/**
+	 * This method will open a popup to the change password widget for Cloud Directory users.
+	 * @param {string} idTokenPayload The id token payload.
+	 * @returns {Promise<Tokens>} The tokens of the authenticated user.
+	 * @throws {AppIDError} "Expect id token payload object to have identities field"
+	 * @throws {AppIDError} "Must be a Cloud Directory user"
+	 * @throws {AppIDError} "Missing id token payload"
+	 * @example
+	 * let tokens = await appID.changePassword(idTokenPayload);
+	 */
+	async changePassword(idTokenPayload) {
+		this._validateInitalize();
+		let userId;
+
+		if (!idTokenPayload){
+			throw new AppIDError(constants.MISSING_ID_TOKEN_PAYLOAD);
+		}
+		if (typeof idTokenPayload === 'string') {
+			throw new AppIDError(constants.INVALID_ID_TOKEN_PAYLOAD);
+		}
+		if(idTokenPayload.identities && idTokenPayload.identities[0] && idTokenPayload.identities[0].id) {
+			if (idTokenPayload.identities[0].provider !== 'cloud_directory') {
+				throw new AppIDError(constants.NOT_CD_USER);
+			}
+			userId = idTokenPayload.identities[0].id;
+		} else {
+			throw new AppIDError(constants.INVALID_ID_TOKEN_PAYLOAD);
+		}
+
+		const endpoint = this.openIdConfigResource.getIssuer() + constants.CHANGE_PASSWORD;
+		return this.utils.performOAuthFlowAndGetTokens({
+			userId,
+			origin: this.window.origin,
+			clientId: this.clientId,
+			endpoint
 		});
 	}
 

@@ -20,6 +20,15 @@ describe('RequestHandler tests', async () => {
 		}
 	});
 
+	it('returns error - failed to fetch invalid url', async () => {
+		const invalidUrl = 'notvalid';
+		try {
+			let res = await requestHandler(invalidUrl);
+		} catch (e) {
+			assert.deepEqual(e.toString(),'Error: Failed to fetch notvalid. TypeError: Only absolute URLs are supported')
+		}
+	});
+
 	it('returns invalid response type', async () => {
 		const htmlResponse = url + 'html';
 		try {

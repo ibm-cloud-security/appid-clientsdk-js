@@ -5,19 +5,23 @@ class PopupController {
 		this.window = w;
 	};
 
-	open(popup) {
-		const h = popup.height;
-		const w = popup.width;
-		const left = (screen.width - w) / 2;
-		const top = (screen.height - h) / 2;
+	init(popupConfig){
+		this.popupConfig = popupConfig;
+	}
+
+	open() {
+		const h = this.popupConfig.height;
+		const w = this.popupConfig.width;
+		const left = (window.screen.width - w) / 2;
+		const top = (window.screen.height - h) / 2;
 		this.popup = this.window.open('', 'popup', `left=${left},top=${top},width=${w},height=${h},resizable,scrollbars=yes,status=1`);
 		if (!this.popup) {
 			throw new PopupError('Unable to open popup')
 		}
 	};
 
-	navigate({authUrl}) {
-		this.popup.location.href = authUrl;
+	navigate(url) {
+		this.popup.location.href = url;
 	};
 
 	close() {
