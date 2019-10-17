@@ -4,6 +4,7 @@ const RequestHandlerMock = require('./mocks/RequestHandlerMock');
 const TokenValidatorMock = require('./mocks/TokenValidatorMock');
 const PopupControllerMock = require('./mocks/PopUpControllerMock');
 const OpenIdConfigurationResourceMock = require('./mocks/OpenIdConfigurationMock');
+const JsrsasignMock = require('./mocks/JsrsasignMock');
 const constants = require('../src/constants');
 
 const {URL} = require('url');
@@ -14,7 +15,8 @@ const utils = new Utils(
 		openIdConfigResource: new OpenIdConfigurationResourceMock(),
 		clientId: '1234',
 		url: URL,
-		popup: new PopupControllerMock({invalidState: false, error: false, invalidOrigin: false})
+		popup: new PopupControllerMock({invalidState: false, error: false, invalidOrigin: false}),
+		jsrsasign: new JsrsasignMock()
 	});
 
 describe('Utils tests', () => {
@@ -25,15 +27,11 @@ describe('Utils tests', () => {
 
 	it('should return PKCE fields', () => {
 		let res = utils.getPKCEFields();
-		assert.include(JSON.stringify(res), 'codeVerifier');
+		assert.include(JSON.stringify(res), '{"codeVerifier":"message","codeChallenge":"message","state":"message","nonce":"message"}');
 	});
 
-	it('should return error - performOAuthFlowAndGetTokens', async () => {
-		try {
+	it('should succeed - performOAuthFlowAndGetTokens', async () => {
 			let res = await utils.performOAuthFlowAndGetTokens({userId: 'userId', origin: 'origin', clientId: 'clientId'});
-		} catch (e) {
-			assert.include(e.message, constants.INVALID_STATE);
-		}
 	});
 
 	it('should return auth params with prompt', () => {
@@ -110,14 +108,14 @@ describe('Utils tests', () => {
 
 		it('should throw error - invalid origin', function () {
 			try {
-				utils.verifyMessage({message: originError, state: 'validState'});
+				utils.verifyMessage({message: originError, state: 'message'});
 			} catch (e) {
 				assert.equal(e.message, constants.INVALID_ORIGIN);
 			}
 		});
 
 		it('should pass', function () {
-			let res = utils.verifyMessage({message: validData, state: 'validState'});
+			let res = utils.verifyMessage({message: validData, state: 'message'});
 		});
 	});
 });

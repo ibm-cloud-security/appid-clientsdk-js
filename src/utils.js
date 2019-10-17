@@ -1,4 +1,4 @@
-const rs = require('jsrsasign');
+const jsrsasign = require('jsrsasign');
 const AppIDError = require('./errors/AppIDError');
 const OAuthError = require('./errors/OAuthError');
 const RequestHandler = require('./RequestHandler');
@@ -12,13 +12,15 @@ class Utils {
 			tokenValidator = new TokenValidator(),
 			url = URL,
 			openIdConfigResource,
-			popup
+			popup,
+			jsrsasign = jsrsasign
 		} = {}) {
 		this.URL = url;
 		this.request = requestHandler.request;
 		this.tokenValidator = tokenValidator;
 		this.openIdConfigResource = openIdConfigResource;
 		this.popup = popup;
+		this.rs = jsrsasign;
 	};
 
 	buildParams(params) {
@@ -28,11 +30,11 @@ class Utils {
 	};
 
 	getRandomString(length) {
-		return rs.KJUR.crypto.Util.getRandomHexOfNbytes(length / 2);
+		return this.rs.KJUR.crypto.Util.getRandomHexOfNbytes(length / 2);
 	};
 
 	sha256(message) {
-		return rs.KJUR.crypto.Util.sha256(message);
+		return this.rs.KJUR.crypto.Util.sha256(message);
 	}
 
 	getPKCEFields() {
@@ -48,8 +50,8 @@ class Utils {
 		let authParams = {
 			client_id: clientId,
 			response_type: constants.RESPONSE_TYPE,
-			state: rs.stob64(state),
-			code_challenge: rs.stob64(codeChallenge),
+			state: this.rs.stob64(state),
+			code_challenge: this.rs.stob64(codeChallenge),
 			code_challenge_method: constants.CHALLENGE_METHOD,
 			redirect_uri: origin,
 			response_mode: constants.RESPONSE_MODE,
@@ -98,7 +100,7 @@ class Utils {
 			throw new OAuthError({description: message.data.error_description, error: message.data.error});
 		}
 
-		if (rs.b64utos(message.data.state) !== state) {
+		if (this.rs.b64utos(message.data.state) !== state) {
 			throw new AppIDError(constants.INVALID_STATE);
 		}
 
@@ -122,7 +124,7 @@ class Utils {
 		const tokens = await this.request(tokenEndpoint, {
 			method: 'POST',
 			headers: {
-				'Authorization': 'Basic ' + rs.stob64(`${clientId}:${codeVerifier}`),
+				'Authorization': 'Basic ' + this.rs.stob64(`${clientId}:${codeVerifier}`),
 				'Content-Type': 'application/x-www-form-urlencoded'
 			},
 			body: requestParams

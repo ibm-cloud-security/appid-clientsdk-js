@@ -60,7 +60,7 @@ class AppID {
 	 * });
 	 *
 	 */
-	async init({clientId, discoveryEndpoint, popup = {height: screen.height * .80, width: 400}}) {
+	async init({clientId, discoveryEndpoint, popup = {height: window.screen.height * .80, width: 400}}) {
 		if (!clientId) {
 			throw new AppIDError(constants.MISSING_CLIENT_ID);
 		}

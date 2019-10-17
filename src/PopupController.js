@@ -12,8 +12,8 @@ class PopupController {
 	open() {
 		const h = this.popupConfig.height;
 		const w = this.popupConfig.width;
-		const left = (screen.width - w) / 2;
-		const top = (screen.height - h) / 2;
+		const left = (window.screen.width - w) / 2;
+		const top = (window.screen.height - h) / 2;
 		this.popup = this.window.open('', 'popup', `left=${left},top=${top},width=${w},height=${h},resizable,scrollbars=yes,status=1`);
 		if (!this.popup) {
 			throw new PopupError('Unable to open popup')
