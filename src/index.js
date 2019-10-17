@@ -3,7 +3,6 @@ const RequestHandler = require('./RequestHandler');
 const PopupController = require('./PopupController');
 const IFrameController = require('./IFrameController');
 const OpenIdConfigurationResource = require('./OpenIDConfigurationResource');
-const TokenValidator = require('./TokenValidator');
 const constants = require('./constants');
 const AppIDError = require('./errors/AppIDError');
 const jsrsasign = require('jsrsasign');
@@ -21,7 +20,6 @@ class AppID {
 		{
 			popup = new PopupController(),
 			iframe = new IFrameController(),
-			tokenValidator = new TokenValidator(),
 			openIdConfigResource = new OpenIdConfigurationResource(),
 			utils,
 			requestHandler = new RequestHandler(),
@@ -31,7 +29,6 @@ class AppID {
 
 		this.popup = popup;
 		this.iframe = iframe;
-		this.tokenValidator = tokenValidator;
 		this.openIdConfigResource = openIdConfigResource;
 		this.URL = url;
 		this.utils = utils;

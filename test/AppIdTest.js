@@ -5,7 +5,6 @@ const AppID = require('../src/index');
 const PopupControllerMock = require('./mocks/PopUpControllerMock');
 const IFrameControllerMock = require('./mocks/IFrameControllerMock');
 const OpenIdConfigurationResourceMock = require('./mocks/OpenIdConfigurationMock');
-const TokenValidatorMock = require('./mocks/TokenValidatorMock');
 const RequestHandlerMock = require('./mocks/RequestHandlerMock');
 const {URL} = require('url');
 const defaultInit = {clientId: '1234', discoveryEndpoint: 'http://authServer.com/', popup: {height: 400, width: 300}};
@@ -14,7 +13,6 @@ describe('AppID tests', () => {
 		const appID = new AppID({
 			popup: new PopupControllerMock({invalidState: false, error: false, invalidOrigin: false}),
 			iframe: new IFrameControllerMock({invalidState: false, error: false, invalidOrigin: false}),
-			tokenValidator: new TokenValidatorMock(),
 			openIdConfigResource: new OpenIdConfigurationResourceMock(),
 			utils: new Utils(),
 			requestHandler: new RequestHandlerMock(),
@@ -56,7 +54,6 @@ describe('AppID tests', () => {
 			const appID = new AppID({
 				popup: new PopupControllerMock({invalidState: false, error: false, invalidOrigin: false}),
 				iframe: new IFrameControllerMock({invalidState: false, error: false, invalidOrigin: false}),
-				tokenValidator: new TokenValidatorMock(),
 				openIdConfigResource: new OpenIdConfigurationResourceMock(),
 				utils: new Utils(),
 				requestHandler: new RequestHandlerMock(),
@@ -74,7 +71,6 @@ describe('AppID tests', () => {
 			const appID = new AppID({
 				popup: new PopupControllerMock({invalidState: true, error: false}),
 				iframe: new IFrameControllerMock({invalidState: false, error: false, invalidOrigin: false}),
-				tokenValidator: new TokenValidatorMock(),
 				openIdConfigResource: new OpenIdConfigurationResourceMock(),
 				utils: new Utils(),
 				requestHandler: new RequestHandlerMock(),
@@ -93,7 +89,6 @@ describe('AppID tests', () => {
 			const appID = new AppID({
 				popup: new PopupControllerMock({invalidState: false, error: true}),
 				iframe: new IFrameControllerMock({invalidState: false, error: false, invalidOrigin: false}),
-				tokenValidator: new TokenValidatorMock(),
 				openIdConfigResource: new OpenIdConfigurationResourceMock(),
 				utils: new Utils(),
 				requestHandler: new RequestHandlerMock(),
@@ -116,7 +111,6 @@ describe('AppID tests', () => {
 			const appID = new AppID({
 				popup: new PopupControllerMock({invalidState: false, error: true}),
 				iframe: new IFrameControllerMock({invalidState: false, error: false, invalidOrigin: false}),
-				tokenValidator: new TokenValidatorMock(),
 				openIdConfigResource: new OpenIdConfigurationResourceMock(),
 				utils: new Utils(),
 				requestHandler: new RequestHandlerMock(),
@@ -134,7 +128,6 @@ describe('AppID tests', () => {
 			const appID = new AppID({
 				popup: new PopupControllerMock({invalidState: false, error: true}),
 				iframe: new IFrameControllerMock({invalidState: false, error: true, invalidOrigin: false}),
-				tokenValidator: new TokenValidatorMock(),
 				openIdConfigResource: new OpenIdConfigurationResourceMock(),
 				utils: new Utils(),
 				requestHandler: new RequestHandlerMock(),
@@ -153,7 +146,6 @@ describe('AppID tests', () => {
 			const appID = new AppID({
 				popup: new PopupControllerMock({invalidState: false, error: true}),
 				iframe: new IFrameControllerMock({invalidState: false, error: false, invalidOrigin: true}),
-				tokenValidator: new TokenValidatorMock(),
 				openIdConfigResource: new OpenIdConfigurationResourceMock(),
 				utils: new Utils(),
 				requestHandler: new RequestHandlerMock(),
@@ -172,7 +164,6 @@ describe('AppID tests', () => {
 			const appID = new AppID({
 				popup: new PopupControllerMock({invalidState: false, error: true}),
 				iframe: new IFrameControllerMock({invalidState: true, error: false, invalidOrigin: false}),
-				tokenValidator: new TokenValidatorMock(),
 				openIdConfigResource: new OpenIdConfigurationResourceMock(),
 				utils: new Utils(),
 				requestHandler: new RequestHandlerMock(),
@@ -194,7 +185,6 @@ describe('AppID tests', () => {
 			appID = new AppID({
 				popup: new PopupControllerMock({invalidState: false, error: false}),
 				iframe: new IFrameControllerMock({invalidState: false, error: false, invalidOrigin: false}),
-				tokenValidator: new TokenValidatorMock(),
 				openIdConfigResource: new OpenIdConfigurationResourceMock(),
 				utils: new Utils(),
 				requestHandler: new RequestHandlerMock(),
@@ -224,7 +214,6 @@ describe('AppID tests', () => {
 			appID = new AppID({
 				popup: new PopupControllerMock({invalidState: false, error: false}),
 				iframe: new IFrameControllerMock({invalidState: false, error: false, invalidOrigin: false}),
-				tokenValidator: new TokenValidatorMock(),
 				openIdConfigResource: new OpenIdConfigurationResourceMock(),
 				utils: new Utils(),
 				requestHandler: new RequestHandlerMock(),
