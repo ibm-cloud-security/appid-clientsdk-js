@@ -1,9 +1,9 @@
-const constants = require('./constants');
+const packagejson = require('../package.json');
 
 class OpenIdConfigurationResource {
 	async init({discoveryEndpoint, requestHandler}){
 		this.openIdConfig = await requestHandler(discoveryEndpoint);
-		const headers = { 'x-filter-type': `spa:v${constants.VERSION}` };
+		const headers = { 'x-filter-type': `spa:v${packagejson.version}` };
 		this.publicKeys = requestHandler(this.getJwksEndpoint(), { headers: headers });
 	}
 
