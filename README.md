@@ -2,7 +2,7 @@
 
 # IBM Cloud App ID Client SDK
 Client-side javascript SDK for the IBM Cloud App ID service. 
-Read the [official documentation](https://console.ng.bluemix.net/docs/services/appid/index.html#gettingstarted) for information about getting started with IBM Cloud App ID Service.
+Read the [official documentation](https://test.cloud.ibm.com/docs/services/appid?topic=appid-single-page) for information on getting started with IBM Cloud App ID and single-page applications.
 
 ## Table of Contents
 
@@ -32,7 +32,7 @@ Or for development purposes use the minified file in this repo:
 A simple sample application can be found in the `sample` folder in this repo.
 
 You will need an [IBM Cloud App ID](https://www.ibm.com/cloud/app-id) instance with a `singlepageapp` application created.
-Use the `clientId` and `discoveryEndpoint` from the application credentials to initialize the `AppID` instance.
+Use the `clientId` and `discoveryEndpoint` from the application credentials to initialize the `AppID` instance. 
 ```javascript
 const appID = new AppID();
 await appID.init({

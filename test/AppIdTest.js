@@ -2,22 +2,20 @@ const assert = require('chai').assert;
 const constants = require('../src/constants');
 const Utils = require('./mocks/UtilsMock');
 const AppID = require('../src/index');
-const PopupController = require('./mocks/PopUpControllerMock');
-const IFrameController = require('./mocks/IFrameControllerMock');
-const OpenIdConfigurationResource = require('./mocks/OpenIdConfigurationMock');
-const TokenValidator = require('./mocks/TokenValidatorMock');
-const RequestHandler = require('./mocks/RequestHandlerMock');
+const PopupControllerMock = require('./mocks/PopUpControllerMock');
+const IFrameControllerMock = require('./mocks/IFrameControllerMock');
+const OpenIdConfigurationResourceMock = require('./mocks/OpenIdConfigurationMock');
+const RequestHandlerMock = require('./mocks/RequestHandlerMock');
 const {URL} = require('url');
 const defaultInit = {clientId: '1234', discoveryEndpoint: 'http://authServer.com/', popup: {height: 400, width: 300}};
 describe('AppID tests', () => {
 	describe('init', () => {
 		const appID = new AppID({
-			popup: new PopupController({invalidState: false, error: false, invalidOrigin: false}),
-			iframe: new IFrameController({invalidState: false, error: false, invalidOrigin: false}),
-			tokenValidator: new TokenValidator(),
-			openIdConfigResource: new OpenIdConfigurationResource(),
+			popup: new PopupControllerMock({invalidState: false, error: false, invalidOrigin: false}),
+			iframe: new IFrameControllerMock({invalidState: false, error: false, invalidOrigin: false}),
+			openIdConfigResource: new OpenIdConfigurationResourceMock(),
 			utils: new Utils(),
-			requestHandler: new RequestHandler(),
+			requestHandler: new RequestHandlerMock(),
 			w: {origin: 'http://localhost:3005'},
 			url: URL
 		});
@@ -54,12 +52,11 @@ describe('AppID tests', () => {
 	describe('signIn', () => {
 		it('should return tokens', async () => {
 			const appID = new AppID({
-				popup: new PopupController({invalidState: false, error: false, invalidOrigin: false}),
-				iframe: new IFrameController({invalidState: false, error: false, invalidOrigin: false}),
-				tokenValidator: new TokenValidator(),
-				openIdConfigResource: new OpenIdConfigurationResource(),
+				popup: new PopupControllerMock({invalidState: false, error: false, invalidOrigin: false}),
+				iframe: new IFrameControllerMock({invalidState: false, error: false, invalidOrigin: false}),
+				openIdConfigResource: new OpenIdConfigurationResourceMock(),
 				utils: new Utils(),
-				requestHandler: new RequestHandler(),
+				requestHandler: new RequestHandlerMock(),
 				w: {origin: 'http://localhost:3005'},
 				url: URL
 			});
@@ -72,12 +69,11 @@ describe('AppID tests', () => {
 
 		it('should return error - invalid state', async () => {
 			const appID = new AppID({
-				popup: new PopupController({invalidState: true, error: false}),
-				iframe: new IFrameController({invalidState: false, error: false, invalidOrigin: false}),
-				tokenValidator: new TokenValidator(),
-				openIdConfigResource: new OpenIdConfigurationResource(),
+				popup: new PopupControllerMock({invalidState: true, error: false}),
+				iframe: new IFrameControllerMock({invalidState: false, error: false, invalidOrigin: false}),
+				openIdConfigResource: new OpenIdConfigurationResourceMock(),
 				utils: new Utils(),
-				requestHandler: new RequestHandler(),
+				requestHandler: new RequestHandlerMock(),
 				w: {origin: 'localhost'},
 				url: URL
 			});
@@ -91,12 +87,11 @@ describe('AppID tests', () => {
 
 		it('should return error - error in message', async () => {
 			const appID = new AppID({
-				popup: new PopupController({invalidState: false, error: true}),
-				iframe: new IFrameController({invalidState: false, error: false, invalidOrigin: false}),
-				tokenValidator: new TokenValidator(),
-				openIdConfigResource: new OpenIdConfigurationResource(),
+				popup: new PopupControllerMock({invalidState: false, error: true}),
+				iframe: new IFrameControllerMock({invalidState: false, error: false, invalidOrigin: false}),
+				openIdConfigResource: new OpenIdConfigurationResourceMock(),
 				utils: new Utils(),
-				requestHandler: new RequestHandler(),
+				requestHandler: new RequestHandlerMock(),
 				w: {origin: 'localhost'},
 				url: URL
 			});
@@ -114,12 +109,11 @@ describe('AppID tests', () => {
 
 		it('should return tokens - happy flow', async () => {
 			const appID = new AppID({
-				popup: new PopupController({invalidState: false, error: true}),
-				iframe: new IFrameController({invalidState: false, error: false, invalidOrigin: false}),
-				tokenValidator: new TokenValidator(),
-				openIdConfigResource: new OpenIdConfigurationResource(),
+				popup: new PopupControllerMock({invalidState: false, error: true}),
+				iframe: new IFrameControllerMock({invalidState: false, error: false, invalidOrigin: false}),
+				openIdConfigResource: new OpenIdConfigurationResourceMock(),
 				utils: new Utils(),
-				requestHandler: new RequestHandler(),
+				requestHandler: new RequestHandlerMock(),
 				w: {origin: 'localhost'},
 				url: URL
 			});
@@ -132,12 +126,11 @@ describe('AppID tests', () => {
 
 		it('should return error - log in time out', async () => {
 			const appID = new AppID({
-				popup: new PopupController({invalidState: false, error: true}),
-				iframe: new IFrameController({invalidState: false, error: true, invalidOrigin: false}),
-				tokenValidator: new TokenValidator(),
-				openIdConfigResource: new OpenIdConfigurationResource(),
+				popup: new PopupControllerMock({invalidState: false, error: true}),
+				iframe: new IFrameControllerMock({invalidState: false, error: true, invalidOrigin: false}),
+				openIdConfigResource: new OpenIdConfigurationResourceMock(),
 				utils: new Utils(),
-				requestHandler: new RequestHandler(),
+				requestHandler: new RequestHandlerMock(),
 				w: {origin: 'localhost'},
 				url: URL
 			});
@@ -151,12 +144,11 @@ describe('AppID tests', () => {
 
 		it('should return error - invalid message origin', async () => {
 			const appID = new AppID({
-				popup: new PopupController({invalidState: false, error: true}),
-				iframe: new IFrameController({invalidState: false, error: false, invalidOrigin: true}),
-				tokenValidator: new TokenValidator(),
-				openIdConfigResource: new OpenIdConfigurationResource(),
+				popup: new PopupControllerMock({invalidState: false, error: true}),
+				iframe: new IFrameControllerMock({invalidState: false, error: false, invalidOrigin: true}),
+				openIdConfigResource: new OpenIdConfigurationResourceMock(),
 				utils: new Utils(),
-				requestHandler: new RequestHandler(),
+				requestHandler: new RequestHandlerMock(),
 				w: {origin: 'https://localhost'},
 				url: URL
 			});
@@ -170,12 +162,11 @@ describe('AppID tests', () => {
 
 		it('should return error - invalid state', async () => {
 			const appID = new AppID({
-				popup: new PopupController({invalidState: false, error: true}),
-				iframe: new IFrameController({invalidState: true, error: false, invalidOrigin: false}),
-				tokenValidator: new TokenValidator(),
-				openIdConfigResource: new OpenIdConfigurationResource(),
+				popup: new PopupControllerMock({invalidState: false, error: true}),
+				iframe: new IFrameControllerMock({invalidState: true, error: false, invalidOrigin: false}),
+				openIdConfigResource: new OpenIdConfigurationResourceMock(),
 				utils: new Utils(),
-				requestHandler: new RequestHandler(),
+				requestHandler: new RequestHandlerMock(),
 				w: {origin: 'localhost'},
 				url: URL
 			});
@@ -192,12 +183,11 @@ describe('AppID tests', () => {
 		let appID;
 		beforeEach(async () => {
 			appID = new AppID({
-				popup: new PopupController({invalidState: false, error: false}),
-				iframe: new IFrameController({invalidState: false, error: false, invalidOrigin: false}),
-				tokenValidator: new TokenValidator(),
-				openIdConfigResource: new OpenIdConfigurationResource(),
+				popup: new PopupControllerMock({invalidState: false, error: false}),
+				iframe: new IFrameControllerMock({invalidState: false, error: false, invalidOrigin: false}),
+				openIdConfigResource: new OpenIdConfigurationResourceMock(),
 				utils: new Utils(),
-				requestHandler: new RequestHandler(),
+				requestHandler: new RequestHandlerMock(),
 				w: {origin: 'localhost'},
 				url: URL
 			});
@@ -217,4 +207,59 @@ describe('AppID tests', () => {
 			}
 		});
 	});
+
+	describe('changePassword', () => {
+		let appID;
+		before(async () => {
+			appID = new AppID({
+				popup: new PopupControllerMock({invalidState: false, error: false}),
+				iframe: new IFrameControllerMock({invalidState: false, error: false, invalidOrigin: false}),
+				openIdConfigResource: new OpenIdConfigurationResourceMock(),
+				utils: new Utils(),
+				requestHandler: new RequestHandlerMock(),
+				w: {origin: 'localhost'},
+				url: URL
+			});
+			await appID.init(defaultInit);
+		});
+
+		it('should throw missing user id error', async () => {
+			try {
+				await appID.changePassword();
+			} catch (e) {
+				assert.equal(e.message, constants.MISSING_ID_TOKEN_PAYLOAD);
+			}
+		});
+
+		it('should throw Id token payload must be an object error', async () => {
+			try {
+				await appID.changePassword('123');
+			} catch (e) {
+				assert.equal(e.message, constants.INVALID_ID_TOKEN_PAYLOAD);
+			}
+		});
+
+		it('should throw not cd user error', async () => {
+			try {
+				await appID.changePassword({identities: [{provider: 'not_cd', id: '123'}]});
+			} catch (e) {
+				assert.equal(e.message, constants.NOT_CD_USER);
+			}
+		});
+
+		it('should throw invalid token payload', async () => {
+			try {
+				await appID.changePassword({identities: 'sdasd'});
+			} catch (e) {
+				assert.equal(e.message, constants.INVALID_ID_TOKEN_PAYLOAD);
+			}
+		});
+
+		it('should succeed', async () => {
+			let res = await appID.changePassword({identities: [{provider: 'cloud_directory', id: '123'}]});
+			assert.equal(res.accessToken, 'accessToken');
+			assert.equal(res.idToken, 'idToken');
+			assert.equal(res.accessTokenPayload, 'tokenPayload');
+		});
+	})
 });

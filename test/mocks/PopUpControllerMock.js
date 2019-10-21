@@ -5,6 +5,10 @@ class PopupControllerMock {
 		this.error = error;
 	}
 
+	init() {
+		return;
+	}
+
 	open() {
 		return;
 	};
