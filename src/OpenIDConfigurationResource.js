@@ -1,7 +1,10 @@
+const packagejson = require('../package.json');
+
 class OpenIdConfigurationResource {
 	async init({discoveryEndpoint, requestHandler}){
 		this.openIdConfig = await requestHandler(discoveryEndpoint);
-		this.publicKeys = requestHandler(this.getJwksEndpoint());
+		const headers = { 'x-filter-type': `spa:v${packagejson.version}` };
+		this.publicKeys = requestHandler(this.getJwksEndpoint(), { headers: headers });
 	}
 
 	getAuthorizationEndpoint() {
@@ -29,3 +32,4 @@ class OpenIdConfigurationResource {
 	}
 }
 module.exports = OpenIdConfigurationResource;
+
