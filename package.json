@@ -1,6 +1,6 @@
 {
   "name": "ibmcloud-appid-js",
-  "version": "0.0.2",
+  "version": "0.3.0",
   "description": "IBM Cloud App ID SDK for Single Page Applications",
   "scripts": {
     "build": "webpack",

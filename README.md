@@ -18,9 +18,13 @@ Using npm:
 npm install ibmcloud-appid-js
 ```
 
+```javascript
+import AppID from 'ibmcloud-appid-js';
+```
+
 From the CDN:
 ```html
-<script src="""></script>
+<script src="https://cdn.appid.cloud.ibm.com/appid-0.3.0.min.js"></script>
 ```
 
 Or for development purposes use the minified file in this repo:
