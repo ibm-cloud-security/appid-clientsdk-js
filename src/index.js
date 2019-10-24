@@ -33,7 +33,12 @@ class AppID {
 		this.URL = url;
 		this.utils = utils;
 		if (!utils) {
-			this.utils = new Utils({openIdConfigResource: this.openIdConfigResource, url: this.URL, popup: this.popup, jsrsasign});
+			this.utils = new Utils({
+				openIdConfigResource: this.openIdConfigResource,
+				url: this.URL,
+				popup: this.popup,
+				jsrsasign
+			});
 		}
 		this.request = requestHandler.request;
 		this.window = w;
@@ -176,13 +181,13 @@ class AppID {
 		this._validateInitalize();
 		let userId;
 
-		if (!idTokenPayload){
+		if (!idTokenPayload) {
 			throw new AppIDError(constants.MISSING_ID_TOKEN_PAYLOAD);
 		}
 		if (typeof idTokenPayload === 'string') {
 			throw new AppIDError(constants.INVALID_ID_TOKEN_PAYLOAD);
 		}
-		if(idTokenPayload.identities && idTokenPayload.identities[0] && idTokenPayload.identities[0].id) {
+		if (idTokenPayload.identities && idTokenPayload.identities[0] && idTokenPayload.identities[0].id) {
 			if (idTokenPayload.identities[0].provider !== 'cloud_directory') {
 				throw new AppIDError(constants.NOT_CD_USER);
 			}
@@ -197,6 +202,26 @@ class AppID {
 			origin: this.window.origin,
 			clientId: this.clientId,
 			endpoint
+		});
+	}
+
+	async changeDetails(tokens) {
+		// get code
+		const generateCodeUrl = this.openIdConfigResource.getIssuer() + constants.GENERATE_CODE;
+		console.log(generateCodeUrl);
+		const changeDetailsCode = await this.request(generateCodeUrl, {
+			headers: {
+				'Authorization': 'Bearer ' + tokens.accessToken + ' ' + tokens.idToken
+			}
+		});
+		const endpoint = this.openIdConfigResource.getIssuer() + constants.CHANGE_DETAILS;
+
+		// send code with url
+		return this.utils.performOAuthFlowAndGetTokens({
+			origin: this.window.origin,
+			clientId: this.clientId,
+			endpoint,
+			changeDetailsCode
 		});
 	}
 
