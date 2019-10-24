@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    
+
     <meta charset="utf-8">
     <title>Home - Documentation</title>
-    
-    
+
+
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
     <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <link type="text/css" rel="stylesheet" href="styles/prettify.css">
     <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
@@ -18,85 +18,97 @@
 </head>
 <body>
 
-<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<input type="checkbox" id="nav-trigger" class="nav-trigger"/>
 <label for="nav-trigger" class="navicon-button x">
-  <div class="navicon"></div>
+    <div class="navicon"></div>
 </label>
 
 <label for="nav-trigger" class="overlay"></label>
 
-<nav >
-    
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AppID.html">AppID</a><ul class='methods'><li data-type='method'><a href="AppID.html#changePassword">changePassword</a></li><li data-type='method'><a href="AppID.html#getUserInfo">getUserInfo</a></li><li data-type='method'><a href="AppID.html#init">init</a></li><li data-type='method'><a href="AppID.html#signin">signin</a></li><li data-type='method'><a href="AppID.html#silentSignin">silentSignin</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#Tokens">Tokens</a></li></ul>
+<nav>
+
+    <h2><a href="index.html">Home</a></h2>
+    <h3>Classes</h3>
+    <ul>
+        <li><a href="AppID.html">AppID</a>
+            <ul class='methods'>
+                <li data-type='method'><a href="AppID.html#init">init</a></li>
+                <li data-type='method'><a href="AppID.html#signin">signin</a></li>
+                <li data-type='method'><a href="AppID.html#silentSignin">silentSignin</a></li>
+                <li data-type='method'><a href="AppID.html#getUserInfo">getUserInfo</a></li>
+                <li data-type='method'><a href="AppID.html#changePassword">changePassword</a></li>
+            </ul>
+        </li>
+    </ul>
+    <h3>Global</h3>
+    <ul>
+        <li><a href="global.html#Tokens">Tokens</a></li>
+    </ul>
 </nav>
 
 <div id="main">
-    
-
-    
-
-
-
-    
 
 
     <section class="package">
-        <h3> </h3>		
+        <h3></h3>
     </section>
 
 
-
-
-
-
-
-
-
-    
-
-
-
     <section class="readme">
-        <article><p><a href="https://www.codacy.com/app/kajabfab/appid-clientsdk-js?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ibm-cloud-security/appid-clientsdk-js&amp;utm_campaign=Badge_Grade"><img src="https://api.codacy.com/project/badge/Grade/a30e7499a5234d3494508b7050975beb" alt="Codacy Badge"></a></p>
-<h1 id="ibm-cloud-app-id-client-sdk">IBM Cloud App ID Client SDK</h1>
-<p>Client-side javascript SDK for the IBM Cloud App ID service.<br>
-Read the <a href="https://test.cloud.ibm.com/docs/services/appid?topic=appid-single-page">official documentation</a> for information on getting started with IBM Cloud App ID and single-page applications.</p>
-<h2 id="table-of-contents">Table of Contents</h2>
-<ul>
-<li>
-<p><a href="#installation">Installation</a></p>
-</li>
-<li>
-<p><a href="#getting-started">Getting Started</a></p>
-</li>
-<li>
-<p><a href="#api-reference">API Reference</a></p>
-</li>
-</ul>
-<h2 id="installation">Installation</h2>
-<p>Using npm:</p>
-<pre class="prettyprint source lang-javascript"><code>npm install ibmcloud-appid-js
+        <article><p><a
+                href="https://www.codacy.com/app/kajabfab/appid-clientsdk-js?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ibm-cloud-security/appid-clientsdk-js&amp;utm_campaign=Badge_Grade"><img
+                src="https://api.codacy.com/project/badge/Grade/a30e7499a5234d3494508b7050975beb"
+                alt="Codacy Badge"></a></p>
+            <h1 id="ibm-cloud-app-id-js-client-sdk">IBM Cloud App ID JS Client SDK</h1>
+            <p>Client-side javascript SDK for the IBM Cloud App ID service to use with single-page applications created
+                in Angular, React, or other frontend frameworks.<br>
+                Read the <a href="https://cloud.ibm.com/docs/services/appid?topic=appid-single-page">documentation</a>
+                for information on getting started with IBM Cloud App ID and single-page applications.<br>
+                Apps using Node.js should use the our <a
+                        href="https://github.com/ibm-cloud-security/appid-serversdk-nodejs">server-side SDK</a>.</p>
+            <h2 id="table-of-contents">Table of Contents</h2>
+            <ul>
+                <li>
+                    <p><a href="#installation">Installation</a></p>
+                </li>
+                <li>
+                    <p><a href="#getting-started">Getting Started</a></p>
+                </li>
+                <li>
+                    <p><a href="#api-reference">API Reference</a></p>
+                </li>
+            </ul>
+            <h2 id="installation">Installation</h2>
+            <p>Using npm:</p>
+            <pre class="prettyprint source lang-javascript"><code>npm install ibmcloud-appid-js
 </code></pre>
-<pre class="prettyprint source lang-javascript"><code>import AppID from 'ibmcloud-appid-js';
+            <pre class="prettyprint source lang-javascript"><code>import AppID from 'ibmcloud-appid-js';
 </code></pre>
-<p>From the CDN:</p>
-<pre class="prettyprint source lang-html"><code>&lt;script src=&quot;https://cdn.appid.cloud.ibm.com/appid-0.3.0.min.js&quot;>&lt;/script>
+            <p>From the CDN:</p>
+            <pre class="prettyprint source lang-html"><code>&lt;script src=&quot;https://cdn.appid.cloud.ibm.com/appid-0.3.0.min.js&quot;>&lt;/script>
 </code></pre>
-<p>Or for development purposes use the minified file in this repo:</p>
-<pre class="prettyprint source lang-html"><code>&lt;script type='text/javascript' src=&quot;dist/appid.min.js&quot;>&lt;/script>
+            <p>Or for development purposes use the minified file in this repo:</p>
+            <pre class="prettyprint source lang-html"><code>&lt;script type='text/javascript' src=&quot;dist/appid.min.js&quot;>&lt;/script>
 </code></pre>
-<h2 id="getting-started">Getting Started</h2>
-<p>A simple sample application can be found in the <code>sample</code> folder in this repo.</p>
-<p>You will need an <a href="https://www.ibm.com/cloud/app-id">IBM Cloud App ID</a> instance with a <code>singlepageapp</code> application created.<br>
-Use the <code>clientId</code> and <code>discoveryEndpoint</code> from the application credentials to initialize the <code>AppID</code> instance.</p>
-<pre class="prettyprint source lang-javascript"><code>const appID = new AppID();
+            <h2 id="getting-started">Getting Started</h2>
+            <p>A sample application can be found in the <code>sample</code> folder in this repo.</p>
+            <p>You will need an <a href="https://www.ibm.com/cloud/app-id">IBM Cloud App ID</a> instance with a <code>singlepageapp</code>
+                application created.<br>
+                Apps using Angular, React, or other frontend frameworks will require a specific type of credentials to
+                use with IBM Cloud App ID.<br>
+                Visit <a
+                        href="https://cloud.ibm.com/docs/services/appid?topic=appid-single-page#create-spa-credentials">the
+                    docs</a> to learn more about creating application credentials.</p>
+            <p>Use the <code>clientId</code> and <code>discoveryEndpoint</code> from the application credentials to
+                initialize the <code>AppID</code> instance.</p>
+            <pre class="prettyprint source lang-javascript"><code>const appID = new AppID();
 await appID.init({
     clientId: '&lt;SPA_CLIENT_ID>',
     discoveryEndpoint: '&lt;WELL_KNOWN_ENDPOINT>'
 });
 </code></pre>
-<p>Using the signin() in your app to start authentication:</p>
-<pre class="prettyprint source lang-javascript"><code>document.getElementById('login').addEventListener('click', async () => {
+            <p>Using the signin() in your app to start authentication:</p>
+            <pre class="prettyprint source lang-javascript"><code>document.getElementById('login').addEventListener('click', async () => {
     try {
         const tokens = await appID.signin();
     } catch (e) {
@@ -104,30 +116,26 @@ await appID.init({
     }
 });
 </code></pre>
-<p>Read the <a href="https://cloud.ibm.com/docs/services/appid?topic=appid-getting-started#gettingstarted">official documentation</a> for information about getting started with IBM Cloud App ID Service.</p>
-<h2 id="api-reference">API Reference</h2>
-<p>Checkout our API reference <a href="https://ibm-cloud-security.github.io/appid-clientsdk-js/">here</a>.</p></article>
+            <p>Read the <a href="https://cloud.ibm.com/docs/services/appid?topic=appid-getting-started#gettingstarted">documentation</a>
+                for information about getting started with IBM Cloud App ID Service.</p>
+            <h2 id="api-reference">API Reference</h2>
+            <p>Checkout our API reference <a href="https://ibm-cloud-security.github.io/appid-clientsdk-js/">here</a>.
+            </p></article>
     </section>
 
 
-
-
-
-
-    
-    
 </div>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Oct 22 2019 16:58:07 GMT-0500 (CDT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Thu Oct 24 2019 14:14:28
+    GMT-0500 (CDT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
 <script src="scripts/polyfill.js"></script>
 <script src="scripts/linenumber.js"></script>
-
 
 
 </body>
