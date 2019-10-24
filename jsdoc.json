@@ -6,6 +6,7 @@
     "idInHeadings": true
   },
   "docdash": {
+    "sort": false,
     "typedefs": true
   }
 }
