@@ -3,7 +3,7 @@
 # IBM Cloud App ID JavaScript SDK
 Client-side javascript SDK for the IBM Cloud App ID service to use with single-page applications created in Angular, React, or other frontend frameworks. 
 Read the [documentation](https://cloud.ibm.com/docs/services/appid?topic=appid-single-page) for information on getting started with IBM Cloud App ID and single-page applications.
-Apps using Node.js should use the our [server-side SDK](https://github.com/ibm-cloud-security/appid-serversdk-nodejs).
+Apps using Node.js should use our [server-side SDK](https://github.com/ibm-cloud-security/appid-serversdk-nodejs).
 ## Table of Contents
 
 -   [Installation][1]
