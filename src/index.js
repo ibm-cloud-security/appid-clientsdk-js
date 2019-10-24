@@ -100,8 +100,9 @@ class AppID {
 	}
 
 	/**
-	 * Silent sign in will attempt to authenticate the user in a hidden iframe.
-	 * You will need to enable Cloud Directory SSO.
+	 * Silent sign in allows you to automatically obtain new tokens for a user without the user having to re-authenticate using a popup.
+	 * This will attempt to authenticate the user in a hidden iframe.
+	 * You will need to [enable Cloud Directory SSO]{@link https://cloud.ibm.com/docs/services/appid?topic=appid-single-page#spa-silent-login}.
 	 * Sign in will be successful only if the user has previously signed in using Cloud Directory and their session is not expired.
 	 * @returns {Promise<Tokens>} The tokens of the authenticated user.
 	 * @throws {OAuthError} Any errors from the server according to the [OAuth spec]{@link https://tools.ietf.org/html/rfc6749#section-4.1.2.1}. e.g. {error: 'access_denied', description: 'User not signed in'}
