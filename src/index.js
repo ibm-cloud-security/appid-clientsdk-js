@@ -169,6 +169,7 @@ class AppID {
 
 	/**
 	 * This method will open a popup to the change password widget for Cloud Directory users.
+	 * You must enable users to manage their account from your app in Cloud Directory settings.
 	 * @param {string} idTokenPayload The id token payload.
 	 * @returns {Promise<Tokens>} The tokens of the authenticated user.
 	 * @throws {AppIDError} "Expect id token payload object to have identities field"
@@ -217,7 +218,7 @@ class AppID {
 	 * let tokens = {accessToken, idToken}
 	 * let newTokens = await appID.changeDetails(tokens);
 	 */
-	async changeDetails(tokens) {
+	async changeDetails({accessToken, idToken}) {
 		if (!tokens) {
 			throw new AppIDError(constants.MISSING_TOKENS);
 		}

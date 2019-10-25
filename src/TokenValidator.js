@@ -46,9 +46,10 @@ class TokenValidator {
 		if (!decoded.payloadObj.aud.includes(clientId)) {
 			throw new TokenError(constants.INVALID_AUDIENCE);
 		}
-
-		if (decoded.payloadObj.nonce && decoded.payloadObj.nonce !== nonce) {
-			throw new TokenError(constants.INVALID_NONCE);
+		if (nonce) {
+			if (decoded.payloadObj.nonce && decoded.payloadObj.nonce !== nonce) {
+				throw new TokenError(constants.INVALID_NONCE);
+			}
 		}
 
 		return decoded.payloadObj;
