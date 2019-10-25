@@ -205,10 +205,32 @@ class AppID {
 		});
 	}
 
+	/**
+	 * This method will open a popup to the change details widget for Cloud Directory users.
+	 * You must enable users to manage their account from your app in Cloud Directory settings.
+	 * @param {Object} tokens App ID tokens
+	 * @returns {Promise<Tokens>}
+	 * @throws {AppIDError} "Missing id token string"
+	 * @throws {AppIDError} "Missing access token string"
+	 * @throws {AppIDError} "Missing tokens object"
+	 * @example
+	 * let tokens = {accessToken, idToken}
+	 * let newTokens = await appID.changeDetails(tokens);
+	 */
 	async changeDetails(tokens) {
-		// get code
+		if (!tokens) {
+			throw new AppIDError(constants.MISSING_TOKENS);
+		}
+
+		if (!tokens.accessToken && typeof tokens.accessToken !== 'string') {
+			throw new AppIDError(constants.MISSING_ACCESS_TOKEN);
+		}
+
+		if (!tokens.idToken && typeof tokens.idToken !== 'string') {
+			throw new AppIDError(constants.MISSING_ID_TOKEN);
+		}
+
 		const generateCodeUrl = this.openIdConfigResource.getIssuer() + constants.GENERATE_CODE;
-		console.log(generateCodeUrl);
 		const changeDetailsCode = await this.request(generateCodeUrl, {
 			headers: {
 				'Authorization': 'Bearer ' + tokens.accessToken + ' ' + tokens.idToken
@@ -216,7 +238,6 @@ class AppID {
 		});
 		const endpoint = this.openIdConfigResource.getIssuer() + constants.CHANGE_DETAILS;
 
-		// send code with url
 		return this.utils.performOAuthFlowAndGetTokens({
 			origin: this.window.origin,
 			clientId: this.clientId,
