@@ -68,7 +68,7 @@ describe('Utils tests', () => {
 			windowOrigin: 'origin'
 		};
 		let res = await utils.retrieveTokens(params);
-		assert.equal(res.accessTokenPayload, 'tokenPayload');
+		assert.equal(res.accessTokenPayload.iss, 'appid');
 	});
 
 	describe('verify message tests', () => {

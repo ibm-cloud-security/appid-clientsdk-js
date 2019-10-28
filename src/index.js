@@ -2,7 +2,8 @@ const Utils = require('./utils');
 const RequestHandler = require('./RequestHandler');
 const PopupController = require('./PopupController');
 const IFrameController = require('./IFrameController');
-const OpenIdConfigurationResource = require('./OpenIDConfigurationResource');
+const OpenIdConfigurationResource = require('./OpenIDConfigurationResource')
+const TokenValidator = require('./TokenValidator');
 const constants = require('./constants');
 const AppIDError = require('./errors/AppIDError');
 const jsrsasign = require('jsrsasign');
@@ -23,6 +24,7 @@ class AppID {
 			openIdConfigResource = new OpenIdConfigurationResource(),
 			utils,
 			requestHandler = new RequestHandler(),
+			tokenValidator = new TokenValidator(),
 			w = window,
 			url = URL
 		} = {}) {
@@ -32,8 +34,14 @@ class AppID {
 		this.openIdConfigResource = openIdConfigResource;
 		this.URL = url;
 		this.utils = utils;
+		this.tokenValidator = tokenValidator;
 		if (!utils) {
-			this.utils = new Utils({openIdConfigResource: this.openIdConfigResource, url: this.URL, popup: this.popup, jsrsasign});
+			this.utils = new Utils({
+				openIdConfigResource: this.openIdConfigResource,
+				url: this.URL,
+				popup: this.popup,
+				jsrsasign
+			});
 		}
 		this.request = requestHandler.request;
 		this.window = w;
@@ -165,35 +173,42 @@ class AppID {
 
 	/**
 	 * This method will open a popup to the change password widget for Cloud Directory users.
-	 * @param {string} idTokenPayload The id token payload.
+	 * You must enable users to manage their account from your app in Cloud Directory settings.
+	 * @param {string} idToken A JWT.
 	 * @returns {Promise<Tokens>} The tokens of the authenticated user.
 	 * @throws {AppIDError} "Expect id token payload object to have identities field"
 	 * @throws {AppIDError} "Must be a Cloud Directory user"
-	 * @throws {AppIDError} "Missing id token payload"
+	 * @throws {AppIDError} "Missing id token string"
 	 * @example
-	 * let tokens = await appID.changePassword(idTokenPayload);
+	 * let tokens = await appID.changePassword(idToken);
 	 */
-	async changePassword(idTokenPayload) {
+	async changePassword(idToken) {
 		this._validateInitalize();
-		let userId;
 
-		if (!idTokenPayload){
-			throw new AppIDError(constants.MISSING_ID_TOKEN_PAYLOAD);
+		if (!idToken || typeof idToken !== 'string') {
+			throw new AppIDError(constants.MISSING_ID_TOKEN);
 		}
-		if (typeof idTokenPayload === 'string') {
-			throw new AppIDError(constants.INVALID_ID_TOKEN_PAYLOAD);
-		}
-		if(idTokenPayload.identities && idTokenPayload.identities[0] && idTokenPayload.identities[0].id) {
-			if (idTokenPayload.identities[0].provider !== 'cloud_directory') {
+
+		let userId;
+		const publicKeys = await this.openIdConfigResource.getPublicKeys();
+		let decodedToken = this.tokenValidator.decodeAndValidate({
+			token: idToken,
+			publicKeys,
+			issuer: this.openIdConfigResource.getIssuer(),
+			clientId: this.clientId
+		});
+
+		if (decodedToken.identities && decodedToken.identities[0] && decodedToken.identities[0].id) {
+			if (decodedToken.identities[0].provider !== 'cloud_directory') {
 				throw new AppIDError(constants.NOT_CD_USER);
 			}
-			userId = idTokenPayload.identities[0].id;
+			userId = decodedToken.identities[0].id;
 		} else {
-			throw new AppIDError(constants.INVALID_ID_TOKEN_PAYLOAD);
+			throw new AppIDError(constants.INVALID_ID_TOKEN);
 		}
 
 		const endpoint = this.openIdConfigResource.getIssuer() + constants.CHANGE_PASSWORD;
-		return this.utils.performOAuthFlowAndGetTokens({
+		return await this.utils.performOAuthFlowAndGetTokens({
 			userId,
 			origin: this.window.origin,
 			clientId: this.clientId,
