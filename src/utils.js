@@ -135,8 +135,7 @@ class Utils {
 			token: tokens.access_token,
 			publicKeys,
 			issuer,
-			clientId,
-			nonce
+			clientId
 		});
 
 		const idTokenPayload = this.tokenValidator.decodeAndValidate({

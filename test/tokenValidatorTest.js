@@ -41,6 +41,13 @@ describe("TokenValidator", () => {
 			assert.equal(res.toString(), validPayload);
 		});
 
+		it('should return decoded payload - without nonce', async function () {
+			let token = generateToken({header, payload: validPayload});
+			let res = await tokenValidator.decodeAndValidate(
+				{token, publicKeys, issuer: validIssuer, clientId});
+			assert.equal(res.toString(), validPayload);
+		});
+
 		it('should return invalid token - malformed token', async function () {
 			try {
 				let res = await tokenValidator.decodeAndValidate(
