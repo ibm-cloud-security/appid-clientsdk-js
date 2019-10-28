@@ -208,7 +208,7 @@ class AppID {
 		}
 
 		const endpoint = this.openIdConfigResource.getIssuer() + constants.CHANGE_PASSWORD;
-		return this.utils.performOAuthFlowAndGetTokens({
+		return await this.utils.performOAuthFlowAndGetTokens({
 			userId,
 			origin: this.window.origin,
 			clientId: this.clientId,
