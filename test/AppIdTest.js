@@ -4,6 +4,7 @@ const Utils = require('./mocks/UtilsMock');
 const AppID = require('../src/index');
 const PopupControllerMock = require('./mocks/PopUpControllerMock');
 const IFrameControllerMock = require('./mocks/IFrameControllerMock');
+const TokenValidatorMock = require('./mocks/TokenValidatorMock');
 const OpenIdConfigurationResourceMock = require('./mocks/OpenIdConfigurationMock');
 const RequestHandlerMock = require('./mocks/RequestHandlerMock');
 const {URL} = require('url');
@@ -210,56 +211,69 @@ describe('AppID tests', () => {
 
 	describe('changePassword', () => {
 		let appID;
-		before(async () => {
+
+		it('should succeed', async () => {
 			appID = new AppID({
 				popup: new PopupControllerMock({invalidState: false, error: false}),
 				iframe: new IFrameControllerMock({invalidState: false, error: false, invalidOrigin: false}),
 				openIdConfigResource: new OpenIdConfigurationResourceMock(),
 				utils: new Utils(),
+				tokenValidator: new TokenValidatorMock({}),
 				requestHandler: new RequestHandlerMock(),
 				w: {origin: 'localhost'},
 				url: URL
 			});
 			await appID.init(defaultInit);
+			let res = await appID.changePassword('idtoken');
+			assert.equal(res.accessToken, 'accessToken');
+			assert.equal(res.idToken, 'idToken');
+			assert.equal(res.accessTokenPayload, 'tokenPayload');
 		});
 
 		it('should throw missing user id error', async () => {
 			try {
 				await appID.changePassword();
 			} catch (e) {
-				assert.equal(e.message, constants.MISSING_ID_TOKEN_PAYLOAD);
+				assert.equal(e.message, constants.MISSING_ID_TOKEN);
 			}
 		});
 
-		it('should throw Id token payload must be an object error', async () => {
+		it('should throw Invalid id token', async () => {
+			appID = new AppID({
+				popup: new PopupControllerMock({invalidState: false, error: false}),
+				iframe: new IFrameControllerMock({invalidState: false, error: false, invalidOrigin: false}),
+				openIdConfigResource: new OpenIdConfigurationResourceMock(),
+				utils: new Utils(),
+				tokenValidator: new TokenValidatorMock({invalidToken: true}),
+				requestHandler: new RequestHandlerMock(),
+				w: {origin: 'localhost'},
+				url: URL
+			});
+			await appID.init(defaultInit);
 			try {
-				await appID.changePassword('123');
+				await appID.changePassword('invalid');
 			} catch (e) {
-				assert.equal(e.message, constants.INVALID_ID_TOKEN_PAYLOAD);
+				assert.equal(e.message, constants.INVALID_ID_TOKEN);
 			}
 		});
 
 		it('should throw not cd user error', async () => {
+			appID = new AppID({
+				popup: new PopupControllerMock({invalidState: false, error: false}),
+				iframe: new IFrameControllerMock({invalidState: false, error: false, invalidOrigin: false}),
+				openIdConfigResource: new OpenIdConfigurationResourceMock(),
+				utils: new Utils(),
+				tokenValidator: new TokenValidatorMock({invalidCDToken: true}),
+				requestHandler: new RequestHandlerMock(),
+				w: {origin: 'localhost'},
+				url: URL
+			});
+			await appID.init(defaultInit);
 			try {
-				await appID.changePassword({identities: [{provider: 'not_cd', id: '123'}]});
+				await appID.changePassword('invalididtoken');
 			} catch (e) {
 				assert.equal(e.message, constants.NOT_CD_USER);
 			}
-		});
-
-		it('should throw invalid token payload', async () => {
-			try {
-				await appID.changePassword({identities: 'sdasd'});
-			} catch (e) {
-				assert.equal(e.message, constants.INVALID_ID_TOKEN_PAYLOAD);
-			}
-		});
-
-		it('should succeed', async () => {
-			let res = await appID.changePassword({identities: [{provider: 'cloud_directory', id: '123'}]});
-			assert.equal(res.accessToken, 'accessToken');
-			assert.equal(res.idToken, 'idToken');
-			assert.equal(res.accessTokenPayload, 'tokenPayload');
 		});
 	})
 });
