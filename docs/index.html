@@ -27,7 +27,7 @@
 
 <nav >
     
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AppID.html">AppID</a><ul class='methods'><li data-type='method'><a href="AppID.html#changePassword">changePassword</a></li><li data-type='method'><a href="AppID.html#getUserInfo">getUserInfo</a></li><li data-type='method'><a href="AppID.html#init">init</a></li><li data-type='method'><a href="AppID.html#signin">signin</a></li><li data-type='method'><a href="AppID.html#silentSignin">silentSignin</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#Tokens">Tokens</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AppID.html">AppID</a><ul class='methods'><li data-type='method'><a href="AppID.html#init">init</a></li><li data-type='method'><a href="AppID.html#signin">signin</a></li><li data-type='method'><a href="AppID.html#silentSignin">silentSignin</a></li><li data-type='method'><a href="AppID.html#getUserInfo">getUserInfo</a></li><li data-type='method'><a href="AppID.html#changePassword">changePassword</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#Tokens">Tokens</a></li></ul>
 </nav>
 
 <div id="main">
@@ -58,9 +58,10 @@
 
     <section class="readme">
         <article><p><a href="https://www.codacy.com/app/kajabfab/appid-clientsdk-js?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ibm-cloud-security/appid-clientsdk-js&amp;utm_campaign=Badge_Grade"><img src="https://api.codacy.com/project/badge/Grade/a30e7499a5234d3494508b7050975beb" alt="Codacy Badge"></a></p>
-<h1 id="ibm-cloud-app-id-client-sdk">IBM Cloud App ID Client SDK</h1>
-<p>Client-side javascript SDK for the IBM Cloud App ID service.<br>
-Read the <a href="https://console.ng.bluemix.net/docs/services/appid/index.html#gettingstarted">official documentation</a> for information about getting started with IBM Cloud App ID Service.</p>
+<h1 id="ibm-cloud-app-id-javascript-sdk">IBM Cloud App ID JavaScript SDK</h1>
+<p>Client-side javascript SDK for the IBM Cloud App ID service to use with single-page applications created in Angular, React, or other frontend frameworks.<br>
+Read the <a href="https://cloud.ibm.com/docs/services/appid?topic=appid-single-page">documentation</a> for information on getting started with IBM Cloud App ID and single-page applications.<br>
+Apps using Node.js should use our <a href="https://github.com/ibm-cloud-security/appid-serversdk-nodejs">server-side SDK</a>.</p>
 <h2 id="table-of-contents">Table of Contents</h2>
 <ul>
 <li>
@@ -77,16 +78,20 @@ Read the <a href="https://console.ng.bluemix.net/docs/services/appid/index.html#
 <p>Using npm:</p>
 <pre class="prettyprint source lang-javascript"><code>npm install ibmcloud-appid-js
 </code></pre>
+<pre class="prettyprint source lang-javascript"><code>import AppID from 'ibmcloud-appid-js';
+</code></pre>
 <p>From the CDN:</p>
-<pre class="prettyprint source lang-html"><code>&lt;script src=&quot;&quot;&quot;>&lt;/script>
+<pre class="prettyprint source lang-html"><code>&lt;script src=&quot;https://cdn.appid.cloud.ibm.com/appid-0.3.0.min.js&quot;>&lt;/script>
 </code></pre>
 <p>Or for development purposes use the minified file in this repo:</p>
 <pre class="prettyprint source lang-html"><code>&lt;script type='text/javascript' src=&quot;dist/appid.min.js&quot;>&lt;/script>
 </code></pre>
 <h2 id="getting-started">Getting Started</h2>
-<p>A simple sample application can be found in the <code>sample</code> folder in this repo.</p>
+<p>A sample application can be found in the <code>sample</code> folder in this repo.</p>
 <p>You will need an <a href="https://www.ibm.com/cloud/app-id">IBM Cloud App ID</a> instance with a <code>singlepageapp</code> application created.<br>
-Use the <code>clientId</code> and <code>discoveryEndpoint</code> from the application credentials to initialize the <code>AppID</code> instance.</p>
+Apps using Angular, React, or other frontend frameworks will require a specific type of credentials to use with IBM Cloud App ID.<br>
+Visit <a href="https://cloud.ibm.com/docs/services/appid?topic=appid-single-page#create-spa-credentials">the docs</a> to learn more about creating application credentials.</p>
+<p>Use the <code>clientId</code> and <code>discoveryEndpoint</code> from the application credentials to initialize the <code>AppID</code> instance.</p>
 <pre class="prettyprint source lang-javascript"><code>const appID = new AppID();
 await appID.init({
     clientId: '&lt;SPA_CLIENT_ID>',
@@ -102,7 +107,7 @@ await appID.init({
     }
 });
 </code></pre>
-<p>Read the <a href="https://cloud.ibm.com/docs/services/appid?topic=appid-getting-started#gettingstarted">official documentation</a> for information about getting started with IBM Cloud App ID Service.</p>
+<p>Read the <a href="https://cloud.ibm.com/docs/services/appid?topic=appid-getting-started#gettingstarted">documentation</a> for information about getting started with IBM Cloud App ID Service.</p>
 <h2 id="api-reference">API Reference</h2>
 <p>Checkout our API reference <a href="https://ibm-cloud-security.github.io/appid-clientsdk-js/">here</a>.</p></article>
     </section>
@@ -119,7 +124,7 @@ await appID.init({
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Wed Oct 09 2019 14:54:34 GMT-0500 (CDT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon Oct 28 2019 11:08:24 GMT-0500 (CDT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
