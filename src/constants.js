@@ -17,7 +17,7 @@ module.exports = {
 	MISSING_CLIENT_ID: 'Missing client ID',
 	MISSING_ID_TOKEN: 'Missing id token string',
 	MISSING_ID_TOKEN_PAYLOAD: 'Missing id token payload',
-	MISSING_TOKENS: 'Missing tokens object',
+	MISSING_TOKENS: 'Missing tokens',
 	MISSING_ACCESS_TOKEN: 'Missing access token string',
 	MISSING_ID_TOKEN: 'Missing access token string',
 	INVALID_DISCOVERY_ENDPOINT: 'Invalid discovery endpoint',

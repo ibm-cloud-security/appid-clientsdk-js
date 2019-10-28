@@ -229,22 +229,18 @@ class AppID {
 	 * let newTokens = await appID.changeDetails(tokens);
 	 */
 	async changeDetails({accessToken, idToken}) {
-		if (!tokens) {
-			throw new AppIDError(constants.MISSING_TOKENS);
-		}
-
-		if (!tokens.accessToken && typeof tokens.accessToken !== 'string') {
+		if (!accessToken && typeof accessToken !== 'string') {
 			throw new AppIDError(constants.MISSING_ACCESS_TOKEN);
 		}
 
-		if (!tokens.idToken && typeof tokens.idToken !== 'string') {
+		if (!idToken && typeof idToken !== 'string') {
 			throw new AppIDError(constants.MISSING_ID_TOKEN);
 		}
 
 		const generateCodeUrl = this.openIdConfigResource.getIssuer() + constants.GENERATE_CODE;
 		const changeDetailsCode = await this.request(generateCodeUrl, {
 			headers: {
-				'Authorization': 'Bearer ' + tokens.accessToken + ' ' + tokens.idToken
+				'Authorization': 'Bearer ' + accessToken + ' ' + idToken
 			}
 		});
 		const endpoint = this.openIdConfigResource.getIssuer() + constants.CHANGE_DETAILS;
