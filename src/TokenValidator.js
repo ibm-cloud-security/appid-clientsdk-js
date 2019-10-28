@@ -47,7 +47,7 @@ class TokenValidator {
 			throw new TokenError(constants.INVALID_AUDIENCE);
 		}
 
-		if ((nonce && !decoded.payloadObj.nonce) || (decoded.payloadObj.nonce !== nonce)) {
+		if (nonce && (!decoded.payloadObj.nonce || decoded.payloadObj.nonce !== nonce)) {
 			throw new TokenError(constants.INVALID_NONCE);
 		}
 
