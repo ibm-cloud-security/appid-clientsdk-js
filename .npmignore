@@ -5,3 +5,6 @@ test
 src
 webpack.config.js
 appid.min.js
+jsdoc.json
+docs
+.DS_Store
