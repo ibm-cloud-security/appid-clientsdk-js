@@ -83,7 +83,7 @@
                     <dd class="tag-source">
                         <ul class="dummy">
                             <li>
-                                <a href="index.js.html">index.js</a>, <a href="index.js.html#line19">line 19</a>
+                                <a href="index.js.html">index.js</a>, <a href="index.js.html#line20">line 20</a>
                             </li>
                         </ul>
                     </dd>
@@ -108,333 +108,6 @@
             <h3 class="subsection-title">Methods</h3>
 
 
-            <h4 class="name" id="changePassword"><span class="type-signature">(async) </span>changePassword<span
-                    class="signature">(idTokenPayload)</span><span class="type-signature"> &rarr; {Promise.&lt;<a
-                    href="global.html#Tokens">Tokens</a>>}</span></h4>
-
-
-            <dl class="details">
-
-
-                <dt class="tag-source">Source:</dt>
-                <dd class="tag-source">
-                    <ul class="dummy">
-                        <li>
-                            <a href="index.js.html">index.js</a>, <a href="index.js.html#line175">line 175</a>
-                        </li>
-                    </ul>
-                </dd>
-
-
-            </dl>
-
-
-            <div class="description">
-                <p>This method will open a popup to the change password widget for Cloud Directory users.</p>
-            </div>
-
-
-            <h5>Example</h5>
-
-            <pre class="prettyprint"><code>let tokens = await appID.changePassword(idTokenPayload);</code></pre>
-
-
-            <h5>Parameters:</h5>
-
-
-            <table class="params">
-                <thead>
-                <tr>
-
-                    <th>Name</th>
-
-
-                    <th>Type</th>
-
-
-                    <th class="last">Description</th>
-                </tr>
-                </thead>
-
-                <tbody>
-
-
-                <tr>
-
-                    <td class="name"><code>idTokenPayload</code></td>
-
-
-                    <td class="type">
-
-
-                        <span class="param-type">string</span>
-
-
-                    </td>
-
-
-                    <td class="description last"><p>The id token payload.</p></td>
-                </tr>
-
-
-                </tbody>
-            </table>
-
-
-            <h5>Throws:</h5>
-            <ul>
-                <li>
-
-                    <dl>
-                        <dt>
-                            <div class="param-desc">
-                                <p>&quot;Expect id token payload object to have identities field&quot;</p>
-                            </div>
-                        </dt>
-                        <dd></dd>
-                        <dt>
-                            <dl class="param-type">
-                                <dt>
-                                    Type
-                                </dt>
-                                <dd>
-
-                                    <span class="param-type">AppIDError</span>
-
-
-                                </dd>
-                            </dl>
-                        </dt>
-                        <dd></dd>
-                    </dl>
-
-                </li>
-
-                <li>
-
-                    <dl>
-                        <dt>
-                            <div class="param-desc">
-                                <p>&quot;Must be a Cloud Directory user&quot;</p>
-                            </div>
-                        </dt>
-                        <dd></dd>
-                        <dt>
-                            <dl class="param-type">
-                                <dt>
-                                    Type
-                                </dt>
-                                <dd>
-
-                                    <span class="param-type">AppIDError</span>
-
-
-                                </dd>
-                            </dl>
-                        </dt>
-                        <dd></dd>
-                    </dl>
-
-                </li>
-
-                <li>
-
-                    <dl>
-                        <dt>
-                            <div class="param-desc">
-                                <p>&quot;Missing id token payload&quot;</p>
-                            </div>
-                        </dt>
-                        <dd></dd>
-                        <dt>
-                            <dl class="param-type">
-                                <dt>
-                                    Type
-                                </dt>
-                                <dd>
-
-                                    <span class="param-type">AppIDError</span>
-
-
-                                </dd>
-                            </dl>
-                        </dt>
-                        <dd></dd>
-                    </dl>
-
-                </li>
-            </ul>
-
-
-            <h5>Returns:</h5>
-
-
-            <div class="param-desc">
-                <p>The tokens of the authenticated user.</p>
-            </div>
-
-
-            <dl class="param-type">
-                <dt>
-                    Type
-                </dt>
-                <dd>
-
-                    <span class="param-type">Promise.&lt;<a href="global.html#Tokens">Tokens</a>></span>
-
-
-                </dd>
-            </dl>
-
-
-            <h4 class="name" id="getUserInfo"><span class="type-signature">(async) </span>getUserInfo<span
-                    class="signature">(accessToken)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
-
-
-            <dl class="details">
-
-
-                <dt class="tag-source">Source:</dt>
-                <dd class="tag-source">
-                    <ul class="dummy">
-                        <li>
-                            <a href="index.js.html">index.js</a>, <a href="index.js.html#line152">line 152</a>
-                        </li>
-                    </ul>
-                </dd>
-
-
-            </dl>
-
-
-            <div class="description">
-                <p>This method will make a GET request to the <a
-                        href="https://us-south.appid.cloud.ibm.com/swagger-ui/#/Authorization%252520Server%252520-%252520Authorization%252520Server%252520V4/oauth-server.userInfo">user
-                    info endpoint</a> using the access token of the authenticated user.</p>
-            </div>
-
-
-            <h5>Parameters:</h5>
-
-
-            <table class="params">
-                <thead>
-                <tr>
-
-                    <th>Name</th>
-
-
-                    <th>Type</th>
-
-
-                    <th class="last">Description</th>
-                </tr>
-                </thead>
-
-                <tbody>
-
-
-                <tr>
-
-                    <td class="name"><code>accessToken</code></td>
-
-
-                    <td class="type">
-
-
-                        <span class="param-type">string</span>
-
-
-                    </td>
-
-
-                    <td class="description last"><p>The App ID access token of the user.</p></td>
-                </tr>
-
-
-                </tbody>
-            </table>
-
-
-            <h5>Throws:</h5>
-            <ul>
-                <li>
-
-                    <dl>
-                        <dt>
-                            <div class="param-desc">
-                                <p>&quot;Access token must be a string&quot; Invalid access token.</p>
-                            </div>
-                        </dt>
-                        <dd></dd>
-                        <dt>
-                            <dl class="param-type">
-                                <dt>
-                                    Type
-                                </dt>
-                                <dd>
-
-                                    <span class="param-type">AppIDError</span>
-
-
-                                </dd>
-                            </dl>
-                        </dt>
-                        <dd></dd>
-                    </dl>
-
-                </li>
-
-                <li>
-
-                    <dl>
-                        <dt>
-                            <div class="param-desc">
-                                <p>Any errors during a HTTP request.</p>
-                            </div>
-                        </dt>
-                        <dd></dd>
-                        <dt>
-                            <dl class="param-type">
-                                <dt>
-                                    Type
-                                </dt>
-                                <dd>
-
-                                    <span class="param-type">RequestError</span>
-
-
-                                </dd>
-                            </dl>
-                        </dt>
-                        <dd></dd>
-                    </dl>
-
-                </li>
-            </ul>
-
-
-            <h5>Returns:</h5>
-
-
-            <div class="param-desc">
-                <p>The user information for the authenticated user. Example: {sub: '', email: ''}</p>
-            </div>
-
-
-            <dl class="param-type">
-                <dt>
-                    Type
-                </dt>
-                <dd>
-
-                    <span class="param-type">Promise</span>
-
-
-                </dd>
-            </dl>
-
-
             <h4 class="name" id="init"><span class="type-signature">(async) </span>init<span
                     class="signature">(options)</span><span class="type-signature"> &rarr; {Promise.&lt;void>}</span>
             </h4>
@@ -447,7 +120,7 @@
                 <dd class="tag-source">
                     <ul class="dummy">
                         <li>
-                            <a href="index.js.html">index.js</a>, <a href="index.js.html#line61">line 61</a>
+                            <a href="index.js.html">index.js</a>, <a href="index.js.html#line69">line 69</a>
                         </li>
                     </ul>
                 </dd>
@@ -761,7 +434,7 @@
                 <dd class="tag-source">
                     <ul class="dummy">
                         <li>
-                            <a href="index.js.html">index.js</a>, <a href="index.js.html#line96">line 96</a>
+                            <a href="index.js.html">index.js</a>, <a href="index.js.html#line104">line 104</a>
                         </li>
                     </ul>
                 </dd>
@@ -929,7 +602,7 @@
                 <dd class="tag-source">
                     <ul class="dummy">
                         <li>
-                            <a href="index.js.html">index.js</a>, <a href="index.js.html#line114">line 114</a>
+                            <a href="index.js.html">index.js</a>, <a href="index.js.html#line123">line 123</a>
                         </li>
                     </ul>
                 </dd>
@@ -939,8 +612,12 @@
 
 
             <div class="description">
-                <p>Silent sign in will attempt to authenticate the user in a hidden iframe.<br>
-                    You will need to enable Cloud Directory SSO.<br>
+                <p>Silent sign in allows you to automatically obtain new tokens for a user without the user having to
+                    re-authenticate using a popup.<br>
+                    This will attempt to authenticate the user in a hidden iframe.<br>
+                    You will need to <a
+                            href="https://cloud.ibm.com/docs/services/appid?topic=appid-single-page#spa-silent-login">enable
+                        Cloud Directory SSO</a>.<br>
                     Sign in will be successful only if the user has previously signed in using Cloud Directory and their
                     session is not expired.</p>
             </div>
@@ -1087,6 +764,334 @@
             </dl>
 
 
+            <h4 class="name" id="getUserInfo"><span class="type-signature">(async) </span>getUserInfo<span
+                    class="signature">(accessToken)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+
+
+            <dl class="details">
+
+
+                <dt class="tag-source">Source:</dt>
+                <dd class="tag-source">
+                    <ul class="dummy">
+                        <li>
+                            <a href="index.js.html">index.js</a>, <a href="index.js.html#line161">line 161</a>
+                        </li>
+                    </ul>
+                </dd>
+
+
+            </dl>
+
+
+            <div class="description">
+                <p>This method will make a GET request to the <a
+                        href="https://us-south.appid.cloud.ibm.com/swagger-ui/#/Authorization%252520Server%252520-%252520Authorization%252520Server%252520V4/oauth-server.userInfo">user
+                    info endpoint</a> using the access token of the authenticated user.</p>
+            </div>
+
+
+            <h5>Parameters:</h5>
+
+
+            <table class="params">
+                <thead>
+                <tr>
+
+                    <th>Name</th>
+
+
+                    <th>Type</th>
+
+
+                    <th class="last">Description</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+
+                <tr>
+
+                    <td class="name"><code>accessToken</code></td>
+
+
+                    <td class="type">
+
+
+                        <span class="param-type">string</span>
+
+
+                    </td>
+
+
+                    <td class="description last"><p>The App ID access token of the user.</p></td>
+                </tr>
+
+
+                </tbody>
+            </table>
+
+
+            <h5>Throws:</h5>
+            <ul>
+                <li>
+
+                    <dl>
+                        <dt>
+                            <div class="param-desc">
+                                <p>&quot;Access token must be a string&quot; Invalid access token.</p>
+                            </div>
+                        </dt>
+                        <dd></dd>
+                        <dt>
+                            <dl class="param-type">
+                                <dt>
+                                    Type
+                                </dt>
+                                <dd>
+
+                                    <span class="param-type">AppIDError</span>
+
+
+                                </dd>
+                            </dl>
+                        </dt>
+                        <dd></dd>
+                    </dl>
+
+                </li>
+
+                <li>
+
+                    <dl>
+                        <dt>
+                            <div class="param-desc">
+                                <p>Any errors during a HTTP request.</p>
+                            </div>
+                        </dt>
+                        <dd></dd>
+                        <dt>
+                            <dl class="param-type">
+                                <dt>
+                                    Type
+                                </dt>
+                                <dd>
+
+                                    <span class="param-type">RequestError</span>
+
+
+                                </dd>
+                            </dl>
+                        </dt>
+                        <dd></dd>
+                    </dl>
+
+                </li>
+            </ul>
+
+
+            <h5>Returns:</h5>
+
+
+            <div class="param-desc">
+                <p>The user information for the authenticated user. Example: {sub: '', email: ''}</p>
+            </div>
+
+
+            <dl class="param-type">
+                <dt>
+                    Type
+                </dt>
+                <dd>
+
+                    <span class="param-type">Promise</span>
+
+
+                </dd>
+            </dl>
+
+
+            <h4 class="name" id="changePassword"><span class="type-signature">(async) </span>changePassword<span
+                    class="signature">(idToken)</span><span class="type-signature"> &rarr; {Promise.&lt;<a
+                    href="global.html#Tokens">Tokens</a>>}</span></h4>
+
+
+            <dl class="details">
+
+
+                <dt class="tag-source">Source:</dt>
+                <dd class="tag-source">
+                    <ul class="dummy">
+                        <li>
+                            <a href="index.js.html">index.js</a>, <a href="index.js.html#line185">line 185</a>
+                        </li>
+                    </ul>
+                </dd>
+
+
+            </dl>
+
+
+            <div class="description">
+                <p>This method will open a popup to the change password widget for Cloud Directory users.<br>
+                    You must enable users to manage their account from your app in Cloud Directory settings.</p>
+            </div>
+
+
+            <h5>Example</h5>
+
+            <pre class="prettyprint"><code>let tokens = await appID.changePassword(idToken);</code></pre>
+
+
+            <h5>Parameters:</h5>
+
+
+            <table class="params">
+                <thead>
+                <tr>
+
+                    <th>Name</th>
+
+
+                    <th>Type</th>
+
+
+                    <th class="last">Description</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+
+                <tr>
+
+                    <td class="name"><code>idToken</code></td>
+
+
+                    <td class="type">
+
+
+                        <span class="param-type">string</span>
+
+
+                    </td>
+
+
+                    <td class="description last"><p>A JWT.</p></td>
+                </tr>
+
+
+                </tbody>
+            </table>
+
+
+            <h5>Throws:</h5>
+            <ul>
+                <li>
+
+                    <dl>
+                        <dt>
+                            <div class="param-desc">
+                                <p>&quot;Expect id token payload object to have identities field&quot;</p>
+                            </div>
+                        </dt>
+                        <dd></dd>
+                        <dt>
+                            <dl class="param-type">
+                                <dt>
+                                    Type
+                                </dt>
+                                <dd>
+
+                                    <span class="param-type">AppIDError</span>
+
+
+                                </dd>
+                            </dl>
+                        </dt>
+                        <dd></dd>
+                    </dl>
+
+                </li>
+
+                <li>
+
+                    <dl>
+                        <dt>
+                            <div class="param-desc">
+                                <p>&quot;Must be a Cloud Directory user&quot;</p>
+                            </div>
+                        </dt>
+                        <dd></dd>
+                        <dt>
+                            <dl class="param-type">
+                                <dt>
+                                    Type
+                                </dt>
+                                <dd>
+
+                                    <span class="param-type">AppIDError</span>
+
+
+                                </dd>
+                            </dl>
+                        </dt>
+                        <dd></dd>
+                    </dl>
+
+                </li>
+
+                <li>
+
+                    <dl>
+                        <dt>
+                            <div class="param-desc">
+                                <p>&quot;Missing id token string&quot;</p>
+                            </div>
+                        </dt>
+                        <dd></dd>
+                        <dt>
+                            <dl class="param-type">
+                                <dt>
+                                    Type
+                                </dt>
+                                <dd>
+
+                                    <span class="param-type">AppIDError</span>
+
+
+                                </dd>
+                            </dl>
+                        </dt>
+                        <dd></dd>
+                    </dl>
+
+                </li>
+            </ul>
+
+
+            <h5>Returns:</h5>
+
+
+            <div class="param-desc">
+                <p>The tokens of the authenticated user.</p>
+            </div>
+
+
+            <dl class="param-type">
+                <dt>
+                    Type
+                </dt>
+                <dd>
+
+                    <span class="param-type">Promise.&lt;<a href="global.html#Tokens">Tokens</a>></span>
+
+
+                </dd>
+            </dl>
+
+
         </article>
 
     </section>
@@ -1097,7 +1102,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Oct 22 2019 16:58:07
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon Oct 28 2019 11:08:24
     GMT-0500 (CDT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
