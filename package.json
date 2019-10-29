@@ -13,6 +13,7 @@
     "url": "git+https://github.com/ibm-cloud-security/appid-clientsdk-js.git"
   },
   "main": "dist/appid.umd.min.js",
+  "license": "Apache-2.0",
   "nyc": {
     "all": true,
     "include": [
