@@ -73,7 +73,7 @@
 
 		document.getElementById('changePassword').addEventListener('click', async () => {
 			try {
-				await appID.changePassword(tokens.idTokenPayload);
+				await appID.changePassword(tokens.idToken);
 			} catch (e) {
 				showError(e);
 			}
