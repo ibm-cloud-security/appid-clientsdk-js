@@ -133,6 +133,7 @@ class Utils {
 			},
 			body: requestParams
 		});
+		console.log(tokens);
 		const publicKeys = await this.openIdConfigResource.getPublicKeys();
 
 		const accessTokenPayload = this.tokenValidator.decodeAndValidate({

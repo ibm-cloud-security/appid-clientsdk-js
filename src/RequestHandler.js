@@ -7,11 +7,17 @@ class RequestHandler {
 			response = await fetch(url, options);
 			text = await response.text();
 		} catch (e) {
+			debugger;
 			throw new RequestError(`Failed to fetch ${url}. ${e}`, null, e);
 		}
 
 		if (!response.ok || response.status > 300) {
-			throw new RequestError(`Failed to fetch ${url}. Response=${text}`, response.status);
+			debugger;
+			if (text.includes('id token not generated with cloud directory idp')) {
+				throw new RequestError(`${JSON.parse(text).error_description}`, response.status);
+			} else {
+				throw new RequestError(`Failed to fetch ${url}. Response=${text}`, response.status);
+			}
 		}
 		
 		try {

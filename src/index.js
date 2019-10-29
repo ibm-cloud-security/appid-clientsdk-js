@@ -229,6 +229,8 @@ class AppID {
 	 * let newTokens = await appID.changeDetails(tokens);
 	 */
 	async changeDetails({accessToken, idToken}) {
+		this._validateInitalize();
+
 		if (!accessToken && typeof accessToken !== 'string') {
 			throw new AppIDError(constants.MISSING_ACCESS_TOKEN);
 		}
