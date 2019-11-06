@@ -45,7 +45,7 @@ class Utils {
 		return {codeVerifier, codeChallenge, state, nonce};
 	}
 
-	getAuthParamsAndUrl({clientId, origin, prompt, endpoint, userId}) {
+	getAuthParamsAndUrl({clientId, origin, prompt, endpoint, userId, changeDetailsCode}) {
 		const {codeVerifier, codeChallenge, state, nonce} = this.getPKCEFields();
 		let authParams = {
 			client_id: clientId,
@@ -67,6 +67,10 @@ class Utils {
 			authParams.user_id = userId;
 		}
 
+		if (changeDetailsCode) {
+			authParams.code = changeDetailsCode;
+		}
+
 		const url = endpoint + '?' + this.buildParams(authParams);
 		return {
 			codeVerifier,
@@ -76,8 +80,8 @@ class Utils {
 		};
 	}
 
-	async performOAuthFlowAndGetTokens({userId, origin, clientId, endpoint}) {
-		const {codeVerifier, state, nonce, url} = this.getAuthParamsAndUrl({userId, origin, clientId, endpoint});
+	async performOAuthFlowAndGetTokens({userId, origin, clientId, endpoint, changeDetailsCode}) {
+		const {codeVerifier, state, nonce, url} = this.getAuthParamsAndUrl({userId, origin, clientId, endpoint, changeDetailsCode});
 
 		this.popup.open();
 		this.popup.navigate(url);
