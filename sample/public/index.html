@@ -18,8 +18,8 @@
     <div class="flex-bottom" id="error"></div>
     <div class="flex-bottom" id="passwordChanged"></div>
     <div id="login-button-div" class="flex-top">
-        <!--<div id="loader" class="loader"></div>-->
-        <button id="login" class="button">Login</button>
+        <div id="loader" class="loader"></div>
+        <button id="login" class="button hidden">Login</button>
         <button id="changePassword" class="button hidden">Change Password</button>
         <button id="changeDetails" class="button hidden">Change Details</button>
     </div>
@@ -49,25 +49,25 @@
 		let tokens;
 		try {
 			await appID.init({
-				clientId: '1b0e3658-fc1f-402e-843c-18402d4dbe58',
-				discoveryEndpoint: 'http://localhost:6002/oauth/v4/5b1eb5f1-34bd-41fd-b6dd-e257c188a4dd/.well-known/openid-configuration'
+				clientId: '<SPA_CLIENT_ID>',
+				discoveryEndpoint: '<WELL_KNOWN_ENDPOINT>'
 			});
 		} catch (e) {
 			console.error(e);
 			document.getElementById('error').textContent = e;
 			return;
 		}
-		// try {
-		// 	tokens = await appID.silentSignin();
-		// 	if (tokens) {
-		// 		document.getElementById('loader').setAttribute('class', 'hidden');
-		// 		document.getElementById('login').setAttribute('class', 'hidden');
-		// 		success(tokens.idTokenPayload);
-		// 	}
-		// } catch (e) {
-		// 	document.getElementById('loader').setAttribute('class', 'hidden');
-		// 	showError(e);
-		// }
+		try {
+			tokens = await appID.silentSignin();
+			if (tokens) {
+				document.getElementById('loader').setAttribute('class', 'hidden');
+				document.getElementById('login').setAttribute('class', 'hidden');
+				success(tokens.idTokenPayload);
+			}
+		} catch (e) {
+			document.getElementById('loader').setAttribute('class', 'hidden');
+			showError(e);
+		}
 		document.getElementById('login').addEventListener('click', async () => {
 			document.getElementById('login').setAttribute('class', 'hidden');
 			document.getElementById('error').textContent = '';
