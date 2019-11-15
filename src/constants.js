@@ -19,7 +19,6 @@ module.exports = {
 	MISSING_ID_TOKEN_PAYLOAD: 'Missing id token payload',
 	MISSING_TOKENS: 'Missing tokens',
 	MISSING_ACCESS_TOKEN: 'Missing access token string',
-	MISSING_ID_TOKEN: 'Missing access token string',
 	INVALID_DISCOVERY_ENDPOINT: 'Invalid discovery endpoint',
 	FAIL_TO_INITIALIZE: 'You must call and wait for init() before calling this function.',
 	RESPONSE_TYPE: 'code',
