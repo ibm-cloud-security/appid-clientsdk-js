@@ -25,16 +25,31 @@ describe('RequestHandler tests', async () => {
 		try {
 			let res = await requestHandler(invalidUrl);
 		} catch (e) {
-			assert.deepEqual(e.toString(),'Error: Failed to fetch notvalid. TypeError: Only absolute URLs are supported')
+			assert.deepEqual(e.toString(), 'Error: Failed to fetch notvalid. TypeError: Only absolute URLs are supported')
+		}
+	});
+
+	it('returns id token not generated with cloud directory idp', async () => {
+		const htmlResponse = 'http://www.mocky.io/v2/5dc17100330000c8b61a526f';
+		try {
+			let res = await requestHandler(htmlResponse);
+		} catch (e) {
+			expect(e.toString()).to.include('Error: id token not generated with cloud directory idp')
 		}
 	});
 
 	it('returns invalid response type', async () => {
-		const htmlResponse = url + 'html';
+		const htmlResponse = 'http://www.mocky.io/v2/5dc171fe330000b3a41a527e';
 		try {
 			let res = await requestHandler(htmlResponse);
 		} catch (e) {
 			expect(e.toString()).to.include('Invalid response while trying to fetch ' + htmlResponse)
 		}
+	});
+
+	it('returns text', async () => {
+		const htmlResponse = 'http://www.mocky.io/v2/5dc17255330000cdbd1a5283';
+		let res = await requestHandler(htmlResponse);
+		assert.deepEqual(res, 'working');
 	});
 });

@@ -16,9 +16,12 @@
     <div class="text-div" id="welcome">
     </div>
     <div class="flex-bottom" id="error"></div>
+    <div class="flex-bottom" id="passwordChanged"></div>
     <div id="login-button-div" class="flex-top">
-        <button id="login" class="button">Login</button>
-        <button id="changePassword" class="button">Change Password</button>
+        <div id="loader" class="loader"></div>
+        <button id="login" class="button hidden">Login</button>
+        <button id="changePassword" class="button hidden">Change Password</button>
+        <button id="changeDetails" class="button hidden">Change Details</button>
     </div>
     <div class="bottom-container">
         <div class="flex-bottom" id="id_token"></div>
@@ -34,13 +37,20 @@
 		document.getElementById('login').setAttribute('class', 'button');
 	}
 
+	function success(decodeIDToken) {
+		document.getElementById('welcome').textContent = 'Hello, ' + decodeIDToken.name;
+		document.getElementById('id_token').textContent = JSON.stringify(decodeIDToken);
+		document.getElementById('changePassword').setAttribute('class', 'button');
+		document.getElementById('changeDetails').setAttribute('class', 'button');
+	}
+
 	(async function () {
 		const appID = new AppID();
 		let tokens;
 		try {
 			await appID.init({
-                clientId: '<SPA_CLIENT_ID>',
-                discoveryEndpoint: '<WELL_KNOWN_ENDPOINT>'
+				clientId: '<SPA_CLIENT_ID>',
+				discoveryEndpoint: '<WELL_KNOWN_ENDPOINT>'
 			});
 		} catch (e) {
 			console.error(e);
@@ -50,9 +60,12 @@
 		try {
 			tokens = await appID.silentSignin();
 			if (tokens) {
-				document.getElementById('id_token').textContent = JSON.stringify(tokens.idTokenPayload);
+				document.getElementById('loader').setAttribute('class', 'hidden');
+				document.getElementById('login').setAttribute('class', 'hidden');
+				success(tokens.idTokenPayload);
 			}
 		} catch (e) {
+			document.getElementById('loader').setAttribute('class', 'hidden');
 			showError(e);
 		}
 		document.getElementById('login').addEventListener('click', async () => {
@@ -62,20 +75,34 @@
 			try {
 				tokens = await appID.signin();
 				let userInfo = await appID.getUserInfo(tokens.accessToken);
-				let decodeIDToken = tokens.idTokenPayload;
-				document.getElementById('welcome').textContent = 'Hello, ' + decodeIDToken.name;
-				document.getElementById('id_token').textContent = JSON.stringify(decodeIDToken);
-				document.getElementById('user_info').textContent = JSON.stringify(userInfo);
+				success(tokens.idTokenPayload);
 			} catch (e) {
 				showError(e);
 			}
 		});
 
 		document.getElementById('changePassword').addEventListener('click', async () => {
+			document.getElementById('passwordChanged').textContent = '';
+			document.getElementById('error').textContent = '';
 			try {
-				await appID.changePassword(tokens.idTokenPayload);
+				tokens = await appID.changePassword(tokens.idToken);
+				document.getElementById('passwordChanged').textContent = 'Your password is changed.';
 			} catch (e) {
 				showError(e);
+				document.getElementById('login').setAttribute('class', 'hidden');
+			}
+		});
+
+		document.getElementById('changeDetails').addEventListener('click', async () => {
+			document.getElementById('passwordChanged').textContent = '';
+			document.getElementById('error').textContent = '';
+			try {
+				tokens = await appID.changeDetails(tokens);
+				success(tokens.idTokenPayload);
+				document.getElementById('passwordChanged').textContent = 'Your details is changed.';
+			} catch (e) {
+				showError(e);
+				document.getElementById('login').setAttribute('class', 'hidden');
 			}
 		});
 	})()
