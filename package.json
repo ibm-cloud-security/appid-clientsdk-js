@@ -1,6 +1,6 @@
 {
   "name": "ibmcloud-appid-js",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "IBM Cloud App ID SDK for Single Page Applications",
   "keywords": [
     "SPA",
