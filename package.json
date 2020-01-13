@@ -1,8 +1,27 @@
 {
   "name": "ibmcloud-appid-js",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "IBM Cloud App ID SDK for Single Page Applications",
-  "keywords": ["SPA","SDK","angular","react","javascript","js","ibmcloud","appid","App ID","authentication","authorization","access control","ACL","openid","jwt","PKCE","oauth","single page application"],
+  "keywords": [
+    "SPA",
+    "SDK",
+    "angular",
+    "react",
+    "javascript",
+    "js",
+    "ibmcloud",
+    "appid",
+    "App ID",
+    "authentication",
+    "authorization",
+    "access control",
+    "ACL",
+    "openid",
+    "jwt",
+    "PKCE",
+    "oauth",
+    "single page application"
+  ],
   "scripts": {
     "build": "webpack",
     "test": "mocha",
@@ -31,7 +50,6 @@
     "jsrsasign": "^8.0.12"
   },
   "devDependencies": {
-    "node-fetch": "^2.6.0",
     "@babel/cli": "^7.0.0",
     "@babel/core": "^7.5.5",
     "@babel/plugin-transform-runtime": "^7.5.5",
@@ -39,12 +57,13 @@
     "babel-cli": "^7.0.0-beta.3",
     "chai": "^4.2.0",
     "coveralls": "^3.0.6",
-    "gulp-babel": "^8.0.0",
-    "mocha": "^6.2.0",
-    "nyc": "^14.1.1",
-    "webpack": "^4.39.1",
-    "webpack-cli": "^3.3.6",
     "docdash": "^1.1.1",
-    "jsdoc": "^3.6.3"
+    "gulp-babel": "^8.0.0",
+    "jsdoc": "^3.6.3",
+    "mocha": "^6.2.0",
+    "node-fetch": "^2.6.0",
+    "nyc": "^15.0.0",
+    "webpack": "^4.39.1",
+    "webpack-cli": "^3.3.6"
   }
 }

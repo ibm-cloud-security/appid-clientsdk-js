@@ -276,4 +276,58 @@ describe('AppID tests', () => {
 			}
 		});
 	})
+
+	describe('changeDetails', () => {
+		let appID;
+
+		it('should succeed', async () => {
+			appID = new AppID({
+				popup: new PopupControllerMock({invalidState: false, error: false}),
+				iframe: new IFrameControllerMock({invalidState: false, error: false, invalidOrigin: false}),
+				openIdConfigResource: new OpenIdConfigurationResourceMock(),
+				utils: new Utils(),
+				tokenValidator: new TokenValidatorMock({}),
+				requestHandler: new RequestHandlerMock(),
+				w: {origin: 'localhost'},
+				url: URL
+			});
+			await appID.init(defaultInit);
+			let res = await appID.changeDetails({accessToken: 'accessToken', idToken: 'idToken'});
+			assert.equal(res.accessToken, 'accessToken');
+			assert.equal(res.idToken, 'idToken');
+			assert.equal(res.accessTokenPayload, 'tokenPayload');
+		});
+
+		it('should throw missing access token error if not exist', async () => {
+			try {
+				await appID.changeDetails({});
+			} catch (e) {
+				assert.equal(e.message, constants.MISSING_ACCESS_TOKEN);
+			}
+		});
+
+		it('should throw missing id token error if not jwt string', async () => {
+			try {
+				await appID.changeDetails({accessToken: {id: 'not a jwt'}});
+			} catch (e) {
+				assert.equal(e.message, constants.MISSING_ID_TOKEN);
+			}
+		});
+
+		it('should throw missing id token error if not exist', async () => {
+			try {
+				await appID.changeDetails({accessToken: 'accessToken'});
+			} catch (e) {
+				assert.equal(e.message, constants.MISSING_ID_TOKEN);
+			}
+		});
+
+		it('should throw missing id token error if not jwt string', async () => {
+			try {
+				await appID.changeDetails({accessToken: 'accessToken', idToken: {id: 'not a jwt'}});
+			} catch (e) {
+				assert.equal(e.message, constants.MISSING_ID_TOKEN);
+			}
+		});
+	})
 });

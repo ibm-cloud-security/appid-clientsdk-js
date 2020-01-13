@@ -22,7 +22,7 @@ class TokenValidator {
 		const publicKey = this.getPublicKey(publicKeys.keys, kid);
 
 		const myKey = this.jwt.KEYUTIL.getKey(publicKey);
-		const isValid =  this.jwt.KJUR.jws.JWS.verify(token, myKey, {alg:[constants.TOKEN_ALG]});
+		const isValid = this.jwt.KJUR.jws.JWS.verify(token, myKey, {alg: [constants.TOKEN_ALG]});
 		if (!isValid) {
 			throw new TokenError(constants.INVALID_SIGNATURE);
 		}
@@ -56,7 +56,7 @@ class TokenValidator {
 
 	getPublicKey(keys, kid) {
 		let publicKey;
-		for(let i = 0; i < keys.length; i++) {
+		for (let i = 0; i < keys.length; i++) {
 			if (keys[i].kid === kid) {
 				publicKey = keys[i];
 			}
@@ -68,4 +68,5 @@ class TokenValidator {
 		return publicKey;
 	}
 }
+
 module.exports = TokenValidator;

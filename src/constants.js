@@ -16,6 +16,9 @@ module.exports = {
 	NOT_CD_USER: 'Must be a Cloud Directory user',
 	MISSING_CLIENT_ID: 'Missing client ID',
 	MISSING_ID_TOKEN: 'Missing id token string',
+	MISSING_ID_TOKEN_PAYLOAD: 'Missing id token payload',
+	MISSING_TOKENS: 'Missing tokens',
+	MISSING_ACCESS_TOKEN: 'Missing access token string',
 	INVALID_DISCOVERY_ENDPOINT: 'Invalid discovery endpoint',
 	FAIL_TO_INITIALIZE: 'You must call and wait for init() before calling this function.',
 	RESPONSE_TYPE: 'code',
@@ -29,6 +32,8 @@ module.exports = {
 	TOKEN_ALG: 'RS256',
 	VERSION: 4,
 	CHANGE_PASSWORD: '/cloud_directory/change_password',
+	GENERATE_CODE: '/cloud_directory/generate_code',
+	CHANGE_DETAILS: '/cloud_directory/change_details',
 	OAUTH: '/oauth/v4/',
 	MALFORMED_ACCESS_TOKEN: 'eyJpc3MiOiJtb2JpbGVjbGllbnRhY2Nlc3Muc3RhZ2UxLm5nLmJsdWVtaXgubmV0IiwiZXhwIjoxNDg3MDg0ODc4LCJhdWQiOiIyNmNiMDEyZWIzMjdjNjEyZDkwYTY4MTkxNjNiNmJjYmQ0ODQ5Y2JiIiwiaWF0IjoxNDg3MDgxMjc4LCJhdXRoX2J5IjoiZmFjZWJvb2siLCJ0ZW5hbnQiOiI0ZGJhOTQzMC01NGU2LTRjZjItYTUxNi02ZjczZmViNzAyYmIiLCJzY29wZSI6ImFwcGlkX2RlZmF1bHQgYXBwaWRfcmVhZHByb2ZpbGUgYXBwaWRfcmVhZHVzZXJhdHRyIGFwcGlkX3dyaXRldXNlcmF0dHIifQ.HHterec250JSDY1965cM2DadBznl2wTKmzKNSnfjpdTAqax9VZvV3EwuFbEnGp9-i6AC-OlsVj7xvbALkdjwG2lZvpQx0M_gRc_3E0NiYuOGVolcm0wEXtbtDUFFqZQAf9BYYOPZ8OintdBiwUGETbH1ZRVtUvt3nalIko1OPE1Q12LvuRlhz5MClNHmvxJcXc7kucxCx4s4UFFy_HJA1gow7HWFqc9-PZf4JMWA-siYqPrdw_zYeBTBzE5co92F6JBEtGLLCjhJVz9eYgLLECXbak3z6hOaY9352Weuj7AgMOWxzw56jKKsiixMtvzrCzLVIcRUG96UJszwPHtPlA',
 	INVALID_SIGNATURE_TOKEN: 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2p3dC1pZHAuZXhhbXBsZS5jb20iLCJzdWIiOiJtYWlsdG86bWlrZUBleGFtcGxlLmNvbSIsIm5iZiI6MTU2NjMxMDg5NSwiZXhwIjoxNTY2MzE0NDk1LCJpYXQiOjE1NjYzMTA4OTUsImp0aSI6ImlkMTIzNDU2IiwidHlwIjoiaHR0cHM6Ly9leGFtcGxlLmNvbS9yZWdpc3RlciIsImF1ZCI6WyJodHRwOi8vZm9vMS5jb20iLCJodHRwOi8vZm9vMi5jb20iXX0.NBDYg8VZxW770qcbIl40OFvaQntO-FVYUUJocE5ZgcyrvFTuomwF997OcEJghO8BE_Y2m67PbfPFsbN0VI6j'
