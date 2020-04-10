@@ -58,7 +58,24 @@ describe('AppID tests', () => {
 				openIdConfigResource: new OpenIdConfigurationResourceMock(),
 				utils: new Utils(),
 				requestHandler: new RequestHandlerMock(),
-				w: {origin: 'http://localhost:3005'},
+				w: {location : {origin: 'http://localhost:3005'}},
+				url: URL
+			});
+			await appID.init(defaultInit);
+			let res = await appID.signin();
+			assert.equal(res.accessToken, 'accessToken');
+			assert.equal(res.idToken, 'idToken');
+			assert.equal(res.accessTokenPayload, 'tokenPayload');
+		});
+
+		it('should return tokens with no origin ', async () => {
+			const appID = new AppID({
+				popup: new PopupControllerMock({invalidState: false, error: false, invalidOrigin: false}),
+				iframe: new IFrameControllerMock({invalidState: false, error: false, invalidOrigin: false}),
+				openIdConfigResource: new OpenIdConfigurationResourceMock(),
+				utils: new Utils(),
+				requestHandler: new RequestHandlerMock(),
+				w: {location : {protocol: 'http', hostname: 'localhost', port: '3005'}},
 				url: URL
 			});
 			await appID.init(defaultInit);
@@ -75,7 +92,25 @@ describe('AppID tests', () => {
 				openIdConfigResource: new OpenIdConfigurationResourceMock(),
 				utils: new Utils(),
 				requestHandler: new RequestHandlerMock(),
-				w: {origin: 'localhost'},
+				w: {location : {origin: 'localhost'}},
+				url: URL
+			});
+			try {
+				await appID.init(defaultInit);
+				await appID.signin();
+			} catch (e) {
+				assert.equal(e.description, constants.INVALID_STATE);
+			}
+		});
+
+		it('should return error with no origin - invalid state', async () => {
+			const appID = new AppID({
+				popup: new PopupControllerMock({invalidState: true, error: false}),
+				iframe: new IFrameControllerMock({invalidState: false, error: false, invalidOrigin: false}),
+				openIdConfigResource: new OpenIdConfigurationResourceMock(),
+				utils: new Utils(),
+				requestHandler: new RequestHandlerMock(),
+				w: {location : {protocol: 'http', hostname: 'localhost'}},
 				url: URL
 			});
 			try {
@@ -93,7 +128,7 @@ describe('AppID tests', () => {
 				openIdConfigResource: new OpenIdConfigurationResourceMock(),
 				utils: new Utils(),
 				requestHandler: new RequestHandlerMock(),
-				w: {origin: 'localhost'},
+				w: {location : {origin: 'localhost'}},
 				url: URL
 			});
 			try {
