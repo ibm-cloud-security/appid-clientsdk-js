@@ -58,7 +58,7 @@ describe('AppID tests', () => {
 				openIdConfigResource: new OpenIdConfigurationResourceMock(),
 				utils: new Utils(),
 				requestHandler: new RequestHandlerMock(),
-				w: {origin: 'http://localhost:3005'},
+				w: {location : {origin: 'http://localhost:3005'}},
 				url: URL
 			});
 			await appID.init(defaultInit);
@@ -75,7 +75,7 @@ describe('AppID tests', () => {
 				openIdConfigResource: new OpenIdConfigurationResourceMock(),
 				utils: new Utils(),
 				requestHandler: new RequestHandlerMock(),
-				w: {origin: 'localhost'},
+				w: {location : {origin: 'localhost'}},
 				url: URL
 			});
 			try {
@@ -93,7 +93,7 @@ describe('AppID tests', () => {
 				openIdConfigResource: new OpenIdConfigurationResourceMock(),
 				utils: new Utils(),
 				requestHandler: new RequestHandlerMock(),
-				w: {origin: 'localhost'},
+				w: {location : {origin: 'localhost'}},
 				url: URL
 			});
 			try {

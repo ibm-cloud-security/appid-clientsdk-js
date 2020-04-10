@@ -104,7 +104,7 @@ class AppID {
 	async signin() {
 		this._validateInitalize();
 		const endpoint = this.openIdConfigResource.getAuthorizationEndpoint();
-		return this.utils.performOAuthFlowAndGetTokens({origin: this.window.origin, clientId: this.clientId, endpoint});
+		return this.utils.performOAuthFlowAndGetTokens({origin: this.window.location.origin, clientId: this.clientId, endpoint});
 	}
 
 	/**
