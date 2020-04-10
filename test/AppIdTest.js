@@ -103,6 +103,24 @@ describe('AppID tests', () => {
 			}
 		});
 
+		it('should return error with no origin - invalid state', async () => {
+			const appID = new AppID({
+				popup: new PopupControllerMock({invalidState: true, error: false}),
+				iframe: new IFrameControllerMock({invalidState: false, error: false, invalidOrigin: false}),
+				openIdConfigResource: new OpenIdConfigurationResourceMock(),
+				utils: new Utils(),
+				requestHandler: new RequestHandlerMock(),
+				w: {location : {protocol: 'http', hostname: 'localhost'}},
+				url: URL
+			});
+			try {
+				await appID.init(defaultInit);
+				await appID.signin();
+			} catch (e) {
+				assert.equal(e.description, constants.INVALID_STATE);
+			}
+		});
+
 		it('should return error - error in message', async () => {
 			const appID = new AppID({
 				popup: new PopupControllerMock({invalidState: false, error: true}),
