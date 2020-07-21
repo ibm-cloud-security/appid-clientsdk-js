@@ -4,7 +4,7 @@
 
 **Added**
 
-- Update dependency versions.
+- Update dependency versions
 
 ## [v0.4.0](https://github.com/ibm-cloud-security/appid-clientsdk-js/releases/tag/0.4.0) (2020-04-10)
 
