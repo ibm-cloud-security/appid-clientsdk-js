@@ -49,9 +49,8 @@
 		let tokens;
 		try {
 			await appID.init({
-				clientId: '6757117a-4715-4f86-af8e-c9437de0cb86',
-				// discoveryEndpoint: 'https://eu-gb.appid.test.cloud.ibm.com/oauth/v4/d28b6a9a-f34c-4fcf-972b-5e957f029650/.well-known/openid-configuration'
-                    discoveryEndpoint: 'http://localhost:6002/oauth/v4/d28b6a9a-f34c-4fcf-972b-5e957f029650/.well-known/openid-configuration'
+                clientId: '<SPA_CLIENT_ID>',
+                discoveryEndpoint: '<WELL_KNOWN_ENDPOINT>'
 			});
 		} catch (e) {
 			console.error(e);
