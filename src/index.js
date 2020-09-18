@@ -56,6 +56,7 @@ class AppID {
 	 * @param {Object} [options.popup] - The popup configuration.
 	 * @param {Number} options.popup.height - The popup height.
 	 * @param {Number} options.popup.width - The popup width.
+	 * @param {string} options.idp - An enabled IdP name or "appid_anon" for anonymous login. If left empty, App ID login widget will be returned with all enabled IdPs.
 	 * @returns {Promise<void>}
 	 * @throws {AppIDError} For missing required params.
 	 * @throws {RequestError} Any errors during a HTTP request.
@@ -66,7 +67,7 @@ class AppID {
 	 * });
 	 *
 	 */
-	async init({clientId, discoveryEndpoint, popup = {height: window.screen.height * .80, width: 400}}) {
+	async init({clientId, discoveryEndpoint, popup = {height: window.screen.height * .80, width: 400}, idp}) {
 		if (!clientId) {
 			throw new AppIDError(constants.MISSING_CLIENT_ID);
 		}
@@ -79,6 +80,7 @@ class AppID {
 		await this.openIdConfigResource.init({discoveryEndpoint, requestHandler: this.request});
 		this.popup.init(popup);
 		this.clientId = clientId;
+		this.idp = idp;
 		this.initialized = true;
 	}
 
@@ -111,7 +113,8 @@ class AppID {
 		return this.utils.performOAuthFlowAndGetTokens({
 			origin,
 			endpoint,
-			clientId: this.clientId
+			clientId: this.clientId,
+			idp: this.idp,
 		});
 	}
 
@@ -135,7 +138,8 @@ class AppID {
 			clientId: this.clientId,
 			origin: this.window.origin,
 			prompt: constants.PROMPT,
-			endpoint
+			endpoint,
+			idp: this.idp,
 		});
 
 		this.iframe.open(url);
@@ -220,7 +224,8 @@ class AppID {
 			userId,
 			origin: this.window.origin,
 			clientId: this.clientId,
-			endpoint
+			endpoint,
+			idp: this.idp,
 		});
 	}
 
@@ -259,7 +264,8 @@ class AppID {
 			origin: this.window.origin,
 			clientId: this.clientId,
 			endpoint,
-			changeDetailsCode
+			changeDetailsCode,
+			idp: this.idp,
 		});
 	}
 
