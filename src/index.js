@@ -95,6 +95,8 @@ class AppID {
 	/**
 	 * This will open a sign in widget in a popup which will prompt the user to enter their credentials.
 	 * After a successful sign in, the popup will close and tokens are returned.
+	 * @param {Object} options
+	 * @param {string} options.idp - An enabled IdP name or "appid_anon" for anonymous login. If left empty, idp parameter that was set during initialization will be used
 	 * @returns {Promise<Tokens>} The tokens of the authenticated user.
 	 * @throws {PopupError} "Popup closed" - The user closed the popup before authentication was completed.
 	 * @throws {TokenError} Any token validation error.
@@ -103,7 +105,7 @@ class AppID {
 	 * @example
 	 * const {accessToken, accessTokenPayload, idToken, idTokenPayload} = await appID.signin();
 	 */
-	async signin() {
+	async signin({ idp } = {}) {
 		this._validateInitalize();
 		const endpoint = this.openIdConfigResource.getAuthorizationEndpoint();
 		let origin = this.window.location.origin;
@@ -114,7 +116,7 @@ class AppID {
 			origin,
 			endpoint,
 			clientId: this.clientId,
-			idp: this.idp,
+			idp: idp || this.idp,
 		});
 	}
 
@@ -123,6 +125,8 @@ class AppID {
 	 * This will attempt to authenticate the user in a hidden iframe.
 	 * You will need to [enable Cloud Directory SSO]{@link https://cloud.ibm.com/docs/services/appid?topic=appid-single-page#spa-silent-login}.
 	 * Sign in will be successful only if the user has previously signed in using Cloud Directory and their session is not expired.
+	 * @param {Object} options
+	 * @param {string} options.idp - An enabled IdP name or "appid_anon" for anonymous login. If left empty, idp parameter that was set during initialization will be used
 	 * @returns {Promise<Tokens>} The tokens of the authenticated user.
 	 * @throws {OAuthError} Any errors from the server according to the [OAuth spec]{@link https://tools.ietf.org/html/rfc6749#section-4.1.2.1}. e.g. {error: 'access_denied', description: 'User not signed in'}
 	 * @throws {IFrameError} "Silent sign-in timed out" - The iframe will close after 5 seconds if authentication could not be completed.
@@ -131,7 +135,7 @@ class AppID {
 	 * @example
 	 * const {accessToken, accessTokenPayload, idToken, idTokenPayload} = await appID.silentSignin();
 	 */
-	async silentSignin() {
+	async silentSignin({ idp } = {}) {
 		this._validateInitalize();
 		const endpoint = this.openIdConfigResource.getAuthorizationEndpoint();
 		const {codeVerifier, nonce, state, url} = this.utils.getAuthParamsAndUrl({
@@ -139,7 +143,7 @@ class AppID {
 			origin: this.window.origin,
 			prompt: constants.PROMPT,
 			endpoint,
-			idp: this.idp,
+			idp: idp || this.idp,
 		});
 
 		this.iframe.open(url);
