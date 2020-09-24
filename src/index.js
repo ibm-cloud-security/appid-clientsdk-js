@@ -105,7 +105,8 @@ class AppID {
 	 * @example
 	 * const {accessToken, accessTokenPayload, idToken, idTokenPayload} = await appID.signin();
 	 */
-	async signin({ idp } = {}) {
+	async signin(options) {
+		const { idp } = options || {};
 		this._validateInitalize();
 		const endpoint = this.openIdConfigResource.getAuthorizationEndpoint();
 		let origin = this.window.location.origin;
@@ -135,7 +136,8 @@ class AppID {
 	 * @example
 	 * const {accessToken, accessTokenPayload, idToken, idTokenPayload} = await appID.silentSignin();
 	 */
-	async silentSignin({ idp } = {}) {
+	async silentSignin(options) {
+		const { idp } = options || {};
 		this._validateInitalize();
 		const endpoint = this.openIdConfigResource.getAuthorizationEndpoint();
 		const {codeVerifier, nonce, state, url} = this.utils.getAuthParamsAndUrl({
