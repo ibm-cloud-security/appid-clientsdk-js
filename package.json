@@ -47,7 +47,7 @@
     ]
   },
   "dependencies": {
-    "jsrsasign": "^8.0.20"
+    "jsrsasign": "^10.2.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.4",
