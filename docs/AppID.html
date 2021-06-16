@@ -48,7 +48,7 @@
         AppID
         </h2>
         
-            <div class="class-description"><p>This class provides functions to support authentication.</p></div>
+            <div class="class-description usertext"><p>This class provides functions to support authentication.</p></div>
         
     
 </header>
@@ -75,7 +75,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line20">line 20</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line14">line 14</a>
     </li></ul></dd>
     
 
@@ -114,7 +114,7 @@
 
 
 
-<div class="description">
+<div class="description usertext">
     <p>This creates an instance of AppID. Once created, call init() before attempting to sign in.</p>
 </div>
 
@@ -227,7 +227,7 @@
 
 
 
-<div class="description">
+<div class="description usertext">
     <p>Initialize AppID. Call this function before attempting to sign in. You must wait for the promise to resolve.</p>
 </div>
 
@@ -511,7 +511,7 @@
 
 <dl>
     <dt>
-        <div class="param-desc">
+        <div class="param-desc usertext">
         <p>For missing required params.</p>
         </div>
     </dt>
@@ -538,7 +538,7 @@
 
 <dl>
     <dt>
-        <div class="param-desc">
+        <div class="param-desc usertext">
         <p>Any errors during a HTTP request.</p>
         </div>
     </dt>
@@ -640,7 +640,7 @@
 
 
 
-<div class="description">
+<div class="description usertext">
     <p>This will open a sign in widget in a popup which will prompt the user to enter their credentials.<br>
 After a successful sign in, the popup will close and tokens are returned.</p>
 </div>
@@ -678,7 +678,7 @@ After a successful sign in, the popup will close and tokens are returned.</p>
 
 <dl>
     <dt>
-        <div class="param-desc">
+        <div class="param-desc usertext">
         <p>&quot;Popup closed&quot; - The user closed the popup before authentication was completed.</p>
         </div>
     </dt>
@@ -705,7 +705,7 @@ After a successful sign in, the popup will close and tokens are returned.</p>
 
 <dl>
     <dt>
-        <div class="param-desc">
+        <div class="param-desc usertext">
         <p>Any token validation error.</p>
         </div>
     </dt>
@@ -732,7 +732,7 @@ After a successful sign in, the popup will close and tokens are returned.</p>
 
 <dl>
     <dt>
-        <div class="param-desc">
+        <div class="param-desc usertext">
         <p>Any errors from the server according to the <a href="https://tools.ietf.org/html/rfc6749#section-4.1.2.1">OAuth spec</a>. e.g. {error: 'server_error', description: ''}</p>
         </div>
     </dt>
@@ -759,7 +759,7 @@ After a successful sign in, the popup will close and tokens are returned.</p>
 
 <dl>
     <dt>
-        <div class="param-desc">
+        <div class="param-desc usertext">
         <p>Any errors during a HTTP request.</p>
         </div>
     </dt>
@@ -865,7 +865,7 @@ After a successful sign in, the popup will close and tokens are returned.</p>
 
 
 
-<div class="description">
+<div class="description usertext">
     <p>Silent sign in allows you to automatically obtain new tokens for a user without the user having to re-authenticate using a popup.<br>
 This will attempt to authenticate the user in a hidden iframe.<br>
 You will need to <a href="https://cloud.ibm.com/docs/services/appid?topic=appid-single-page#spa-silent-login">enable Cloud Directory SSO</a>.<br>
@@ -905,7 +905,7 @@ Sign in will be successful only if the user has previously signed in using Cloud
 
 <dl>
     <dt>
-        <div class="param-desc">
+        <div class="param-desc usertext">
         <p>Any errors from the server according to the <a href="https://tools.ietf.org/html/rfc6749#section-4.1.2.1">OAuth spec</a>. e.g. {error: 'access_denied', description: 'User not signed in'}</p>
         </div>
     </dt>
@@ -932,7 +932,7 @@ Sign in will be successful only if the user has previously signed in using Cloud
 
 <dl>
     <dt>
-        <div class="param-desc">
+        <div class="param-desc usertext">
         <p>&quot;Silent sign-in timed out&quot; - The iframe will close after 5 seconds if authentication could not be completed.</p>
         </div>
     </dt>
@@ -959,7 +959,7 @@ Sign in will be successful only if the user has previously signed in using Cloud
 
 <dl>
     <dt>
-        <div class="param-desc">
+        <div class="param-desc usertext">
         <p>Any token validation error.</p>
         </div>
     </dt>
@@ -986,7 +986,7 @@ Sign in will be successful only if the user has previously signed in using Cloud
 
 <dl>
     <dt>
-        <div class="param-desc">
+        <div class="param-desc usertext">
         <p>Any errors during a HTTP request.</p>
         </div>
     </dt>
@@ -1092,7 +1092,7 @@ Sign in will be successful only if the user has previously signed in using Cloud
 
 
 
-<div class="description">
+<div class="description usertext">
     <p>This method will make a GET request to the <a href="https://us-south.appid.cloud.ibm.com/swagger-ui/#/Authorization%252520Server%252520-%252520Authorization%252520Server%252520V4/oauth-server.userInfo">user info endpoint</a> using the access token of the authenticated user.</p>
 </div>
 
@@ -1173,7 +1173,7 @@ Sign in will be successful only if the user has previously signed in using Cloud
 
 <dl>
     <dt>
-        <div class="param-desc">
+        <div class="param-desc usertext">
         <p>&quot;Access token must be a string&quot; Invalid access token.</p>
         </div>
     </dt>
@@ -1200,7 +1200,7 @@ Sign in will be successful only if the user has previously signed in using Cloud
 
 <dl>
     <dt>
-        <div class="param-desc">
+        <div class="param-desc usertext">
         <p>Any errors during a HTTP request.</p>
         </div>
     </dt>
@@ -1306,7 +1306,7 @@ Sign in will be successful only if the user has previously signed in using Cloud
 
 
 
-<div class="description">
+<div class="description usertext">
     <p>This method will open a popup to the change password widget for Cloud Directory users.<br>
 You must enable users to manage their account from your app in Cloud Directory settings.</p>
 </div>
@@ -1393,7 +1393,7 @@ You must enable users to manage their account from your app in Cloud Directory s
 
 <dl>
     <dt>
-        <div class="param-desc">
+        <div class="param-desc usertext">
         <p>&quot;Expect id token payload object to have identities field&quot;</p>
         </div>
     </dt>
@@ -1420,7 +1420,7 @@ You must enable users to manage their account from your app in Cloud Directory s
 
 <dl>
     <dt>
-        <div class="param-desc">
+        <div class="param-desc usertext">
         <p>&quot;Must be a Cloud Directory user&quot;</p>
         </div>
     </dt>
@@ -1447,7 +1447,7 @@ You must enable users to manage their account from your app in Cloud Directory s
 
 <dl>
     <dt>
-        <div class="param-desc">
+        <div class="param-desc usertext">
         <p>&quot;Missing id token string&quot;</p>
         </div>
     </dt>
@@ -1553,7 +1553,7 @@ You must enable users to manage their account from your app in Cloud Directory s
 
 
 
-<div class="description">
+<div class="description usertext">
     <p>This method will open a popup to the change details widget for Cloud Directory users.<br>
 You must enable users to manage their account from your app in Cloud Directory settings.</p>
 </div>
@@ -1641,7 +1641,7 @@ let newTokens = await appID.changeDetails(tokens);</code></pre>
 
 <dl>
     <dt>
-        <div class="param-desc">
+        <div class="param-desc usertext">
         <p>&quot;Missing id token string&quot;</p>
         </div>
     </dt>
@@ -1668,7 +1668,7 @@ let newTokens = await appID.changeDetails(tokens);</code></pre>
 
 <dl>
     <dt>
-        <div class="param-desc">
+        <div class="param-desc usertext">
         <p>&quot;Missing access token string&quot;</p>
         </div>
     </dt>
@@ -1695,7 +1695,7 @@ let newTokens = await appID.changeDetails(tokens);</code></pre>
 
 <dl>
     <dt>
-        <div class="param-desc">
+        <div class="param-desc usertext">
         <p>&quot;Missing tokens object&quot;</p>
         </div>
     </dt>
@@ -1761,7 +1761,7 @@ let newTokens = await appID.changeDetails(tokens);</code></pre>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Jul 21 2020 11:34:54 GMT-0500 (Central Daylight Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a> on Wed Jun 16 2021 12:34:16 GMT+0100 (Irish Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
