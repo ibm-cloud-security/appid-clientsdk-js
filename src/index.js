@@ -56,6 +56,7 @@ class AppID {
 	 * @param {Object} [options.popup] - The popup configuration.
 	 * @param {Number} options.popup.height - The popup height.
 	 * @param {Number} options.popup.width - The popup width.
+	 * @param {string} options.idp - An enabled IdP name or "appid_anon" for anonymous login. If left empty, App ID login widget will be returned with all enabled IdPs.
 	 * @returns {Promise<void>}
 	 * @throws {AppIDError} For missing required params.
 	 * @throws {RequestError} Any errors during a HTTP request.
@@ -66,7 +67,7 @@ class AppID {
 	 * });
 	 *
 	 */
-	async init({clientId, discoveryEndpoint, popup = {height: window.screen.height * .80, width: 400}}) {
+	async init({clientId, discoveryEndpoint, popup = {height: window.screen.height * .80, width: 400}, idp}) {
 		if (!clientId) {
 			throw new AppIDError(constants.MISSING_CLIENT_ID);
 		}
@@ -79,6 +80,7 @@ class AppID {
 		await this.openIdConfigResource.init({discoveryEndpoint, requestHandler: this.request});
 		this.popup.init(popup);
 		this.clientId = clientId;
+		this.idp = idp;
 		this.initialized = true;
 	}
 
@@ -93,6 +95,8 @@ class AppID {
 	/**
 	 * This will open a sign in widget in a popup which will prompt the user to enter their credentials.
 	 * After a successful sign in, the popup will close and tokens are returned.
+	 * @param {Object} options
+	 * @param {string} options.idp - An enabled IdP name or "appid_anon" for anonymous login. If left empty, idp parameter that was set during initialization will be used
 	 * @returns {Promise<Tokens>} The tokens of the authenticated user.
 	 * @throws {PopupError} "Popup closed" - The user closed the popup before authentication was completed.
 	 * @throws {TokenError} Any token validation error.
@@ -101,7 +105,8 @@ class AppID {
 	 * @example
 	 * const {accessToken, accessTokenPayload, idToken, idTokenPayload} = await appID.signin();
 	 */
-	async signin() {
+	async signin(options) {
+		const { idp } = options || {};
 		this._validateInitalize();
 		const endpoint = this.openIdConfigResource.getAuthorizationEndpoint();
 		let origin = this.window.location.origin;
@@ -111,7 +116,8 @@ class AppID {
 		return this.utils.performOAuthFlowAndGetTokens({
 			origin,
 			endpoint,
-			clientId: this.clientId
+			clientId: this.clientId,
+			idp: idp || this.idp,
 		});
 	}
 
@@ -120,6 +126,8 @@ class AppID {
 	 * This will attempt to authenticate the user in a hidden iframe.
 	 * You will need to [enable Cloud Directory SSO]{@link https://cloud.ibm.com/docs/services/appid?topic=appid-single-page#spa-silent-login}.
 	 * Sign in will be successful only if the user has previously signed in using Cloud Directory and their session is not expired.
+	 * @param {Object} options
+	 * @param {string} options.idp - An enabled IdP name or "appid_anon" for anonymous login. If left empty, idp parameter that was set during initialization will be used
 	 * @returns {Promise<Tokens>} The tokens of the authenticated user.
 	 * @throws {OAuthError} Any errors from the server according to the [OAuth spec]{@link https://tools.ietf.org/html/rfc6749#section-4.1.2.1}. e.g. {error: 'access_denied', description: 'User not signed in'}
 	 * @throws {IFrameError} "Silent sign-in timed out" - The iframe will close after 5 seconds if authentication could not be completed.
@@ -128,14 +136,16 @@ class AppID {
 	 * @example
 	 * const {accessToken, accessTokenPayload, idToken, idTokenPayload} = await appID.silentSignin();
 	 */
-	async silentSignin() {
+	async silentSignin(options) {
+		const { idp } = options || {};
 		this._validateInitalize();
 		const endpoint = this.openIdConfigResource.getAuthorizationEndpoint();
 		const {codeVerifier, nonce, state, url} = this.utils.getAuthParamsAndUrl({
 			clientId: this.clientId,
 			origin: this.window.origin,
 			prompt: constants.PROMPT,
-			endpoint
+			endpoint,
+			idp: idp || this.idp,
 		});
 
 		this.iframe.open(url);
@@ -220,7 +230,8 @@ class AppID {
 			userId,
 			origin: this.window.origin,
 			clientId: this.clientId,
-			endpoint
+			endpoint,
+			idp: this.idp,
 		});
 	}
 
@@ -259,7 +270,8 @@ class AppID {
 			origin: this.window.origin,
 			clientId: this.clientId,
 			endpoint,
-			changeDetailsCode
+			changeDetailsCode,
+			idp: this.idp,
 		});
 	}
 

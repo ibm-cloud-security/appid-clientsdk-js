@@ -31,7 +31,7 @@ describe('Utils tests', () => {
 	});
 
 	it('should succeed - performOAuthFlowAndGetTokens', async () => {
-			let res = await utils.performOAuthFlowAndGetTokens({userId: 'userId', origin: 'origin', clientId: 'clientId'});
+			let res = await utils.performOAuthFlowAndGetTokens({userId: 'userId', origin: 'origin', clientId: 'clientId', idp: 'idp'});
 	});
 
 	it('should return auth params with prompt', () => {
@@ -58,6 +58,14 @@ describe('Utils tests', () => {
 		assert.include(res.url, 'changePassword');
 		assert.include(res.url, 'user_id');
 		assert.notInclude(res.url, 'prompt');
+	});
+
+	it('should return auth params with idp', () => {
+		let res = utils.getAuthParamsAndUrl({clientId: '1234', origin: 'http://origin.com', endpoint: 'auth', idp: 'customIdp'});
+		assert.exists(res.codeVerifier, 'returned code verifier');
+		assert.exists(res.nonce, 'returned nonce');
+		assert.exists(res.state, 'returned state');
+		assert.include(res.url, 'idp=customIdp');
 	});
 
 	it('should return tokens', async () => {
