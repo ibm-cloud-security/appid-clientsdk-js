@@ -24,7 +24,7 @@ import AppID from 'ibmcloud-appid-js';
 
 From the CDN:
 ```html
-<script src="https://cdn.appid.cloud.ibm.com/appid-0.4.2.min.js"></script>
+<script src="https://cdn.appid.cloud.ibm.com/appid-0.4.3.min.js"></script>
 ```
 
 Or for development purposes use the minified file in this repo:

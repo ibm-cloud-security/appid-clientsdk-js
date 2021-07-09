@@ -1,6 +1,12 @@
 # Change Log
 
-## [v0.4.2](https://github.com/ibm-cloud-security/appid-clientsdk-js/releases/tag/0.4.2) (2021-06-16)
+## [v0.4.3](https://github.com/ibm-cloud-security/appid-clientsdk-js/releases/tag/0.4.3) (2021-07-09)
+
+**Added**
+
+- Update dependency versions
+
+## [v0.4.2](https://github.com/ibm-cloud-security/appid-clientsdk-js/releases/tag/0.4.2) (2021-07-09)
 
 **Added**
 
