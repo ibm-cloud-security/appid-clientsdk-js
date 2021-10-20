@@ -1,6 +1,6 @@
 {
   "name": "ibmcloud-appid-js",
-  "version": "0.4.3",
+  "version": "0.0.0-development",
   "description": "IBM Cloud App ID SDK for Single Page Applications",
   "keywords": [
     "SPA",
@@ -25,12 +25,15 @@
   "scripts": {
     "build": "webpack",
     "test": "mocha",
+    "commit": "git-cz",
     "coverage": "nyc --reporter=lcov mocha",
-    "docs": "jsdoc src/index.js src/errors -t node_modules/docdash --readme README.md --destination docs -c jsdoc.json"
+    "docs": "jsdoc src/index.js src/errors -t node_modules/docdash --readme README.md --destination docs -c jsdoc.json",
+    "semantic-release": "semantic-release",
+    "acp": "git add . && npm run commit && git push"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ibm-cloud-security/appid-clientsdk-js.git"
+    "url": "https://github.com/ibm-cloud-security/appid-clientsdk-js.git"
   },
   "main": "dist/appid.umd.min.js",
   "license": "Apache-2.0",
@@ -54,15 +57,22 @@
     "@babel/core": "^7.10.4",
     "@babel/plugin-transform-runtime": "^7.10.4",
     "@babel/preset-env": "^7.10.4",
-    "gulp-babel": "^8.0.0",
     "chai": "^4.2.0",
     "coveralls": "^3.1.0",
+    "cz-conventional-changelog": "^3.3.0",
     "docdash": "^1.2.0",
+    "gulp-babel": "^8.0.0",
     "jsdoc": "^3.6.4",
     "mocha": "^7.2.0",
     "node-fetch": "^2.6.0",
     "nyc": "^15.1.0",
+    "semantic-release": "^18.0.0",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.12"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
