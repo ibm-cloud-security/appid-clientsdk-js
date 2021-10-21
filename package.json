@@ -1,6 +1,6 @@
 {
   "name": "ibmcloud-appid-js",
-  "version": "0.0.0-development",
+  "version": "0.4.3",
   "description": "IBM Cloud App ID SDK for Single Page Applications",
   "keywords": [
     "SPA",
@@ -33,7 +33,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ibm-cloud-security/appid-clientsdk-js.git"
+    "url": "git+https://github.com/ibm-cloud-security/appid-clientsdk-js.git"
   },
   "main": "dist/appid.umd.min.js",
   "license": "Apache-2.0",
