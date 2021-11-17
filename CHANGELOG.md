@@ -1,5 +1,11 @@
 # Change Log
 
+## [v0.5.0](https://github.com/ibm-cloud-security/appid-clientsdk-js/releases/tag/0.5.0) (2021-11-17)
+
+**Added**
+
+- Update deployment workflow
+
 ## [v0.4.3](https://github.com/ibm-cloud-security/appid-clientsdk-js/releases/tag/0.4.3) (2021-07-09)
 
 **Added**

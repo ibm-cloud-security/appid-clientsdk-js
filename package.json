@@ -28,7 +28,7 @@
     "coverage": "nyc --reporter=lcov mocha",
     "commit": "git-cz",
     "semantic-release": "semantic-release",
-    "acp": "npm run docs && git add . && npm run commit && git push -u origin --all",
+    "acp": "npm install && npm run docs && npm run build && git add . && npm run commit && git push -u origin --all",
     "docs": "jsdoc src/index.js src/errors -t node_modules/docdash --readme README.md --destination docs -c jsdoc.json"
   },
   "repository": {
