@@ -9,7 +9,7 @@ on:
     branches: [ development, master ]
 
 jobs:
-  quality:
+  build:
 
     runs-on: ubuntu-latest
     strategy:
