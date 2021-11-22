@@ -80,10 +80,10 @@ Checkout our API reference [here](https://ibm-cloud-security.github.io/appid-cli
 [img-ibmcloud-powered]: https://img.shields.io/badge/ibm%20cloud-powered-blue.svg
 [url-ibmcloud]: https://www.ibm.com/cloud/
 [url-npm]: https://www.npmjs.com/package/ibmcloud-appid-js
-[img-license]: https://img.shields.io/npm/l/ibmcloud-appid.svg
-[img-version]: https://img.shields.io/npm/v/ibmcloud-appid.svg
-[img-npm-downloads-monthly]: https://img.shields.io/npm/dm/ibmcloud-appid.svg
-[img-npm-downloads-total]: https://img.shields.io/npm/dt/ibmcloud-appid.svg
+[img-license]: https://img.shields.io/npm/l/ibmcloud-appid-js.svg
+[img-version]: https://img.shields.io/npm/v/ibmcloud-appid-js.svg
+[img-npm-downloads-monthly]: https://img.shields.io/npm/dm/ibmcloud-appid-js.svg
+[img-npm-downloads-total]: https://img.shields.io/npm/dt/ibmcloud-appid-js.svg
 
 [img-github-watchers]: https://img.shields.io/github/watchers/ibm-cloud-security/appid-clientsdk-js.svg?style=social&label=Watch
 [url-github-watchers]: https://github.com/ibm-cloud-security/appid-clientsdk-js/watchers
