@@ -1,4 +1,14 @@
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/a30e7499a5234d3494508b7050975beb)](https://www.codacy.com/app/kajabfab/appid-clientsdk-js?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ibm-cloud-security/appid-clientsdk-js&amp;utm_campaign=Badge_Grade)
+[![IBM Cloud powered][img-ibmcloud-powered]][url-ibmcloud]
+[![Coveralls][img-coveralls-master]][url-coveralls-master]
+[![Version][img-version]][url-npm]
+[![DownloadsMonthly][img-npm-downloads-monthly]][url-npm]
+[![DownloadsTotal][img-npm-downloads-total]][url-npm]
+[![License][img-license]][url-npm]
+
+
+[![GithubWatch][img-github-watchers]][url-github-watchers]
+[![GithubStars][img-github-stars]][url-github-stars]
+[![GithubForks][img-github-forks]][url-github-forks]
 
 # IBM Cloud App ID JavaScript SDK
 Client-side javascript SDK for the IBM Cloud App ID service to use with single-page applications created in Angular, React, or other frontend frameworks. 
@@ -65,3 +75,22 @@ Checkout our API reference [here](https://ibm-cloud-security.github.io/appid-cli
 [1]: #installation
 [2]: #getting-started
 [3]: #api-reference
+
+
+[img-ibmcloud-powered]: https://img.shields.io/badge/ibm%20cloud-powered-blue.svg
+[url-ibmcloud]: https://www.ibm.com/cloud/
+[url-npm]: https://www.npmjs.com/package/ibmcloud-appid-js
+[img-license]: https://img.shields.io/npm/l/ibmcloud-appid-js.svg
+[img-version]: https://img.shields.io/npm/v/ibmcloud-appid-js.svg
+[img-npm-downloads-monthly]: https://img.shields.io/npm/dm/ibmcloud-appid-js.svg
+[img-npm-downloads-total]: https://img.shields.io/npm/dt/ibmcloud-appid-js.svg
+
+[img-github-watchers]: https://img.shields.io/github/watchers/ibm-cloud-security/appid-clientsdk-js.svg?style=social&label=Watch
+[url-github-watchers]: https://github.com/ibm-cloud-security/appid-clientsdk-js/watchers
+[img-github-stars]: https://img.shields.io/github/stars/ibm-cloud-security/appid-clientsdk-js.svg?style=social&label=Star
+[url-github-stars]: https://github.com/ibm-cloud-security/appid-clientsdk-js/stargazers
+[img-github-forks]: https://img.shields.io/github/forks/ibm-cloud-security/appid-clientsdk-js.svg?style=social&label=Fork
+[url-github-forks]: https://github.com/ibm-cloud-security/appid-clientsdk-js/network
+
+[img-coveralls-master]: https://coveralls.io/repos/github/ibm-cloud-security/appid-clientsdk-js/badge.svg
+[url-coveralls-master]: https://coveralls.io/github/ibm-cloud-security/appid-clientsdk-js
