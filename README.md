@@ -23,8 +23,7 @@ Apps using Node.js should use our [server-side SDK](https://github.com/ibm-cloud
 -   [API Reference][3]
 
 ## Installation
-Using npm:
-```javascript
+adsaddsasdsads ```javascript
 npm install ibmcloud-appid-js
 ```
 
