@@ -63,7 +63,7 @@
     "cz-conventional-changelog": "^3.3.0",
     "docdash": "^1.2.0",
     "jsdoc": "^3.6.4",
-    "mocha": "^7.2.0",
+    "mocha": "^10.2.0",
     "node-fetch": "^2.6.0",
     "nyc": "^15.1.0",
     "semantic-release": "^18.0.0",
