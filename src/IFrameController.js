@@ -21,7 +21,7 @@ class IFrameController {
 		return new Promise((resolve, reject) => {
 			const timer = setInterval(() => {
 				reject(new IFrameError('Silent sign-in timed out'));
-			}, 5 * 1000);
+			}, 10 * 1000);
 			window.addEventListener('message', (message) => {
 				if (!message.data || message.data.type !== messageType) {
 					return;
