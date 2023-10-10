@@ -122,7 +122,7 @@ class AppID {
 	 * Sign in will be successful only if the user has previously signed in using Cloud Directory and their session is not expired.
 	 * @returns {Promise<Tokens>} The tokens of the authenticated user.
 	 * @throws {OAuthError} Any errors from the server according to the [OAuth spec]{@link https://tools.ietf.org/html/rfc6749#section-4.1.2.1}. e.g. {error: 'access_denied', description: 'User not signed in'}
-	 * @throws {IFrameError} "Silent sign-in timed out" - The iframe will close after 5 seconds if authentication could not be completed.
+	 * @throws {IFrameError} "Silent sign-in timed out" - The iframe will close after 10 seconds if authentication could not be completed.
 	 * @throws {TokenError} Any token validation error.
 	 * @throws {RequestError} Any errors during a HTTP request.
 	 * @example
