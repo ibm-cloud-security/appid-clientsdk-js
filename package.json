@@ -1,6 +1,6 @@
 {
   "name": "ibmcloud-appid-js",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "IBM Cloud App ID SDK for Single Page Applications",
   "keywords": [
     "SPA",
@@ -50,21 +50,21 @@
     ]
   },
   "dependencies": {
-    "jsrsasign": "^10.2.0"
+    "jsrsasign": "^11.1.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.4",
     "@babel/core": "^7.10.4",
-    "@babel/plugin-transform-runtime": "^7.10.4",
-    "@babel/preset-env": "^7.10.4",
-    "gulp-babel": "^8.0.0",
+    "@babel/plugin-transform-runtime": "^7.23.9",
+    "@babel/preset-env": "^7.23.9",
     "chai": "^4.2.0",
     "coveralls": "^3.1.0",
     "cz-conventional-changelog": "^3.3.0",
     "docdash": "^1.2.0",
+    "gulp-babel": "^8.0.0",
     "jsdoc": "^3.6.4",
     "mocha": "^7.2.0",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.7.0",
     "nyc": "^15.1.0",
     "semantic-release": "^18.0.0",
     "webpack": "^4.43.0",
