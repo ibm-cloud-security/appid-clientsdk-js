@@ -39,7 +39,7 @@ describe('RequestHandler tests', async () => {
 	});
 
 	it('returns invalid response type', async () => {
-		const htmlResponse = 'https://run.mocky.io/v3/1ed32821-e4d3-4fe1-a975-f1f50f380354';
+		const htmlResponse = 'https://run.mocky.io/v3/8208632b-ab12-4ddd-b31b-05fc8169df04';
 		try {
 			let res = await requestHandler(htmlResponse);
 		} catch (e) {
@@ -48,7 +48,7 @@ describe('RequestHandler tests', async () => {
 	});
 
 	it('returns text', async () => {
-		const htmlResponse = 'https://run.mocky.io/v3/34ada513-308c-4cf6-85ad-43139b9525c8';
+		const htmlResponse = 'https://run.mocky.io/v3/ccad6260-346f-4721-b2d4-e13519a6f72e';
 		let res = await requestHandler(htmlResponse);
 		assert.deepEqual(res, 'working');
 	});
