@@ -30,7 +30,7 @@ describe('RequestHandler tests', async () => {
 	});
 
 	it('returns id token not generated with cloud directory idp', async () => {
-		const htmlResponse = 'http://www.mocky.io/v2/5dc17100330000c8b61a526f';
+		const htmlResponse = 'https://run.mocky.io/v3/0a008e78-7fd9-48da-b97f-0605b6681a77';
 		try {
 			let res = await requestHandler(htmlResponse);
 		} catch (e) {
@@ -39,7 +39,7 @@ describe('RequestHandler tests', async () => {
 	});
 
 	it('returns invalid response type', async () => {
-		const htmlResponse = 'http://www.mocky.io/v2/5dc171fe330000b3a41a527e';
+		const htmlResponse = 'https://run.mocky.io/v3/8208632b-ab12-4ddd-b31b-05fc8169df04';
 		try {
 			let res = await requestHandler(htmlResponse);
 		} catch (e) {
@@ -48,7 +48,7 @@ describe('RequestHandler tests', async () => {
 	});
 
 	it('returns text', async () => {
-		const htmlResponse = 'http://www.mocky.io/v2/5dc17255330000cdbd1a5283';
+		const htmlResponse = 'https://run.mocky.io/v3/ccad6260-346f-4721-b2d4-e13519a6f72e';
 		let res = await requestHandler(htmlResponse);
 		assert.deepEqual(res, 'working');
 	});
