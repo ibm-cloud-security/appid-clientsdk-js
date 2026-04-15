@@ -125,14 +125,15 @@ class AppID {
 	}
 
 	/**
-	 * Silent sign in allows you to automatically obtain new tokens for a user without the user having to re-authenticate using a popup.
-	 * This will attempt to authenticate the user in a popup (configured via silentPopup in init()).
+	 * Silent sign-in allows you to automatically obtain new tokens for a user without requiring re-authentication.
+	 * This will attempt to authenticate the user in a small popup (configured via silentPopup in init()).
+	 * The popup will timeout after 5 seconds if authentication doesn't complete.
 	 * You will need to [enable Cloud Directory SSO]{@link https://cloud.ibm.com/docs/services/appid?topic=appid-single-page#spa-silent-login}.
 	 * Sign in will be successful only if the user has previously signed in using Cloud Directory and their session is not expired.
 	 * @returns {Promise<Tokens>} The tokens of the authenticated user.
 	 * @throws {OAuthError} Any errors from the server according to the [OAuth spec]{@link https://tools.ietf.org/html/rfc6749#section-4.1.2.1}. e.g. {error: 'access_denied', description: 'User not signed in'}
-	 // old need to remove @throws {Iframe error} "Silent sign-in timed out" - The iframe will close after 5 seconds if authentication could not be completed.
-	 * @throws {PopupError} "Popup closed" - The popup was closed before authentication was completed. // need to change this message also as in above line
+	 * @throws {PopupError} "Popup closed" - The silent popup was closed before authentication was completed.
+	 * @throws {PopupError} "Silent sign-in timed out" - Authentication didn't complete within 5 seconds.
 	 * @throws {TokenError} Any token validation error.
 	 * @throws {RequestError} Any errors during a HTTP request.
 	 * @example
@@ -147,8 +148,10 @@ class AppID {
 			origin = this.window.location.protocol + "//" + this.window.location.hostname + (this.window.location.port ? ':' + this.window.location.port : '');
 		}
 		
-		// NEW: Use silentPopup for silent login
-		return this.utils.performOAuthFlowAndGetTokens({
+		const PopupError = require('./errors/PopupError');
+		
+		// Start silent login with popup
+		const silentLoginPromise = this.utils.performOAuthFlowAndGetTokens({
 			origin,
 			endpoint,
 			clientId: this.clientId,
@@ -156,34 +159,22 @@ class AppID {
 			useSilentPopup: true
 		});
 		
-		/* OLD CODE: Using iframe for silent login
-		const {codeVerifier, nonce, state, url} = this.utils.getAuthParamsAndUrl({
-			clientId: this.clientId,
-			origin: this.window.origin,
-			prompt: constants.PROMPT,
-			endpoint
+		// Create 5-second timeout (same as iframe behavior)
+		let timeoutId;
+		const timeoutPromise = new Promise((_, reject) => {
+			timeoutId = setTimeout(() => {
+				// Close the popup on timeout
+				this.silentPopup.close();
+				reject(new PopupError('Silent sign-in timed out'));
+			}, 5 * 1000);
 		});
-
-		this.iframe.open(url);
-
-		let message;
+		
+		// Race between login and timeout
 		try {
-			message = await this.iframe.waitForMessage({messageType: 'authorization_response'});
+			return await Promise.race([silentLoginPromise, timeoutPromise]);
 		} finally {
-			this.iframe.remove();
+			clearTimeout(timeoutId);  // Always clear timeout, whether success or error
 		}
-		this.utils.verifyMessage({message, state});
-		let authCode = message.data.code;
-
-		return await this.utils.retrieveTokens({
-			clientId: this.clientId,
-			authCode,
-			codeVerifier,
-			nonce,
-			openId: this.openIdConfigResource,
-			windowOrigin: this.window.origin
-		});
-		*/
 	}
 
 	/**
