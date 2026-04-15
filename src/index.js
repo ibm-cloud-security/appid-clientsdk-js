@@ -1,7 +1,6 @@
 const Utils = require('./utils');
 const RequestHandler = require('./RequestHandler');
 const PopupController = require('./PopupController');
-const IFrameController = require('./IFrameController');
 const OpenIdConfigurationResource = require('./OpenIDConfigurationResource')
 const TokenValidator = require('./TokenValidator');
 const constants = require('./constants');
@@ -21,7 +20,6 @@ class AppID {
 		{
 			popup = new PopupController(),
 			silentPopup = new PopupController(),
-			iframe = new IFrameController(),
 			openIdConfigResource = new OpenIdConfigurationResource(),
 			utils,
 			requestHandler = new RequestHandler(),
@@ -31,7 +29,6 @@ class AppID {
 		} = {}) {
 
 		this.popup = popup;
-		this.iframe = iframe;
 		this.silentPopup = silentPopup;
 		this.openIdConfigResource = openIdConfigResource;
 		this.URL = url;

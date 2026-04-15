@@ -18,8 +18,8 @@ class PopupController {
 		const height = (h === 0 && w === 0) ? 1 : h;
 		
 		// Center popup on screen
-		const left = (window.screen.width - width) / 2;
-		const top = (window.screen.height - height) / 2;
+		const left = (this.window.screen.width - width) / 2;
+		const top = (this.window.screen.height - height) / 2;
 		
 		this.popup = this.window.open('', 'popup', `left=${left},top=${top},width=${width},height=${height},resizable,scrollbars=yes,status=1`);
 		if (!this.popup) {
