@@ -188,9 +188,9 @@ describe('AppID tests', () => {
 			try {
 				await appID.init(defaultInit);
 				await appID.silentSignin();
-				assert.fail('Should have thrown a timeout error');
+				assert.fail('Should have thrown silent sign in timeout error');
 			} catch (e) {
-				assert.include(e.message, 'timed out', 'Should throw timeout error');
+				assert.equal(e.message, 'Silent sign-in timed out', 'Should throw silent sign in timeout error message');
 			}
 		});
 
