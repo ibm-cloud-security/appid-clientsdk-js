@@ -1,7 +1,6 @@
 const Utils = require('./utils');
 const RequestHandler = require('./RequestHandler');
 const PopupController = require('./PopupController');
-const IFrameController = require('./IFrameController');
 const OpenIdConfigurationResource = require('./OpenIDConfigurationResource')
 const TokenValidator = require('./TokenValidator');
 const constants = require('./constants');
@@ -20,7 +19,7 @@ class AppID {
 	constructor(
 		{
 			popup = new PopupController(),
-			iframe = new IFrameController(),
+			silentPopup = new PopupController(),
 			openIdConfigResource = new OpenIdConfigurationResource(),
 			utils,
 			requestHandler = new RequestHandler(),
@@ -30,7 +29,7 @@ class AppID {
 		} = {}) {
 
 		this.popup = popup;
-		this.iframe = iframe;
+		this.silentPopup = silentPopup;
 		this.openIdConfigResource = openIdConfigResource;
 		this.URL = url;
 		this.utils = utils;
@@ -40,6 +39,7 @@ class AppID {
 				openIdConfigResource: this.openIdConfigResource,
 				url: this.URL,
 				popup: this.popup,
+				silentPopup: this.silentPopup,
 				jsrsasign
 			});
 		}
@@ -53,20 +53,25 @@ class AppID {
 	 * @param {Object} options
 	 * @param {string} options.clientId - The clientId from the singlepageapp application credentials.
 	 * @param {string} options.discoveryEndpoint - The discoveryEndpoint from the singlepageapp application credentials.
-	 * @param {Object} [options.popup] - The popup configuration.
+	 * @param {Object} [options.popup] - The popup configuration for regular signin.
 	 * @param {Number} options.popup.height - The popup height.
 	 * @param {Number} options.popup.width - The popup width.
+	 * @param {Object} [options.silentPopup] - The popup configuration for silent signin.
+	 * @param {Number} options.silentPopup.height - The silent popup height.
+	 * @param {Number} options.silentPopup.width - The silent popup width.
 	 * @returns {Promise<void>}
 	 * @throws {AppIDError} For missing required params.
 	 * @throws {RequestError} Any errors during a HTTP request.
 	 * @example
 	 * await appID.init({
 	 * 	clientId: '<SPA_CLIENT_ID>',
-	 * 	discoveryEndpoint: '<WELL_KNOWN_ENDPOINT>'
+	 * 	discoveryEndpoint: '<WELL_KNOWN_ENDPOINT>',
+	 * 	popup: { height: 600, width: 400 },
+	 * 	silentPopup: { height: 0, width: 0 }
 	 * });
 	 *
 	 */
-	async init({clientId, discoveryEndpoint, popup = {height: window.screen.height * .80, width: 400}}) {
+	async init({clientId, discoveryEndpoint, popup = {height: window.screen.height * .80, width: 400}, silentPopup = {height: 0, width: 0}}) {
 		if (!clientId) {
 			throw new AppIDError(constants.MISSING_CLIENT_ID);
 		}
@@ -80,6 +85,7 @@ class AppID {
 		this.popup.init(popup);
 		this.clientId = clientId;
 		this.initialized = true;
+		this.silentPopup.init(silentPopup);
 	}
 
 	/**
@@ -116,13 +122,15 @@ class AppID {
 	}
 
 	/**
-	 * Silent sign in allows you to automatically obtain new tokens for a user without the user having to re-authenticate using a popup.
-	 * This will attempt to authenticate the user in a hidden iframe.
+	 * Silent sign-in allows you to automatically obtain new tokens for a user without requiring re-authentication.
+	 * This will attempt to authenticate the user in a small popup (configured via silentPopup in init()).
+	 * The popup will timeout after 5 seconds if authentication doesn't complete.
 	 * You will need to [enable Cloud Directory SSO]{@link https://cloud.ibm.com/docs/services/appid?topic=appid-single-page#spa-silent-login}.
 	 * Sign in will be successful only if the user has previously signed in using Cloud Directory and their session is not expired.
 	 * @returns {Promise<Tokens>} The tokens of the authenticated user.
 	 * @throws {OAuthError} Any errors from the server according to the [OAuth spec]{@link https://tools.ietf.org/html/rfc6749#section-4.1.2.1}. e.g. {error: 'access_denied', description: 'User not signed in'}
-	 * @throws {IFrameError} "Silent sign-in timed out" - The iframe will close after 5 seconds if authentication could not be completed.
+	 * @throws {PopupError} "Popup closed" - The silent popup was closed before authentication was completed.
+	 * @throws {PopupError} "Silent sign-in timed out" - Authentication didn't complete within 5 seconds.
 	 * @throws {TokenError} Any token validation error.
 	 * @throws {RequestError} Any errors during a HTTP request.
 	 * @example
@@ -131,32 +139,39 @@ class AppID {
 	async silentSignin() {
 		this._validateInitalize();
 		const endpoint = this.openIdConfigResource.getAuthorizationEndpoint();
-		const {codeVerifier, nonce, state, url} = this.utils.getAuthParamsAndUrl({
-			clientId: this.clientId,
-			origin: this.window.origin,
-			prompt: constants.PROMPT,
-			endpoint
-		});
 
-		this.iframe.open(url);
-
-		let message;
-		try {
-			message = await this.iframe.waitForMessage({messageType: 'authorization_response'});
-		} finally {
-			this.iframe.remove();
+		let origin = this.window.location.origin;
+		if (!origin) {
+			origin = this.window.location.protocol + "//" + this.window.location.hostname + (this.window.location.port ? ':' + this.window.location.port : '');
 		}
-		this.utils.verifyMessage({message, state});
-		let authCode = message.data.code;
-
-		return await this.utils.retrieveTokens({
+		
+		const PopupError = require('./errors/PopupError');
+		
+		// Start silent login with popup
+		const silentLoginPromise = this.utils.performOAuthFlowAndGetTokens({
+			origin,
+			endpoint,
 			clientId: this.clientId,
-			authCode,
-			codeVerifier,
-			nonce,
-			openId: this.openIdConfigResource,
-			windowOrigin: this.window.origin
+			prompt: constants.PROMPT,
+			useSilentPopup: true
 		});
+		
+		// Create 5-second timeout (same as iframe behavior)
+		let timeoutId;
+		const timeoutPromise = new Promise((_, reject) => {
+			timeoutId = setTimeout(() => {
+				// Close the popup on timeout
+				this.silentPopup.close();
+				reject(new PopupError('Silent sign-in timed out'));
+			}, 5 * 1000);
+		});
+		
+		// Race between login and timeout
+		try {
+			return await Promise.race([silentLoginPromise, timeoutPromise]);
+		} finally {
+			clearTimeout(timeoutId);  // Always clear timeout, whether success or error
+		}
 	}
 
 	/**

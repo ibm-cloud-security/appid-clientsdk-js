@@ -12,9 +12,16 @@ class PopupController {
 	open() {
 		const h = this.popupConfig.height;
 		const w = this.popupConfig.width;
-		const left = (window.screen.width - w) / 2;
-		const top = (window.screen.height - h) / 2;
-		this.popup = this.window.open('', 'popup', `left=${left},top=${top},width=${w},height=${h},resizable,scrollbars=yes,status=1`);
+		
+		// For silent popups (0x0), use minimal size; otherwise use configured size
+		const width = (h === 0 && w === 0) ? 1 : w;
+		const height = (h === 0 && w === 0) ? 1 : h;
+		
+		// Center popup on screen
+		const left = (this.window.screen.width - width) / 2;
+		const top = (this.window.screen.height - height) / 2;
+		
+		this.popup = this.window.open('', 'popup', `left=${left},top=${top},width=${width},height=${height},resizable,scrollbars=yes,status=1`);
 		if (!this.popup) {
 			throw new PopupError('Unable to open popup')
 		}
