@@ -1,5 +1,13 @@
 # Change Log
 
+## [v2.0.0](https://github.com/ibm-cloud-security/appid-clientsdk-js/releases/tag/2.0.0) (2026-05-12)
+
+**Added**
+
+- Update Silent login flow to use popup based authentication rather than hidden iframes
+
+# Change Log
+
 ## [v1.0.1](https://github.com/ibm-cloud-security/appid-clientsdk-js/releases/tag/1.0.1) (2022-01-11)
 
 **Added**
