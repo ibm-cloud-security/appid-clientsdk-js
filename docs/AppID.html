@@ -75,7 +75,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line14">line 14</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line13">line 13</a>
     </li></ul></dd>
     
 
@@ -188,7 +188,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line69">line 69</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line74">line 74</a>
     </li></ul></dd>
     
 
@@ -243,7 +243,9 @@
     
     <pre class="prettyprint"><code>await appID.init({
 	clientId: '&lt;SPA_CLIENT_ID>',
-	discoveryEndpoint: '&lt;WELL_KNOWN_ENDPOINT>'
+	discoveryEndpoint: '&lt;WELL_KNOWN_ENDPOINT>',
+	popup: { height: 600, width: 400 },
+	silentPopup: { height: 0, width: 0 }
 });</code></pre>
 
 
@@ -406,7 +408,7 @@
 
             
 
-            <td class="description last"><p>The popup configuration.</p>
+            <td class="description last"><p>The popup configuration for regular signin.</p>
                 <h6>Properties</h6>
                 
 
@@ -472,6 +474,111 @@
             
 
             <td class="description last"><p>The popup width.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>silentPopup</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The popup configuration for silent signin.</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>height</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The silent popup height.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>width</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The silent popup width.</p></td>
         </tr>
 
     
@@ -601,7 +708,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line104">line 104</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line110">line 110</a>
     </li></ul></dd>
     
 
@@ -826,7 +933,7 @@ After a successful sign in, the popup will close and tokens are returned.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line131">line 131</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line139">line 139</a>
     </li></ul></dd>
     
 
@@ -866,8 +973,9 @@ After a successful sign in, the popup will close and tokens are returned.</p>
 
 
 <div class="description usertext">
-    <p>Silent sign in allows you to automatically obtain new tokens for a user without the user having to re-authenticate using a popup.<br>
-This will attempt to authenticate the user in a hidden iframe.<br>
+    <p>Silent sign-in allows you to automatically obtain new tokens for a user without requiring re-authentication.<br>
+This will attempt to authenticate the user in a small popup (configured via silentPopup in init()).<br>
+The popup will timeout after 5 seconds if authentication doesn't complete.<br>
 You will need to <a href="https://cloud.ibm.com/docs/services/appid?topic=appid-single-page#spa-silent-login">enable Cloud Directory SSO</a>.<br>
 Sign in will be successful only if the user has previously signed in using Cloud Directory and their session is not expired.</p>
 </div>
@@ -933,7 +1041,7 @@ Sign in will be successful only if the user has previously signed in using Cloud
 <dl>
     <dt>
         <div class="param-desc usertext">
-        <p>&quot;Silent sign-in timed out&quot; - The iframe will close after 5 seconds if authentication could not be completed.</p>
+        <p>&quot;Popup closed&quot; - The silent popup was closed before authentication was completed.</p>
         </div>
     </dt>
     <dd></dd>
@@ -944,7 +1052,34 @@ Sign in will be successful only if the user has previously signed in using Cloud
             </dt>
             <dd>
                 
-<span class="param-type">IFrameError</span>
+<span class="param-type">PopupError</span>
+
+
+            </dd>
+        </dl>
+    </dt>
+    <dd></dd>
+</dl>
+
+</li>
+    
+        <li>
+
+<dl>
+    <dt>
+        <div class="param-desc usertext">
+        <p>&quot;Silent sign-in timed out&quot; - Authentication didn't complete within 5 seconds.</p>
+        </div>
+    </dt>
+    <dd></dd>
+    <dt>
+        <dl class="param-type">
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type">PopupError</span>
 
 
             </dd>
@@ -1053,7 +1188,7 @@ Sign in will be successful only if the user has previously signed in using Cloud
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line169">line 169</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line184">line 184</a>
     </li></ul></dd>
     
 
@@ -1267,7 +1402,7 @@ Sign in will be successful only if the user has previously signed in using Cloud
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line193">line 193</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line208">line 208</a>
     </li></ul></dd>
     
 
@@ -1514,7 +1649,7 @@ You must enable users to manage their account from your app in Cloud Directory s
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line239">line 239</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line254">line 254</a>
     </li></ul></dd>
     
 
@@ -1761,7 +1896,7 @@ let newTokens = await appID.changeDetails(tokens);</code></pre>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Tue May 05 2026 21:54:03 GMT+0530 (India Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Tue May 12 2026 10:33:32 GMT+0530 (India Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
