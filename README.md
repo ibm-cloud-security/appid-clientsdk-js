@@ -69,6 +69,12 @@ document.getElementById('login').addEventListener('click', async () => {
 ```
 Read the [documentation](https://cloud.ibm.com/docs/services/appid?topic=appid-getting-started#gettingstarted) for information about getting started with IBM Cloud App ID Service.
 
+## Silent Login
+
+**Note:** Silent login now uses a popup-based approach (previously used hidden iframes) to ensure compatibility with modern browsers that enforce strict cookie restrictions.
+
+> **Version Note:** This popup-based approach is available in version 2.0.0 and later. Versions 0.x and 1.x use hidden iframes for silent login.
+
 ## API Reference
 Checkout our API reference [here](https://ibm-cloud-security.github.io/appid-clientsdk-js/).
 

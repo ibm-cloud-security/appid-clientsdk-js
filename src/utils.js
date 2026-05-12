@@ -13,6 +13,7 @@ class Utils {
 			url = URL,
 			openIdConfigResource,
 			popup,
+			silentPopup,
 			jsrsasign = jsrsasign
 		} = {}) {
 		this.URL = url;
@@ -20,6 +21,7 @@ class Utils {
 		this.tokenValidator = tokenValidator;
 		this.openIdConfigResource = openIdConfigResource;
 		this.popup = popup;
+		this.silentPopup = silentPopup;
 		this.rs = jsrsasign;
 	};
 
@@ -80,13 +82,16 @@ class Utils {
 		};
 	}
 
-	async performOAuthFlowAndGetTokens({userId, origin, clientId, endpoint, changeDetailsCode}) {
-		const {codeVerifier, state, nonce, url} = this.getAuthParamsAndUrl({userId, origin, clientId, endpoint, changeDetailsCode});
+	async performOAuthFlowAndGetTokens({userId, origin, clientId, endpoint, changeDetailsCode, prompt = undefined, useSilentPopup = false}) {
+		const {codeVerifier, state, nonce, url} = this.getAuthParamsAndUrl({userId, origin, clientId, endpoint, changeDetailsCode, prompt});
 
-		this.popup.open();
-		this.popup.navigate(url);
-		const message = await this.popup.waitForMessage({messageType: 'authorization_response'});
-		this.popup.close();
+		// Choose which popup to use based on useSilentPopup flag
+		const popupController = useSilentPopup ? this.silentPopup : this.popup;
+
+		popupController.open();
+		popupController.navigate(url);
+		const message = await popupController.waitForMessage({messageType: 'authorization_response'});
+		popupController.close();
 		this.verifyMessage({message, state});
 		let authCode = message.data.code;
 

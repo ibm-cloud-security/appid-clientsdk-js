@@ -1,4 +1,9 @@
 class UtilsMock {
+	constructor({popup, silentPopup} = {}) {
+		this.popup = popup;
+		this.silentPopup = silentPopup;
+	}
+
 	getRandomString() {
 		return 'valid';
 	};
@@ -24,8 +29,18 @@ class UtilsMock {
 		return;
 	}
 
-	performOAuthFlowAndGetTokens() {
-		return this.retrieveTokens()
+	async performOAuthFlowAndGetTokens({useSilentPopup = false} = {}) {
+		// Use the appropriate popup controller
+		const popupController = useSilentPopup ? this.silentPopup : this.popup;
+		
+		if (popupController) {
+			popupController.open();
+			popupController.navigate();
+			await popupController.waitForMessage();
+			popupController.close();
+		}
+		
+		return this.retrieveTokens();
 	}
 
 	getPKCEFields() {

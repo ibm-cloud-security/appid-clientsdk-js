@@ -1,8 +1,9 @@
 class PopupControllerMock {
-	constructor({invalidState, error, invalidOrigin}) {
+	constructor({invalidState, error, invalidOrigin, delay = 0}) {
 		this.invalidState = invalidState;
 		this.invalidOrigin = invalidOrigin;
 		this.error = error;
+		this.delay = delay;
 	}
 
 	init() {
@@ -21,7 +22,12 @@ class PopupControllerMock {
 		return;
 	};
 
-	waitForMessage() {
+	async waitForMessage() {
+		// Simulate delay if specified (useful for testing timeouts)
+		if (this.delay > 0) {
+			await new Promise(resolve => setTimeout(resolve, this.delay));
+		}
+		
 		let message = {
 			data: {
 				type: 'authorization_response',
@@ -40,7 +46,7 @@ class PopupControllerMock {
 		if (this.invalidOrigin) {
 			message.origin = 'http://invalidOrigin.com';
 		}
-		return Promise.resolve(message);
+		return message;
 	}
 }
 
